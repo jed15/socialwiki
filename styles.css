@@ -1,0 +1,773 @@
+/*
+ This file is part of Moodle - http://moodle.org/
+
+ Moodle is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Moodle is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Moodle. If not, see <http://www.gnu.org/licenses/>.
+*/ /**
+ * Wiki module style sheet
+ *
+ * @package mod-wiki-2.0
+ * @copyrigth 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
+ * @copyrigth 2009 Universitat Politecnica de Catalunya http://www.upc.edu
+ *
+ * @author Jordi Piguillem
+ * @author Marc Alier
+ * @author David Jimenez
+ * @author Josep Arus
+ * @author Kenneth Riba
+ *
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+.socialwiki_contentbox {
+    width: 80%;
+    margin: auto;
+    min-width: 200px;
+    min-height: 100px;
+}
+
+.socialwiki_editor {
+    width: 50%;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.socialwiki_previewbox {
+    width: 50%;
+    margin: auto;
+    border: thin solid blue;
+}
+
+.socialwiki_info {
+    color: darkred;
+    text-decoration: underline;
+}
+
+.socialwiki_button {
+    margin: 5px;
+}
+
+.socialwiki_warning {
+    color: red;
+}
+
+.emptycomments {
+    color: red;
+    display: inline;
+}
+
+.socialwiki-toc {
+    border: 1px solid #BBB;
+    background: #EEE;
+    margin: 16px;
+    padding: 8px;
+}
+
+.socialwiki-toc-title {
+    color: #666;
+    font-size: 1.1em;
+    font-variant: small-caps;
+    text-align: center;
+}
+
+.socialwiki-toc-section {
+    padding: 0;
+    margin: 2px 8px;
+}
+
+.socialwiki-toc-section-2 {
+    padding-left: 12px;
+}
+
+.socialwiki-toc-section-3 {
+    padding-left: 24px;
+}
+
+.socialwiki_form-button {
+    margin-left: 0%;
+}
+
+.socialwiki-form-center {
+    text-align: center;
+    margin: auto;
+    width: 320px;
+}
+
+.socialwiki-upload-table {
+    margin: 8px auto;
+    clear: both;
+}
+
+.socialwiki-upload-table table {
+    margin: auto;
+}
+
+.socialwiki-upload-table h3 {
+    margin: 4px 0px;
+    text-align: center;
+}
+
+.socialwiki-upload-section {
+    border: 1px solid #EEE;
+    width: 400px;
+    margin: 8px auto;
+}
+
+.socialwiki-upload-section legend {
+    font-weight: bold;
+    font-size: 0.9em;
+    margin-left: 16px;
+}
+
+.socialwiki-tags {
+    text-align: right;
+}
+
+.socialwiki-tags span {
+    font-weight: bold;
+}
+
+.socialwiki_modifieduser p {
+    line-height: 35px;
+}
+
+.socialwiki_modifieduser img {
+    border: thin solid black;
+}
+
+.socialwiki_restore_yes, .socialwiki_deletecomment_yes {
+    float: left;
+}
+
+.socialwiki_restore_no, .socialwiki_deletecomment_no {
+    float: right;
+}
+
+.socialwiki_restoreform, .socialwiki_deletecommentform {
+    width: 10%;
+    margin: auto;
+}
+
+.socialwiki_versionuser {
+    float: left;
+}
+
+.socialwiki_diffuserleft,.socialwiki_diffuserright {
+    font-weight: normal;
+    padding-top: 1%;
+}
+
+.socialwiki_diffuserleft {
+    float: right;
+}
+
+.dir-rtl .socialwiki_diffuserleft {
+    float: left;
+}
+
+.socialwiki_diffuserright {
+    float: left;
+}
+
+.socialwiki_compareheading {
+    font-weight: normal;
+}
+
+.socialwiki_restore,.socialwiki_diffview,.socialwiki_difftime,.socialwiki_headingtime {
+    font-size: 0.8em;
+    font-weight: normal;
+}
+
+.socialwiki_difftime,.socialwiki_headingtime {
+    font-style: oblique;
+    text-align: center;
+}
+
+.socialwiki_diff_oldpaging {
+    float: left;
+    width: 40%;
+    min-width: 200px;
+    margin-left: 5%;
+}
+
+.socialwiki_diff_newpaging {
+    float: right;
+    width: 40%;
+    min-width: 200px;
+    margin-right: 5%;
+}
+
+.socialwiki_diff_old,.socialwiki_diff_new {
+    float: left;
+    min-width: 200px;
+    width: 40%;
+}
+
+.socialwiki_difftable td {
+    width: 50%;
+    float: left;
+}
+
+.socialwiki_histdate {
+    text-align: left;
+}
+
+.socialwiki_histnewdate {
+    border-top: 1px dotted gray;
+}
+
+.ouw_deleted {
+    background: #FFFFAA;
+    color: red;
+    text-decoration: line-through;
+}
+
+.ouw_added {
+    background: #CCFFCC;
+    color: red;
+}
+
+a.socialwiki_newentry:link, a.socialwiki_newentry:visited {
+    color: red;
+    font-style: italic;
+}
+
+.socialwiki_newentry a {
+    color: red;
+    font-style: italic;
+}
+
+#intro.generalbox {
+    margin-top: 10px;
+    padding: 5px;
+}
+
+.socialwiki_navigation_container {
+    margin: 0 auto;
+}
+
+.socialwiki_navigation_from {
+    float: left;
+    width: 40%;
+    min-width: 200px;
+    margin-left: 5%;
+}
+
+.socialwiki_navigation_to {
+    float: left;
+    width: 40%;
+    min-width: 200px;
+    margin-right: 5%;
+}
+
+.socialwiki_headingtitle {
+    text-align: center;
+}
+
+.socialwiki_clear {
+    clear: both;
+}
+
+.socialwiki_right {
+    text-align: right;
+}
+
+.socialwiki_index {
+    text-align: right;
+}
+
+.notunderlined {
+    text-decoration: none;
+}
+
+a.socialwiki_edit_section {
+    font-size: 0.6em;
+    vertical-align: top;
+    position: relative;
+    float: right;
+}
+
+.midpad {
+    text-align: center;
+    margin-top: 0.4em;
+    margin-bottom: 0.4em;
+}
+
+.block_socialwiki_search ul {
+    margin-top: 0.5em;
+    margin-bottom: 3px;
+}
+
+.socialwiki-attachment:before {
+    content: url("/mod/socialwiki/pix/attachment.png");
+    padding-right: 2px;
+}
+
+/** Print CSS */
+#socialwiki_printable_content {
+    text-align: left;
+}
+
+.dir-rtl #socialwiki_printable_content {
+    text-align: right;
+}
+
+#socialwiki_printable_content a {
+    color: black;
+}
+
+#socialwiki_printable_title {
+    font-size: 2.2em;
+    text-decoration: underline;
+}
+
+.socialwiki_diff_boxes {
+    width: 100%;
+    clear: both;
+}
+
+.socialwiki_diff_paging {
+    width: 100%;
+    clear: both;
+}
+
+.socialwiki_grayline {
+    color: gray
+}
+
+.socialwikisearchresults{
+    padding-left: 50px;
+    padding-top: 20px;
+}
+
+.socialwiki-diff-container {width:95%;margin:10px auto;}
+.socialwiki-diff-container .socialwiki-diff-leftside,
+.socialwiki-diff-container .socialwiki-diff-rightside {width:49.5%;margin:0;padding:0;float:left;}
+.socialwiki-diff-container .socialwiki-diff-rightside {margin-left:1%;}
+.socialwiki-diff-container .socialwiki-diff-heading,
+.socialwiki-diff-container .no-overflow {padding:10px;border:1px solid #DDD;}
+.socialwiki-diff-container .socialwiki-diff-rightside .socialwiki_diffversion {text-align:right;}
+
+.socialwikieditor-toolbar img{
+    width: 22px;
+    height: 22px;
+    vertical-align: middle;
+}
+
+#socialwiki-nav
+{
+clear:both;
+position:relative;
+top:0px;
+left:0px;
+right:0px;
+width:100%;
+text-align:center;
+border:solid;
+}
+
+#socialwiki_navbuttons
+{
+margin:0 auto;
+display:inline-block;
+clear:both;
+position:relative;
+top:-22px;
+left:-100px;
+}
+
+ #socialwiki_bfbuttons
+{
+margin:0 auto;
+display:inline-block;
+float:left;
+position:relative;
+top:-22px;
+}
+
+
+#socialwiki_search
+{
+margin:0 auto;
+position:relative;
+top:-58px;
+left:-100px;
+display:inline-block;
+clear:both;
+
+}
+
+#socialwiki_socialbuttons
+{
+margin:0 auto;
+display:inline-block;
+clear:both;
+position:relative;
+top:-10px;
+left:-50px;
+}
+  
+.navlistitem
+{
+  float:left;
+  margin:0px 5px;
+}
+
+.horizontal_list
+{
+  list-style:none;
+}
+
+
+#socialwiki_container
+{
+width:100%;
+height:51px;
+text-align:center;
+background-image:url([[pix:socialwiki|toolbar-bg]]);
+background-repeat:repeat;
+}
+
+#socialwiki_viewbutton, #socialwiki_versionbutton, #socialwiki_editbutton, #socialwiki_likebutton, #socialwiki_friendbutton, #socialwiki_backbutton
+{
+color:white;
+}
+
+#socialwiki_searchbox
+{
+height:20px;
+position:relative;
+
+border-radius: 13px 13px 13px 13px;
+outline:0px none;
+background-color:rgba(255,255,255,0.6);
+border:1px solid;
+color:white;
+padding:3px 3px 3px 3px;
+}
+
+#socialwiki_searchbox:focus
+{
+height:20px;
+border-radius: 13px 13px 13px 13px;
+outline:0px none;
+background-color:white;
+border:1px solid;
+color:black;
+padding:3px 3px 3px 3px;
+}
+
+#socialwiki_likebutton[like="yes"]
+{
+margin-right:5px;
+width:50px;
+height:50px;
+display:inline-block;
+background-repeat:no-repeat;
+background-image:url([[pix:socialwiki|goodbutton]]);
+}
+
+#socialwiki_likebutton[like="yes"]:hover
+{
+margin-right:5px;
+width:50px;
+height:50px;
+display:inline-block;
+background-repeat:no-repeat;
+background-image:url([[pix:socialwiki|goodbutton_hover]]);
+}
+
+#socialwiki_likebutton[like="no"]
+{
+margin-right:5px;
+width:50px;
+height:50px;
+display:inline-block;
+background-repeat:no-repeat;
+background-image:url([[pix:socialwiki|badbutton]]);
+}
+
+#socialwiki_likebutton[like="no"]:hover
+{
+margin-right:5px;
+width:50px;
+height:50px;
+display:inline-block;
+background-repeat:no-repeat;
+background-image:url([[pix:socialwiki|badbutton_hover]]);
+}
+
+#socialwiki_friendbutton
+{
+margin-right:5px;
+width:50px;
+height:50px;
+display:inline-block;
+background-repeat:no-repeat;
+background-image:url([[pix:socialwiki|followbutton]]);
+}
+
+#socialwiki_friendbutton:hover
+{
+margin-right:5px;
+width:50px;
+height:50px;
+display:inline-block;
+background-repeat:no-repeat;
+background-image:url([[pix:socialwiki|followbutton_hover]]);
+}
+
+#socialwiki_managebutton
+{
+margin-right:5px;
+position:relative;
+top: -2px;
+width:50px;
+height:50px;
+display:inline-block;
+background-repeat:no-repeat;
+background-image:url([[pix:socialwiki|managebutton]]);
+}
+
+#socialwiki_managebutton:hover
+{
+margin-right:5px;
+width:50px;
+height:50px;
+display:inline-block;
+background-repeat:no-repeat;
+background-image:url([[pix:socialwiki|managebutton_hover]]);
+}
+
+#socialwiki_viewbutton
+{
+margin-right:5px;
+width:50px;
+height:50px;
+display:inline-block;
+background-repeat:no-repeat;
+background-image:url([[pix:socialwiki|viewbutton]]);
+}
+
+#socialwiki_viewbutton:hover
+{
+margin-right:5px;
+width:50px;
+height:50px;
+display:inline-block;
+background-repeat:no-repeat;
+background-image:url([[pix:socialwiki|viewbutton_hover]]);
+}
+
+#socialwiki_commentsbutton
+{
+margin-right:5px;
+width:50px;
+height:50px;
+display:inline-block;
+background-repeat:no-repeat;
+background-image:url([[pix:socialwiki|commentsbutton]]);
+}
+
+#socialwiki_commentsbutton:hover
+{
+margin-right:5px;
+width:50px;
+height:50px;
+display:inline-block;
+background-repeat:no-repeat;
+background-image:url([[pix:socialwiki|commentsbutton_hover]]);
+}
+
+
+#socialwiki_versionbutton
+{
+margin-right:5px;
+width:50px;
+height:50px;
+display:inline-block;
+background-repeat:no-repeat;
+background-image:url([[pix:socialwiki|versionbutton]]);
+}
+
+#socialwiki_versionbutton:hover
+{
+margin-right:5px;
+width:50px;
+height:50px;
+display:inline-block;
+background-repeat:no-repeat;
+background-image:url([[pix:socialwiki|versionbutton_version]]);
+}
+
+#socialwiki_editbutton
+{
+margin-right:5px;
+width:50px;
+height:50px;
+display:inline-block;
+background-repeat:no-repeat;
+background-image:url([[pix:socialwiki|editbutton]]);
+}
+
+#socialwiki_editbutton:hover
+{
+margin-right:5px;
+width:50px;
+height:50px;
+display:inline-block;
+background-repeat:no-repeat;
+background-image:url([[pix:socialwiki|editbutton_hover]]);
+}
+
+#socialwiki_backbutton
+{
+margin-right:5px;
+width:50px;
+height:50px;
+display:inline-block;
+background-repeat:no-repeat;
+background-image:url([[pix:socialwiki|backbutton]]);
+}
+
+#socialwiki_backbutton:hover
+{
+margin-right:5px;
+width:50px;
+height:50px;
+display:inline-block;
+background-repeat:no-repeat;
+background-image:url([[pix:socialwiki|backbutton_hover]]);
+}
+
+#socialwiki_forwardbutton
+{
+margin-right:5px;
+width:50px;
+height:50px;
+display:inline-block;
+background-repeat:no-repeat;
+background-image:url([[pix:socialwiki|forwardbutton]]);
+}
+
+#socialwiki_forwardbutton:hover
+{
+margin-right:5px;
+width:50px;
+height:50px;
+display:inline-block;
+background-repeat:no-repeat;
+background-image:url([[pix:socialwiki|forwardbutton_hover]]);
+}
+
+#socialwiki_forwardbutton[disabled='disabled']
+{
+margin-right:5px;
+width:50px;
+height:50px;
+display:inline-block;
+background-repeat:no-repeat;
+background-image:url([[pix:socialwiki|forwardbutton-disabled]]);
+}
+
+#socialwiki_backbutton[disabled='disabled']
+{
+margin-right:5px;
+width:50px;
+height:50px;
+display:inline-block;
+background-repeat:no-repeat;
+background-image:url([[pix:socialwiki|backbutton-disabled]]);
+}
+
+
+.wikicontent
+{
+width:100%;
+height:1000px;
+background-image:url([[pix:socialwiki|background]]);
+padding-top:50px;
+overflow:hidden;
+text-align:center;
+}
+
+.wikipage
+{
+display:inline-block;
+width:85%;
+background-color:rgba(255,255,255,0.9);
+height:900px;
+margin:0 auto;
+border-radius:8px;
+text-align:center;
+box-shadow:0px 0px 10px 3px #000000;
+overflow-y:auto;
+overflow-x:hidden;
+}
+
+.whitetext
+{
+color:white !important;
+}
+
+#manage
+{
+width:100%;
+height:1000px;
+background-image:url([[pix:socialwiki|background]]);
+padding-top:50px;
+overflow:auto;
+text-align:left;
+color:white;
+position:relative;
+}
+
+#wikititle
+{
+display:inline-block;
+}
+
+#wikicontent
+{
+text-align:left;
+padding:5px 25px 5px 25px;
+
+}
+
+#filler
+{
+background-color:orange;
+height:2000px;
+}
+
+#author
+{
+	display:inline-block;
+	margin-left:25px;
+}
+
+#viewtitle
+{
+	display:inline-block;
+}
+#socialwiki_title
+{
+display:inline-block;
+text-align:center;
+width:100%;
+}
+
+
+
+
+
