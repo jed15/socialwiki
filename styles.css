@@ -383,7 +383,6 @@ display:inline-block;
 clear:both;
 position:relative;
 top:-22px;
-left:-100px;
 }
 
  #socialwiki_bfbuttons
@@ -393,6 +392,7 @@ display:inline-block;
 float:left;
 position:relative;
 top:-22px;
+z-indez:1;
 }
 
 
@@ -401,7 +401,6 @@ top:-22px;
 margin:0 auto;
 position:relative;
 top:-58px;
-left:-100px;
 display:inline-block;
 clear:both;
 
@@ -414,7 +413,6 @@ display:inline-block;
 clear:both;
 position:relative;
 top:-10px;
-left:-50px;
 }
   
 .navlistitem
@@ -632,6 +630,7 @@ background-image:url([[pix:socialwiki|editbutton_hover]]);
 
 #socialwiki_backbutton
 {
+position:absolute;
 margin-right:5px;
 width:50px;
 height:50px;
@@ -652,6 +651,7 @@ background-image:url([[pix:socialwiki|backbutton_hover]]);
 
 #socialwiki_forwardbutton
 {
+position:absolute;
 margin-right:5px;
 width:50px;
 height:50px;
@@ -766,7 +766,6 @@ display:inline-block;
 text-align:center;
 width:100%;
 }
-
 
 
 
