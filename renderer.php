@@ -529,12 +529,12 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 		$html .= html_writer::start_tag('ul', array('id' => 'socialwiki_bflist', 'class' => 'horizontal_list'));
 		$html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
 		$html .= html_writer::start_span('socialwiki_navspan');
-		$html .= html_writer::link('','', array('id' => 'forwardbutton'));
+		$html .= html_writer::link('','', array('id' => 'socialwiki_forwardbutton'));
 		$html .= html_writer::end_span();
 		$html .= html_writer::end_tag('li');
 		$html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
 		$html .= html_writer::start_span('socialwiki_navspan');
-		$html .= html_writer::link('','', array('id' => 'backbutton'));
+		$html .= html_writer::link('','', array('id' => 'socialwiki_backbutton'));
 		$html .= html_writer::end_span();
 		$html .= html_writer::end_tag('li');
 		$html .= html_writer::end_tag('ul');
