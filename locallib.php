@@ -1429,7 +1429,7 @@ function socialwiki_unfollow($userfromid,$usertoid){
 	$select='userfromid=? AND usertoid=?';
 	$DB->delete_records_select('socialwiki_follows',$select,array($userfromid,$usertoid));
 }
-
+//returns true if the user likes the page
 function socialwiki_liked($userid,$pageid){
 Global $DB;
 	$sql='SELECT * 
@@ -1452,5 +1452,5 @@ function socialwiki_add_like($userid,$pageid){
 function socialwiki_delete_like($userid,$pageid){
 	Global $DB;
 	$select='userid=? AND pageid=?';
-	$DB->delete_records_select('socialwiki_likes',$select,array($userfromid,$usertoid));
+	$DB->delete_records_select('socialwiki_likes',$select,array($userid,$pageid));
 }

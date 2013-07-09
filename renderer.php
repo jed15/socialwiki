@@ -518,8 +518,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 	//Outputs the html for the socialwiki navbar
 	public function pretty_navbar($pageid)
 	{
-		global $CFG;
-
+		global $CFG,$PAGE;
 		$html  = '';
 		$html .= html_writer::start_div('', array('id' => 'socialwiki_nav'));
 		$html .= html_writer::start_div('', array('id' => 'socialwiki_container'));
@@ -578,10 +577,10 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 		$html .= html_writer::start_div('', array('id' => 'socialwiki_socialbuttons'));
 		$html .= html_writer::start_tag('ul', array('id' => 'socialwiki_socialbuttons', 'class' => 'horizontal_list'));
 		$html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
-		$html .= html_writer::link('','', array('id' => 'socialwiki_likebutton', 'like' =>'yes'));
+		$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/like.php?pageid='.$pageid.'&from='.urlencode($PAGE->url->out()),'', array('id' => 'socialwiki_likebutton', 'like' =>'yes'));
 		$html .= html_writer::end_tag('li');
 		$html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
-		$html .= html_writer::link('','', array('id' => 'socialwiki_friendbutton'));
+		$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/follow.php?pageid='.$pageid.'&from='.urlencode($PAGE->url->out()),'', array('id' => 'socialwiki_friendbutton'));
 		$html .= html_writer::end_tag('li');
 		$html .= html_writer::end_tag('li');
 		$html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
