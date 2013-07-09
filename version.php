@@ -33,7 +33,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$module->version   = 2013061101;      // The current module version (Date: YYYYMMDDXX)
+$module->version   = 2013070901;      // The current module version (Date: YYYYMMDDXX)
 $module->requires  = 2010031900;      // Requires this Moodle version
 $module->component = 'mod_socialwiki';       // Full name of the plugin (used for diagnostics)
 $module->cron      = 0;
