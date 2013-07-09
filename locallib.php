@@ -1431,13 +1431,12 @@ function socialwiki_unfollow($userfromid,$usertoid){
 }
 //returns true if the user likes the page
 function socialwiki_liked($userid,$pageid){
-Global $DB;
+global $DB;
 	$sql='SELECT * 
 		  FROM {socialwiki_likes}
 		  WHERE userid=? AND pageid=?';
 		  
 	return $DB->record_exists_sql($sql,array($userid,$pageid));
-
 }
 //add a like
 function socialwiki_add_like($userid,$pageid){
@@ -1453,4 +1452,15 @@ function socialwiki_delete_like($userid,$pageid){
 	Global $DB;
 	$select='userid=? AND pageid=?';
 	$DB->delete_records_select('socialwiki_likes',$select,array($userid,$pageid));
+}
+
+//get page's author
+function socialwiki_get_author($pageid)
+{
+	global $DB;
+		$sql='SELECT userid 
+		  FROM {socialwiki_pages}
+		  WHERE id=?';
+		  
+	return $DB->get_record_sql($sql,array($pageid));
 }

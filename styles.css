@@ -491,7 +491,8 @@ background-repeat:no-repeat;
 background-image:url([[pix:socialwiki|badbutton_hover]]);
 }
 
-#socialwiki_friendbutton
+
+#socialwiki_friendbutton[friend="yes"]
 {
 margin-right:5px;
 width:50px;
@@ -501,7 +502,7 @@ background-repeat:no-repeat;
 background-image:url([[pix:socialwiki|followbutton]]);
 }
 
-#socialwiki_friendbutton:hover
+#socialwiki_friendbutton[friend="yes"]:hover
 {
 margin-right:5px;
 width:50px;
@@ -509,6 +510,26 @@ height:50px;
 display:inline-block;
 background-repeat:no-repeat;
 background-image:url([[pix:socialwiki|followbutton_hover]]);
+}
+
+#socialwiki_friendbutton[friend="no"]
+{
+margin-right:5px;
+width:50px;
+height:50px;
+display:inline-block;
+background-repeat:no-repeat;
+background-image:url([[pix:socialwiki|unfollowbutton]]);
+}
+
+#socialwiki_friendbutton[friend="no"]:hover
+{
+margin-right:5px;
+width:50px;
+height:50px;
+display:inline-block;
+background-repeat:no-repeat;
+background-image:url([[pix:socialwiki|unfollowbutton_hover]]);
 }
 
 #socialwiki_managebutton
