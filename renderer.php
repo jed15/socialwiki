@@ -527,12 +527,12 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 		//Back/Forward buttons
 		$html .= html_writer::start_div('', array('id' => 'socialwiki_bfbuttons'));
 		$html .= html_writer::start_tag('ul', array('id' => 'socialwiki_bflist', 'class' => 'horizontal_list'));
-		$html .= html_writer::start_tag('li', array('class' => 'navlistitem'));
+		$html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
 		$html .= html_writer::start_span('socialwiki_navspan');
 		$html .= html_writer::link('','', array('id' => 'forwardbutton'));
 		$html .= html_writer::end_span();
 		$html .= html_writer::end_tag('li');
-		$html .= html_writer::start_tag('li', array('class' => 'navlistitem'));
+		$html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
 		$html .= html_writer::start_span('socialwiki_navspan');
 		$html .= html_writer::link('','', array('id' => 'backbutton'));
 		$html .= html_writer::end_span();
@@ -543,22 +543,22 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 		//Page navigation buttons
 		$html .= html_writer::start_div('', array('id' => 'socialwiki_navbuttons'));
 		$html .= html_writer::start_tag('ul', array('id' => 'socialwiki_navlist', 'class' => 'horizontal_list'));
-		$html .= html_writer::start_tag('li', array('class' => 'navlistitem'));
+		$html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
 		$html .= html_writer::start_span('socialwiki_navspan');
 		$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$pageid,'', array('id' => 'socialwiki_viewbutton'));
 		$html .= html_writer::end_span();
 		$html .= html_writer::end_tag('li');
-		$html .= html_writer::start_tag('li', array('class' => 'navlistitem'));
+		$html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
 		$html .= html_writer::start_span('socialwiki_navspan');
 		$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/edit.php?pageid='.$pageid,'', array('id' => 'socialwiki_editbutton'));
 		$html .= html_writer::end_span();
 		$html .= html_writer::end_tag('li');
-		$html .= html_writer::start_tag('li', array('class' => 'navlistitem'));
+		$html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
 		$html .= html_writer::start_span('socialwiki_navspan');
 		$html .= html_writer::link('','', array('id' => 'socialwiki_versionbutton'));
 		$html .= html_writer::end_span();
 		$html .= html_writer::end_tag('li');
-		$html .= html_writer::start_tag('li', array('class' => 'navlistitem'));
+		$html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
 		$html .= html_writer::start_span('socialwiki_navspan');
 		$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/comments.php?pageid='.$pageid,'', array('id' => 'socialwiki_commentsbutton'));
 		$html .= html_writer::end_span();
@@ -577,14 +577,14 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 		//Social buttons
 		$html .= html_writer::start_div('', array('id' => 'socialwiki_socialbuttons'));
 		$html .= html_writer::start_tag('ul', array('id' => 'socialwiki_socialbuttons', 'class' => 'horizontal_list'));
-		$html .= html_writer::start_tag('li', array('class' => 'navlistitem'));
+		$html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
 		$html .= html_writer::link('','', array('id' => 'socialwiki_likebutton', 'like' =>'yes'));
 		$html .= html_writer::end_tag('li');
-		$html .= html_writer::start_tag('li', array('class' => 'navlistitem'));
+		$html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
 		$html .= html_writer::link('','', array('id' => 'socialwiki_friendbutton'));
 		$html .= html_writer::end_tag('li');
 		$html .= html_writer::end_tag('li');
-		$html .= html_writer::start_tag('li', array('class' => 'navlistitem'));
+		$html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
 		$html .= html_writer::link('','', array('id' => 'socialwiki_managebutton'));
 		$html .= html_writer::end_tag('li');
 		$html .= html_writer::end_tag('ul');
