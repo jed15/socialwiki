@@ -2724,8 +2724,8 @@ class page_socialwiki_manage extends page_socialwiki{
 	function print_content(){
 		Global $USER,$PAGE,$OUTPUT,$CFG;
 		//get the follows and likes for a user
-		$follows=socialwiki_getfollows($USER->id);
-		$likes=socialwiki_getlikes($USER->id);
+		$follows=socialwiki_get_follows($USER->id,$this->subwiki->id);
+		$likes=socialwiki_getlikes($USER->id,$this->subwiki->id);
 		
 		$html=$this->wikioutput->content_area_begin();
 		$html.=$OUTPUT->container_start('socialwiki_manageheading');

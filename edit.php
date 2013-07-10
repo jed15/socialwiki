@@ -90,7 +90,7 @@ if ($option == get_string('save', 'socialwiki')) {
 		$newpage = socialwiki_get_page($newpageid);
 		$wikipage = new page_socialwiki_save($wiki, $subwiki, $cm, $makenew);
 		$wikipage->set_page($newpage);
-        socialwiki_add_like($USER->id,$newpageid);
+        socialwiki_add_like($USER->id,$newpageid,$subwiki->id);
 	}
 	else
 	{

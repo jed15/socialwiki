@@ -593,7 +593,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 		$html .= html_writer::end_tag('li');
 		$html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
 		$userto = socialwiki_get_author($pageid);
-		if (socialwiki_is_following($USER->id,$userto->userid))
+		if (socialwiki_is_following($USER->id,$userto->userid,$page->subwikiid))
 		{
 		$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/follow.php?pageid='.$pageid.'&from='.urlencode($PAGE->url->out()),'', array('id' => 'socialwiki_friendbutton',  'friend' => 'no'));
 		}
