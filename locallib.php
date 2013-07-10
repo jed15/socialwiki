@@ -35,6 +35,7 @@
 require_once($CFG->dirroot . '/mod/socialwiki/lib.php');
 require_once($CFG->dirroot . '/mod/socialwiki/parser/parser.php');
 require_once($CFG->libdir . '/filelib.php');
+require_once($CFG->dirroot.'/tag/lib.php');
 
 define('SOCIALWIKI_REFRESH_CACHE_TIME', 30); // @TODO: To be deleted.
 define('SOCIALFORMAT_CREOLE', '37');
@@ -1429,6 +1430,16 @@ function socialwiki_unfollow($userfromid,$usertoid){
 	$select='userfromid=? AND usertoid=?';
 	$DB->delete_records_select('socialwiki_follows',$select,array($userfromid,$usertoid));
 }
+
+//get the user ids of all users the user is following
+function socialwiki_getfollows($userid){
+	Global $DB;
+	$sql='SELECT usertoid 
+		  FROM {socialwiki_follows}
+		  WHERE userfromid=?';
+	return $DB->delete_records_sql($sql,array($userid));	  
+}
+
 //returns true if the user likes the page
 function socialwiki_liked($userid,$pageid){
 global $DB;
@@ -1454,6 +1465,24 @@ function socialwiki_delete_like($userid,$pageid){
 	$DB->delete_records_select('socialwiki_likes',$select,array($userid,$pageid));
 }
 
+//get the number of likes for a page
+function socialwiki_numlikes($pageid){
+	global $DB;
+	$sql='SELECT * 
+		  FROM {socialwiki_likes}
+		  WHERE pageid=?';
+	return count($DB->get_records_sql($sql,array($pageid)));
+}
+
+//return all the pages the user likes
+function socialwiki_getlikes($userid){
+global $DB;
+	$sql='SELECT pageid 
+		  FROM {socialwiki_likes}
+		  WHERE userid=?';
+	return $DB->get_records_sql($sql,array($userid));
+}
+
 //get page's author
 function socialwiki_get_author($pageid)
 {
@@ -1464,3 +1493,5 @@ function socialwiki_get_author($pageid)
 		  
 	return $DB->get_record_sql($sql,array($pageid));
 }
+
+

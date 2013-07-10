@@ -108,6 +108,8 @@ switch ($action) {
 case 'create':
     $newpageid = $wikipage->create_page($title);
     add_to_log($course->id, 'socialwiki', 'add page', "view.php?pageid=".$newpageid, $newpageid, $cm->id);
+	//have the user like the page they are creating
+	socialwiki_add_like($USER->id,$newpageid);
     redirect($CFG->wwwroot . '/mod/socialwiki/edit.php?pageid='.$newpageid."&makenew=1");
     break;
 case 'new':
@@ -115,6 +117,8 @@ case 'new':
     if ((int)$wiki->forceformat == 1 && $title != get_string('newpage', 'socialwiki')) {
         $newpageid = $wikipage->create_page($title);
         add_to_log($course->id, 'socialwiki', 'add page', "view.php?pageid=".$newpageid, $newpageid, $cm->id);
+		//have the user like the page they are creating
+		socialwiki_add_like($USER->id,$newpageid);
         redirect($CFG->wwwroot . '/mod/socialwiki/edit.php?pageid='.$newpageid."&makenew=1");
     } else {
         $wikipage->print_header();
