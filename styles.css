@@ -724,7 +724,6 @@ height:1000px;
 background-image:url([[pix:socialwiki|background]]);
 padding-top:50px;
 overflow:hidden;
-text-align:center;
 }
 
 .wikipage
@@ -813,4 +812,12 @@ width:100%;
 .socialwiki_username
 {
 	margin-left:10px;
+}
+.following .like
+{
+	margin-left:5px;
+}
+.socialwiki_manageheading
+{
+text-align:center;
 }
