@@ -96,6 +96,7 @@ abstract class page_socialwiki {
      */
     function __construct($wiki, $subwiki, $cm) {
         global $PAGE, $CFG;
+		$PAGE->requires->js(new moodle_url("/mod/socialwiki/view.js"));
         $this->subwiki = $subwiki;
         $this->modcontext = context_module::instance($PAGE->cm->id);
 
@@ -293,13 +294,6 @@ class page_socialwiki_view extends page_socialwiki {
      * @var int the coursemodule id
      */
     private $coursemodule;
-
-	function __construct($wiki, $subwiki, $cm)
-	{
- 		global $PAGE, $CFG;
-		parent::__construct($wiki, $subwiki, $cm);
-		$PAGE->requires->js(new moodle_url("/mod/socialwiki/view.js"));
-	}
 
     function print_header() {
         global $PAGE;
@@ -2731,11 +2725,12 @@ class page_socialwiki_manage extends page_socialwiki{
 		//get the follows and likes for a user
 		$follows=socialwiki_getfollows($USER->id);
 		$likes=socialwiki_getlikes($USER->id);
-		echo $OUTPUT->heading('FOLLOWING');
+		
+		$html=$this->wikioutput->content_area_begin();
+		$html.= $OUTPUT->heading('FOLLOWING',1,'whitetext');
 		if (count($follows)==0){
 			echo $OUTPUT->heading('You are not following anyone');
 		}else{
-			$html=''; //the html to be displayed
 			//display all the users being followed by the current user
 			foreach($follows as $follow){
 				$user = socialwiki_get_user_info($follow->usertoid);
@@ -2743,13 +2738,13 @@ class page_socialwiki_manage extends page_socialwiki{
 				$picture = $OUTPUT->user_picture($user, array('popup' => true));
 				$html .= $OUTPUT->container_start('following','following_'.$user->id);
 				$html.=$picture;
-				$html.=html_writer::link($userlink->out(false),fullname($user),array('class'=>'socialwiki_username'));
-				$html.=html_writer::link('/mod/socialwiki/follow.php?user2='.$follow->usertoid.'&from='.urlencode($PAGE->url->out()),'Unfollow',array('class'=>'socialwiki_unfollowlink'));
+				$html.=html_writer::link($userlink->out(false),fullname($user),array('class'=>'socialwiki_username socialwiki_link'));
+				$html.=html_writer::link('/mod/socialwiki/follow.php?user2='.$follow->usertoid.'&from='.urlencode($PAGE->url->out()),'Unfollow',array('class'=>'socialwiki_unfollowlink socialwiki_link'));
 				$html .= $OUTPUT->container_end();
 			}
 			echo $html;
 		}
-		echo $OUTPUT->heading('LIKES');
+		echo $OUTPUT->heading('LIKES',1,'whitetext');
 		if (count($likes)==0){
 			echo $OUTPUT->heading('You have no likes');
 		}else{
@@ -2758,13 +2753,14 @@ class page_socialwiki_manage extends page_socialwiki{
 			foreach($likes as $like){
 				$page=socialwiki_get_page($like->pageid);
 				$html .= $OUTPUT->container_start('following','following_'.$user->id);
-				$html.=$page->title;
-				$html.=html_writer::link('/mod/socialwiki/view.php?pageid='.$page->id,'  (View)');
-				$html.=html_writer::link('/mod/socialwiki/like.php?pageid='.$page->id.'&from='.urlencode($PAGE->url->out()),'Unlike',array('class'=>'socialwiki_unlikelink'));
+				$html.=html_writer::link('/mod/socialwiki/view.php?pageid='.$page->id,$page->title,array('class'=>'socialwiki_link'));
+				$html.=html_writer::link('/mod/socialwiki/like.php?pageid='.$page->id.'&from='.urlencode($PAGE->url->out()),'Unlike',array('class'=>'socialwiki_unlikelink socialwiki_link'));
 				$html .= $OUTPUT->container_end();
 			}
-			echo $html;
+			
 		}
+		$html.=$this->wikioutput->content_area_end();
+		echo $html;
 	}
 	
 	function set_url() {
