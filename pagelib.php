@@ -2728,9 +2728,13 @@ class page_socialwiki_manage extends page_socialwiki{
 		$likes=socialwiki_getlikes($USER->id);
 		
 		$html=$this->wikioutput->content_area_begin();
+		$html.=$OUTPUT->container_start('socialwiki_manageheading');
 		$html.= $OUTPUT->heading('FOLLOWING',1,'whitetext');
+		$html.=$OUTPUT->container_end();
 		if (count($follows)==0){
-			echo $OUTPUT->heading('You are not following anyone');
+			$html.=$OUTPUT->container_start('socialwiki_manageheading');
+			$html.= $OUTPUT->heading('You are not following anyone');
+			$html.=$OUTPUT->container_end();
 		}else{
 			//display all the users being followed by the current user
 			foreach($follows as $follow){
@@ -2743,17 +2747,20 @@ class page_socialwiki_manage extends page_socialwiki{
 				$html.=html_writer::link('/mod/socialwiki/follow.php?user2='.$follow->usertoid.'&from='.urlencode($PAGE->url->out()),'Unfollow',array('class'=>'socialwiki_unfollowlink socialwiki_link'));
 				$html .= $OUTPUT->container_end();
 			}
-			echo $html;
+		
 		}
-		echo $OUTPUT->heading('LIKES',1,'whitetext');
+		$html.=$OUTPUT->container_start('socialwiki_manageheading');
+		$html.='<br/><br/><br/>'. $OUTPUT->heading('LIKES',1,'whitetext');
+		$html.=$OUTPUT->container_end();
 		if (count($likes)==0){
-			echo $OUTPUT->heading('You have no likes');
+			$html.=$OUTPUT->container_start('socialwiki_manageheading');
+			$html.= $OUTPUT->heading('You have no likes');
+			$html.=$OUTPUT->container_end();
 		}else{
-			$html=''; //the html to be displayed
 			//display all the pages the current user likes
 			foreach($likes as $like){
 				$page=socialwiki_get_page($like->pageid);
-				$html .= $OUTPUT->container_start('following','following_'.$user->id);
+				$html .= $OUTPUT->container_start('like','like_'.$page->id);
 				$html.=html_writer::link('/mod/socialwiki/view.php?pageid='.$page->id,$page->title,array('class'=>'socialwiki_link'));
 				$html.=html_writer::link('/mod/socialwiki/like.php?pageid='.$page->id.'&from='.urlencode($PAGE->url->out()),'Unlike',array('class'=>'socialwiki_unlikelink socialwiki_link'));
 				$html .= $OUTPUT->container_end();
