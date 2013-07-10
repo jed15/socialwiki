@@ -604,7 +604,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 		$html .= html_writer::end_tag('li');
 		$html .= html_writer::end_tag('li');
 		$html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
-		$html .= html_writer::link('','', array('id' => 'socialwiki_managebutton'));
+		$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/manage.php?pageid='.$pageid,'', array('id' => 'socialwiki_managebutton'));
 		$html .= html_writer::end_tag('li');
                 
                 $html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
