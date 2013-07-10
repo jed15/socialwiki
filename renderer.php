@@ -571,7 +571,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 
 	
 		//Search box
-        $html .=  '<div id="socialwiki_search">
+                $html .=  '<div id="socialwiki_search">
                     <form id="socialwiki_searchform">
                         <input id="socialwiki_searchbox" type="text" value="Search..."></input>
                     </form>
@@ -622,6 +622,21 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 		return $html;	
 	}
         
+        public function content_area_begin()
+        {
+                $html = '';
+                $html .= html_writer::start_div('wikicontent');
+                return $html;
+        }
+
+        public function content_area_end()
+        {
+                $html = '';
+                $html .= html_writer::end_div();
+                return $html;
+        }
+
+        
         //Outputs the main socialwiki view area, under the toolbar
         public function viewing_area($pagetitle, $pagecontent, $page)
         {
@@ -629,7 +644,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 
                 $html = '';
                 
-                $html .= html_writer::start_div('wikicontent');
+                $html .= $this->content_area_begin();
                 $html .= html_writer::start_div('wikipage');
                 $html .= html_writer::start_div('wikititle');
                 $html .= html_writer::tag('h1', $pagetitle);
@@ -644,11 +659,10 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
                 $html .= $pagecontent;
                 $html .= html_writer::end_div();
                 $html .= html_writer::end_div();
-                $html .= html_writer::end_div();
+                $html .= $this->content_area_end();
                 return $html;
         }
-
-
+        
     /**
      * Internal function - creates htmls structure suitable for YUI tree.
      */
