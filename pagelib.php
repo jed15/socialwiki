@@ -98,12 +98,13 @@ abstract class page_socialwiki {
         global $PAGE, $CFG;
         $this->subwiki = $subwiki;
         $this->modcontext = context_module::instance($PAGE->cm->id);
-
+		
         // initialise wiki renderer
         $this->wikioutput = $PAGE->get_renderer('mod_socialwiki');
         $PAGE->set_cacheable(true);
         $PAGE->set_cm($cm);
         $PAGE->set_activity_record($wiki);
+		$PAGE->requires->jquery();
         // the search box
         //$PAGE->set_button(socialwiki_search_form($cm));
     }

@@ -296,8 +296,9 @@ class page_socialwiki_view extends page_socialwiki {
 
 	function __construct($wiki, $subwiki, $cm)
 	{
+ 		global $PAGE, $CFG;
 		parent::__construct($wiki, $subwiki, $cm);
-		
+		$PAGE->requires->js(new moodle_url("/mod/socialwiki/view.js"));
 	}
 
     function print_header() {
