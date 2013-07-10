@@ -271,7 +271,6 @@ function socialwiki_save_page($wikipage, $newcontent, $userid) {
 
 function socialwiki_refresh_cachedcontent($page, $newcontent = null) {
     global $DB;
-
     $version = socialwiki_get_current_version($page->id);
     if (empty($version)) {
         return null;

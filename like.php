@@ -26,7 +26,15 @@
 		$firstpage=socialwiki_get_first_page($subwiki->id);
 		//delete pages with no likes as long as it's not the first page
 		if($likes==0&&$page!=$firstpage){
-			socialwiki_delete_pages($context,array($pageid)); 
+                        $pagelist = socialwiki_get_linked_from_pages($pageid);
+			socialwiki_delete_pages($context,array($pageid));
+                        foreach ($pagelist as $refreshpage)
+                        {
+                                if ($refreshpage->frompageid != $refreshpage->topageid)
+                                {
+                                        socialwiki_refresh_cachedcontent(socialwiki_get_page($refreshpage->frompageid));
+                                }
+                        }
 			redirect($CFG->wwwroot .'/mod/socialwiki/view.php?pageid='.$firstpage->id);
 		}
 	}else{
