@@ -1440,7 +1440,7 @@ function socialwiki_getfollows($userid){
 	$sql='SELECT usertoid 
 		  FROM {socialwiki_follows}
 		  WHERE userfromid=?';
-	return $DB->delete_records_sql($sql,array($userid));	  
+	return $DB->get_records_sql($sql,array($userid));	  
 }
 
 //returns true if the user likes the page

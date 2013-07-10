@@ -799,4 +799,12 @@ width:100%;
 }
 
 
+.socialwiki_unfollowlink,.socialwiki_unlikelink
+{
+	margin-left:50px;
+}
 
+.socialwiki_username
+{
+	margin-left:10px;
+}

@@ -2718,3 +2718,57 @@ class page_socialwiki_admin extends page_socialwiki {
         }
     }
 }
+class page_socialwiki_manage extends page_socialwiki{
+	
+	function print_content(){
+		Global $USER,$PAGE,$OUTPUT,$CFG;
+		//get the follows and likes for a user
+		$follows=socialwiki_getfollows($USER->id);
+		$likes=socialwiki_getlikes($USER->id);
+		echo $OUTPUT->heading('FOLLOWING');
+		if (count($follows)==0){
+			echo $OUTPUT->heading('You are not following anyone');
+		}else{
+			$html=''; //the html to be displayed
+			//display all the users being followed by the current user
+			foreach($follows as $follow){
+				$user = socialwiki_get_user_info($follow->usertoid);
+				$userlink = new moodle_url('/user/view.php', array('id' => $user->id, 'course' => $PAGE->cm->course));
+				$picture = $OUTPUT->user_picture($user, array('popup' => true));
+				$html .= $OUTPUT->container_start('following','following_'.$user->id);
+				$html.=$picture;
+				$html.=html_writer::link($userlink->out(false),fullname($user),array('class'=>'socialwiki_username'));
+				$html.=html_writer::link('/mod/socialwiki/follow.php?user2='.$follow->usertoid.'&from='.urlencode($PAGE->url->out()),'Unfollow',array('class'=>'socialwiki_unfollowlink'));
+				$html .= $OUTPUT->container_end();
+			}
+			echo $html;
+		}
+		echo $OUTPUT->heading('LIKES');
+		if (count($likes)==0){
+			echo $OUTPUT->heading('You have no likes');
+		}else{
+			$html=''; //the html to be displayed
+			//display all the pages the current user likes
+			foreach($likes as $like){
+				$page=socialwiki_get_page($like->pageid);
+				$html .= $OUTPUT->container_start('following','following_'.$user->id);
+				$html.=$page->title;
+				$html.=html_writer::link('/mod/socialwiki/view.php?pageid='.$page->id,'  (View)');
+				$html.=html_writer::link('/mod/socialwiki/like.php?pageid='.$page->id.'&from='.urlencode($PAGE->url->out()),'Unlike',array('class'=>'socialwiki_unlikelink'));
+				$html .= $OUTPUT->container_end();
+			}
+			echo $html;
+		}
+	}
+	
+	function set_url() {
+        global $PAGE, $CFG;
+        $params = array('pageid' => $this->page->id);
+		$PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/manage.php', $params);
+	}
+	protected function create_navbar() {
+        global $PAGE, $CFG;
+        parent::create_navbar();
+        $PAGE->navbar->add(get_string('manage', 'socialwiki'), $CFG->wwwroot . '/mod/socialwiki/manage.php?pageid=' . $this->page->id);
+    }
+}
