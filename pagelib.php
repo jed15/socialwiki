@@ -96,7 +96,6 @@ abstract class page_socialwiki {
      */
     function __construct($wiki, $subwiki, $cm) {
         global $PAGE, $CFG;
-		$PAGE->requires->js(new moodle_url("/mod/socialwiki/view.js"));
         $this->subwiki = $subwiki;
         $this->modcontext = context_module::instance($PAGE->cm->id);
 
@@ -294,6 +293,13 @@ class page_socialwiki_view extends page_socialwiki {
      * @var int the coursemodule id
      */
     private $coursemodule;
+
+	function __construct($wiki, $subwiki, $cm)
+	{
+ 		global $PAGE, $CFG;
+		parent::__construct($wiki, $subwiki, $cm);
+		$PAGE->requires->js(new moodle_url("/mod/socialwiki/view.js"));
+	}
 
     function print_header() {
         global $PAGE;

@@ -405,7 +405,11 @@ clear:both;
 .socialwiki_navlistitem
 {
   float:left;
-  margin: 0px 0px 0px 0px;
+  color:white;
+  margin-left:3px;
+  margin-right:3px;
+  margin-top: 0px;
+  margin-bottom:0px;
 }
 
 .horizontal_list
@@ -418,16 +422,12 @@ clear:both;
 #socialwiki_container
 {
 width:100%;
-height:51px;
+height:50px;
 text-align:center;
 background-image:url([[pix:socialwiki|toolbar-bg]]);
 background-repeat:repeat;
 }
 
-#socialwiki_viewbutton, #socialwiki_versionbutton, #socialwiki_editbutton, #socialwiki_likebutton, #socialwiki_friendbutton, #socialwiki_backbutton
-{
-color:white;
-}
 
 #socialwiki_searchbox
 {
@@ -660,7 +660,7 @@ right:-110px;
 margin-right:5px;
 width:50px;
 height:50px;
-display:inline-block;
+display:none;
 background-repeat:no-repeat;
 background-image:url([[pix:socialwiki|backbutton]]);
 }
@@ -681,7 +681,7 @@ position:absolute;
 margin-right:5px;
 width:50px;
 height:50px;
-display:inline-block;
+display:none;
 background-repeat:no-repeat;
 background-image:url([[pix:socialwiki|forwardbutton]]);
 }
