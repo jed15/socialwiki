@@ -332,7 +332,6 @@ class page_socialwiki_view extends page_socialwiki {
 
             if (!empty($this->page)) {
                 socialwiki_print_page_content($this->page, $this->modcontext, $this->subwiki->id);
-            	echo $this->wikioutput->prettyview_link($this->page);
                 $wiki = $PAGE->activityrecord;
             } else {
                 print_string('nocontent', 'socialwiki');

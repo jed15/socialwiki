@@ -1219,7 +1219,7 @@ function socialwiki_print_page_content($page, $context, $subwikiid) {
     $html = format_text($html, FORMAT_MOODLE, array('overflowdiv'=>true, 'allowid'=>true));
 	$wikioutput = $PAGE->get_renderer('mod_socialwiki');
 	
-	echo $wikioutput->viewing_area($page->title, $html, $page);
+	echo $wikioutput->viewing_area($page->title, $html);
     //echo $OUTPUT->box($html);
 
     if (!empty($CFG->usetags)) {
