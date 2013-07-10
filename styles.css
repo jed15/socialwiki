@@ -592,6 +592,26 @@ background-repeat:no-repeat;
 background-image:url([[pix:socialwiki|commentsbutton_hover]]);
 }
 
+#socialwiki_homebutton
+{
+margin-right:5px;
+width:50px;
+height:50px;
+display:inline-block;
+background-repeat:no-repeat;
+background-image:url([[pix:socialwiki|homebutton]]);
+}
+
+#socialwiki_homebutton:hover
+{
+margin-right:5px;
+width:50px;
+height:50px;
+display:inline-block;
+background-repeat:no-repeat;
+background-image:url([[pix:socialwiki|homebutton_hover]]);
+}
+
 
 #socialwiki_versionbutton
 {
@@ -635,6 +655,8 @@ background-image:url([[pix:socialwiki|editbutton_hover]]);
 
 #socialwiki_backbutton
 {
+position:absolute;
+right:-110px;
 margin-right:5px;
 width:50px;
 height:50px;
@@ -655,6 +677,7 @@ background-image:url([[pix:socialwiki|backbutton_hover]]);
 
 #socialwiki_forwardbutton
 {
+position:absolute;
 margin-right:5px;
 width:50px;
 height:50px;
