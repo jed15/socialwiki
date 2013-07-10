@@ -719,6 +719,7 @@ background-image:url([[pix:socialwiki|backbutton-disabled]]);
 
 .wikicontent
 {
+text-align:center;
 width:100%;
 height:1000px;
 background-image:url([[pix:socialwiki|background]]);
@@ -810,9 +811,25 @@ text-align:left;
 
 .socialwiki_link
 {
-    color:#86FFFF !important;
+text-decoration:underline;
+font-weight:bold;
+font-style:italic;
+}
+
+.socialwiki_link:link
+{
     display:inline-block;
     margin-left:20px;
+}
+
+.wikicontent .socialwiki_link:link
+{
+color:white;
+}
+
+.wikicontent .socialwiki_link:visited
+{
+color:white;
 }
 
 .socialwiki_username
