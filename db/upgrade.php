@@ -48,19 +48,24 @@ function xmldb_socialwiki_upgrade($oldversion) {
     // Moodle v2.3.0 release upgrade line
     // Put any upgrade step following this
 
-    if ($oldversion < 2013061101) {
+        if ($oldversion < 2013071001) {
 
-        // Define field id to be added to socialwiki_pages.
-        $table = new xmldb_table('socialwiki_pages');
-        $field = new xmldb_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
-
-        // Conditionally launch add field id.
+        // Define field subwikiid to be added to socialwiki_likes.
+        $table = new xmldb_table('socialwiki_likes');
+        $field = new xmldb_field('subwikiid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'pageid');
+		$field2 = new xmldb_field('subwikiid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'usertoid');
+		$table2=new xmldb_table('socialwiki_follows');
+		
+        // Conditionally launch add field subwikiid.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
+		
+		if (!$dbman->field_exists($table2, $field2)) {
+            $dbman->add_field($table2, $field2);
+        }
         // Socialwiki savepoint reached.
-        upgrade_mod_savepoint(true, 2013061101, 'socialwiki');
+        upgrade_mod_savepoint(true, 2013071001, 'socialwiki');
     }
 
 

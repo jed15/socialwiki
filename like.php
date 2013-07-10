@@ -38,6 +38,6 @@
 			redirect($CFG->wwwroot .'/mod/socialwiki/view.php?pageid='.$firstpage->id);
 		}
 	}else{
-		socialwiki_add_like($USER->id,$pageid);
+		socialwiki_add_like($USER->id,$pageid,$subwiki->id);
 	}
 	redirect($from);
