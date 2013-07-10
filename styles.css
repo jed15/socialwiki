@@ -797,6 +797,10 @@ width:100%;
 	text-align:center;
 }
 
+.socialwiki_likelist
+{
+text-align:left;
+}
 
 .socialwiki_unfollowlink,.socialwiki_unlikelink
 {
@@ -806,7 +810,9 @@ width:100%;
 
 .socialwiki_link
 {
-	color:#86FFFF !important;
+    color:#86FFFF !important;
+    display:inline-block;
+    margin-left:20px;
 }
 
 .socialwiki_username
@@ -820,4 +826,14 @@ width:100%;
 .socialwiki_manageheading
 {
 text-align:center;
+}
+
+.socialwiki_followlist
+{
+text-align:left;
+}
+
+.following
+{
+margin-left:25px;
 }
