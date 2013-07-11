@@ -2753,7 +2753,7 @@ class page_socialwiki_manage extends page_socialwiki{
 		$html.=$OUTPUT->container_end();
 		if (count($likes)==0){
 			$html.=$OUTPUT->container_start('socialwiki_manageheading');
-			$html.= $OUTPUT->heading('You have no likes', 3, "whitetext");
+			$html.= $OUTPUT->heading('You have not liked any pages', 3, "whitetext");
 			$html.=$OUTPUT->container_end();
 		}else{
 			//display all the pages the current user likes

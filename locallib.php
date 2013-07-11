@@ -1429,7 +1429,7 @@ function socialwiki_is_following($userfromid,$usertoid,$subwikiid)
 
 function socialwiki_unfollow($userfromid,$usertoid, $subwikiid){
 	Global $DB;
-	$select='userfromid=? AND usertoid=?';
+	$select='userfromid=? AND usertoid=? AND subwikiid=?';
 	$DB->delete_records_select('socialwiki_follows',$select,array($userfromid,$usertoid, $subwikiid));
 }
 
