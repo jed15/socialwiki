@@ -51,7 +51,6 @@ if (!empty($swid)) {
 
 } else {
     $subwiki = socialwiki_get_subwiki_by_group($wid, $group, $uid);
-
     if (!$wiki = socialwiki_get_wiki($wid)) {
         print_error('invalidwikiid', 'socialwiki');
     }
@@ -109,7 +108,8 @@ case 'create':
     $newpageid = $wikipage->create_page($title);
     add_to_log($course->id, 'socialwiki', 'add page', "view.php?pageid=".$newpageid, $newpageid, $cm->id);
 	//have the user like the page they are creating
-	socialwiki_add_like($USER->id,$newpageid,$subwiki->id);
+    $subwikiid = socialwiki_get_page($newpageid)->subwikiid;
+	socialwiki_add_like($USER->id,$newpageid,$subwikiid);
     redirect($CFG->wwwroot . '/mod/socialwiki/edit.php?pageid='.$newpageid."&makenew=1");
     break;
 case 'new':
