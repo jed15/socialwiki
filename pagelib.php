@@ -96,7 +96,7 @@ abstract class page_socialwiki {
      */
     function __construct($wiki, $subwiki, $cm) {
         global $PAGE, $CFG;
-		$PAGE->requires->js(new moodle_url("/mod/socialwiki/view.js"));
+		$PAGE->requires->js(new moodle_url("/mod/socialwiki/toolbar.js"));
         $this->subwiki = $subwiki;
         $this->modcontext = context_module::instance($PAGE->cm->id);
 		
