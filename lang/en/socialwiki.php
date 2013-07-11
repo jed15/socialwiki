@@ -156,6 +156,7 @@ $string['noteditblocks'] = 'Turn edit blocks off';
 $string['notingroup'] = 'Not in group';
 $string['notopages'] = 'This page does not link to other pages';
 $string['notmigrated'] = 'This wiki has not been migrated yet. Please contact your administrator.';
+$string['nonode']= 'The parent node doesn\'t exist';
 $string['noupdatedpages'] = 'There are no updated pages';
 $string['nouser']='A pageid or userid must be passed to follow.php';
 $string['noviewcommentpermission'] = 'View comments permission needed';
