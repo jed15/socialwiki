@@ -518,7 +518,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 	//Outputs the html for the socialwiki navbar
 	public function pretty_navbar($pageid)
 	{
-		global $CFG,$PAGE,$USER;
+		global $CFG,$PAGE,$USER,$COURSE;
                 
                 $page = socialwiki_get_page($pageid);
                 
@@ -569,11 +569,12 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 		$html .= html_writer::end_tag('ul');
 		$html .= html_writer::end_div();
 
-	
 		//Search box
                 $html .=  '<div id="socialwiki_search">
-                    <form id="socialwiki_searchform">
-                        <input id="socialwiki_searchbox" type="text" value="Search..."></input>
+                    <form id="socialwiki_searchform" action="'.$CFG->wwwroot.'/mod/socialwiki/search.php" method="post">
+                        <input id="socialwiki_searchbox" name="searchstring" type="text" value="Search..."></input>
+                        <input type="hidden" name="cmid" value="'.$this->page->cm->id.'"></input>
+                        <input type="hidden" name="courseid" value="'.$COURSE->id.'"></input>
                     </form>
                 </div>';	
 
