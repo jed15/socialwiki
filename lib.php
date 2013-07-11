@@ -102,6 +102,17 @@ function socialwiki_delete_instance($id) {
             $result = false;
         }
 
+        # Get likes and delete them #
+        if (!$DB->delete_records('socialwiki_likes', array('subwikiid' => $subwiki->id), IGNORE_MISSING)) {
+            $result = false;
+        }
+        
+        # Get follows and delete them #
+        if (!$DB->delete_records('socialwiki_follows', array('subwikiid' => $subwiki->id), IGNORE_MISSING)) {
+            $result = false;
+        }
+
+
         # Get existing pages #
         if ($pages = $DB->get_records('socialwiki_pages', array('subwikiid' => $subwiki->id))) {
             foreach ($pages as $page) {
