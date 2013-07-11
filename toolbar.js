@@ -17,5 +17,5 @@ $(document).ready(function(){
         $("#socialwiki_searchbox").attr("value", "Search...");
     });
     
-    
-    });
+
+});
