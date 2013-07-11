@@ -1489,4 +1489,20 @@ function socialwiki_get_author($pageid)
 	return $DB->get_record_sql($sql,array($pageid));
 }
 
+//returns the id of the parent page
+function socialwiki_get_parent($pageid){
+	Global $DB;
+	$sql='SELECT parent
+		  FROM {socialwiki_pages}
+		  WHERE id=?';
+	return $DB->get_record_sql($sql,array($pageid));
+}
 
+//returns the children of a page
+function socialwiki_get_children($pageid){
+	Global $DB;
+	$sql='SELECT *
+		  FROM {socialwiki_pages}
+		  WHERE parent=?';
+	return $DB->get_records_sql($sql,array($pageid));
+}

@@ -27,7 +27,15 @@
 		//delete pages with no likes as long as it's not the first page
 		if($likes==0&&$page!=$firstpage){
                         $pagelist = socialwiki_get_linked_from_pages($pageid);
-			socialwiki_delete_pages($context,array($pageid));
+						$parentid=socialwiki_get_parent($pageid);
+						$children=socialwiki_get_children($pageid);
+						//change the child's parent to be the parent of the page being deleted
+						foreach($children as $child){
+							$child->parent=$parentid->parent;
+							$DB->update_record('socialwiki_pages',$child);
+						}
+						//remove the page from the database
+						socialwiki_delete_pages($context,array($pageid));
                         foreach ($pagelist as $refreshpage)
                         {
                                 if ($refreshpage->frompageid != $refreshpage->topageid)
