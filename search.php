@@ -26,12 +26,13 @@ require_once($CFG->dirroot . '/mod/socialwiki/lib.php');
 require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
 require_once($CFG->dirroot . '/mod/socialwiki/pagelib.php');
 
-$search = optional_param('searchstring', null, PARAM_ALPHANUMEXT);
+$search = optional_param('searchstring', null, PARAM_TEXT);
 $courseid = optional_param('courseid', 0, PARAM_INT);
 $searchcontent = optional_param('searchwikicontent', 0, PARAM_INT);
 $cmid = optional_param('cmid', 0, PARAM_INT);
 
 if (!$course = $DB->get_record('course', array('id' => $courseid))) {
+    echo $courseid;
     print_error('invalidcourseid');
 }
 if (!$cm = get_coursemodule_from_id('socialwiki', $cmid)) {
