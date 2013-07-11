@@ -868,11 +868,13 @@ class page_socialwiki_search extends page_socialwiki {
         global $PAGE;
 		
         require_capability('mod/socialwiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'socialwiki');
+<<<<<<< HEAD
 		
 		echo $this->wikioutput->content_area_begin();
 		echo $this->wikioutput->title_block("Search results for: ".$this->search_string);
         //echo $this->wikioutput->search_result($this->search_result, $this->subwiki);
 		echo $this->wikioutput->content_area_end();
+=======
 		$tree= new socialwiki_tree();
 		//create a tree from the search results
         foreach($this->search_result as $page){
@@ -882,7 +884,7 @@ class page_socialwiki_search extends page_socialwiki {
 		$json=json_encode($tree);
 		//send the tree to javascript
 		echo '<script> var searchResluts='.$json.';</script>';
-
+>>>>>>> 28f8d787d965f1e695bddf4b02a8177d340d1e1c
     }
 }
 
