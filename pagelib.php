@@ -2740,11 +2740,9 @@ class page_socialwiki_manage extends page_socialwiki{
 				$user = socialwiki_get_user_info($follow->usertoid);
 				$userlink = new moodle_url('/user/view.php', array('id' => $user->id, 'course' => $PAGE->cm->course));
 				$picture = $OUTPUT->user_picture($user, array('popup' => true));
-				$html .= $OUTPUT->container_start('following','following_'.$user->id);
 				$html.=$picture;
 				$html.=html_writer::link($userlink->out(false),fullname($user),array('class'=>'socialwiki_username socialwiki_link'));
 				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/follow.php?user2='.$follow->usertoid.'&from='.urlencode($PAGE->url->out()),'Unfollow',array('class'=>'socialwiki_unfollowlink socialwiki_link'));
-				$html .= $OUTPUT->container_end();
 			}
 		
 		}
@@ -2766,9 +2764,8 @@ class page_socialwiki_manage extends page_socialwiki{
 				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/like.php?pageid='.$page->id.'&from='.urlencode($PAGE->url->out()),'Unlike',array('class'=>'socialwiki_unlikelink socialwiki_link'));
 				$html .= "<br/><br/>";
 			}
-			
+			$html .= $OUTPUT->container_end();
 		}
-		$html .= $OUTPUT->container_end();
 
 		$html.=$this->wikioutput->content_area_end();
 		echo $html;

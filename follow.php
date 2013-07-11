@@ -27,30 +27,32 @@
 		$page=socialwiki_get_wiki_page_version($pageid,0);
 		$user2=$page->userid;
 		//check if the user is following themselves
-		if($USER->id==$user2){
-			//display error with a redirect back to the page hey came from
+		if($USER->id==$user2){t
+			//display error with a link back to the page they came from
 			$PAGE->set_context($context);
 			$PAGE->set_cm($cm);
 			$PAGE->set_url('/mod/socialwiki/follow.php');
 			echo $OUTPUT->header();
 			echo $OUTPUT->box_start('generalbox','socialwiki_followerror');
-				echo get_string("cannotfollow", 'socialwiki').'<br/>';
-				echo html_writer::link($from,'Go back');
+                        echo '<p>'.get_string("cannotfollow", 'socialwiki').'</p>'.'<br/>';
+                        echo html_writer::link($from,'Go back');
 			echo $OUTPUT->box_end();
 			echo $OUTPUT->footer();
 		}else{
 		
 			//check if the use is already following the author
-			if(socialwiki_is_following($USER->id,$user2,$subwiki)){
+			if(socialwiki_is_following($USER->id,$user2,$subwiki->id)){
 				//delete the record if the user is already following the author
-				socialwiki_unfollow($USER->id,$user2);
+				socialwiki_unfollow($USER->id,$user2, $subwiki->id);
 			}else{
 				//if the user isn't following the author add a new follow
 				$record=new StdClass();
 				$record->userfromid=$USER->id;
 				$record->usertoid=$user2;
 				$record->subwikiid=$subwiki->id;
-				$DB->insert_record('socialwiki_follows',$record);
+				$DB->insert_record('socialwiki_follows',$record);	
+                                //go back to the page you came from
+                                redirect($from);
 			}
 		}
 		
@@ -59,7 +61,7 @@
 		//check if the use is already following the author
 		if(socialwiki_is_following($USER->id,$user2,$subwiki)){
 			//delete the record if the user is already following the author
-			socialwiki_unfollow($USER->id,$user2);
+			socialwiki_unfollow($USER->id,$user2, $subwiki->id);
 		}else{
 			//if the user isn't following the author add a new follow
 			$record=new StdClass();
@@ -67,11 +69,11 @@
 			$record->usertoid=$user2;
 			$record->subwikiid=$subwiki->id;
 			$DB->insert_record('socialwiki_follows',$record);
+                        //go back to the page you came from
+                        redirect($from);
 		}
 	}else{
 		print_error('nouser','socialwiki');
 	}
-	//go back to the page you came from
-	redirect($from);
 	
 

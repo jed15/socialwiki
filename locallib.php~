@@ -1404,12 +1404,12 @@ function socialwiki_get_updated_pages_by_subwiki($swid) {
  *returns an array of all the people the user is following
  *@param int $userid the users id
  */
-function socialwiki_get_follows($userid){
+function socialwiki_get_follows($userid,$subwikiid){
 	global $DB;
 	$sql='SELECT usertoid 
 		  FROM {socialwiki_follows}
-		  WHERE userfromid=?';
-	return $DB->get_records_sql($sql,array($userid));
+		  WHERE userfromid=? AND subwikiid=?';
+	return $DB->get_records_sql($sql,array($userid,$subwikiid));
 }
 
 /*
@@ -1417,30 +1417,22 @@ function socialwiki_get_follows($userid){
  *@param int $userfromid the user doing the following
  *@param int $usertoid the user being followed
  */
-function socialwiki_is_following($userfromid,$usertoid)
+function socialwiki_is_following($userfromid,$usertoid,$subwikiid)
 {
 	Global $DB;
 	$sql='SELECT usertoid 
 		  FROM {socialwiki_follows}
-		  WHERE userfromid=? AND usertoid=?';
+		  WHERE userfromid=? AND usertoid=? AND subwikiid= ?';
 		  
-	return $DB->record_exists_sql($sql,array($userfromid,$usertoid));
+	return $DB->record_exists_sql($sql,array($userfromid,$usertoid,$subwikiid));
 }
 
-function socialwiki_unfollow($userfromid,$usertoid){
+function socialwiki_unfollow($userfromid,$usertoid, $subwikiid){
 	Global $DB;
 	$select='userfromid=? AND usertoid=?';
 	$DB->delete_records_select('socialwiki_follows',$select,array($userfromid,$usertoid));
 }
 
-//get the user ids of all users the user is following
-function socialwiki_getfollows($userid){
-	Global $DB;
-	$sql='SELECT usertoid 
-		  FROM {socialwiki_follows}
-		  WHERE userfromid=?';
-	return $DB->get_records_sql($sql,array($userid));	  
-}
 
 //returns true if the user likes the page
 function socialwiki_liked($userid,$pageid){
@@ -1452,11 +1444,12 @@ global $DB;
 	return $DB->record_exists_sql($sql,array($userid,$pageid));
 }
 //add a like
-function socialwiki_add_like($userid,$pageid){
+function socialwiki_add_like($userid,$pageid,$subwikiid){
 	Global $DB;
 	$like=new stdClass();
 	$like->userid=$userid;
 	$like->pageid=$pageid;
+	$like->subwikiid=$subwikiid;
 	$DB->insert_record('socialwiki_likes',$like);
 }
 
@@ -1477,12 +1470,12 @@ function socialwiki_numlikes($pageid){
 }
 
 //return all the pages the user likes
-function socialwiki_getlikes($userid){
+function socialwiki_getlikes($userid,$subwikiid){
 global $DB;
 	$sql='SELECT pageid 
 		  FROM {socialwiki_likes}
-		  WHERE userid=?';
-	return $DB->get_records_sql($sql,array($userid));
+		  WHERE userid=? and subwikiid=?';
+	return $DB->get_records_sql($sql,array($userid,$subwikiid));
 }
 
 //get page's author

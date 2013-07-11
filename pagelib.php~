@@ -2724,8 +2724,8 @@ class page_socialwiki_manage extends page_socialwiki{
 	function print_content(){
 		Global $USER,$PAGE,$OUTPUT,$CFG;
 		//get the follows and likes for a user
-		$follows=socialwiki_getfollows($USER->id);
-		$likes=socialwiki_getlikes($USER->id);
+		$follows=socialwiki_get_follows($USER->id,$this->subwiki->id);
+		$likes=socialwiki_getlikes($USER->id,$this->subwiki->id);
 		
 		$html=$this->wikioutput->content_area_begin();
 		$html.=$OUTPUT->container_start('socialwiki_manageheading');
@@ -2740,11 +2740,9 @@ class page_socialwiki_manage extends page_socialwiki{
 				$user = socialwiki_get_user_info($follow->usertoid);
 				$userlink = new moodle_url('/user/view.php', array('id' => $user->id, 'course' => $PAGE->cm->course));
 				$picture = $OUTPUT->user_picture($user, array('popup' => true));
-				$html .= $OUTPUT->container_start('following','following_'.$user->id);
 				$html.=$picture;
 				$html.=html_writer::link($userlink->out(false),fullname($user),array('class'=>'socialwiki_username socialwiki_link'));
-				$html.=html_writer::link('/mod/socialwiki/follow.php?user2='.$follow->usertoid.'&from='.urlencode($PAGE->url->out()),'Unfollow',array('class'=>'socialwiki_unfollowlink socialwiki_link'));
-				$html .= $OUTPUT->container_end();
+				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/follow.php?user2='.$follow->usertoid.'&from='.urlencode($PAGE->url->out()),'Unfollow',array('class'=>'socialwiki_unfollowlink socialwiki_link'));
 			}
 		
 		}
@@ -2762,8 +2760,8 @@ class page_socialwiki_manage extends page_socialwiki{
 			$html .= $OUTPUT->container_start('socialwiki_likelist');
 			foreach($likes as $like){
 				$page=socialwiki_get_page($like->pageid);
-				$html.=html_writer::link('/mod/socialwiki/view.php?pageid='.$page->id,$page->title,array('class'=>'socialwiki_link'));
-				$html.=html_writer::link('/mod/socialwiki/like.php?pageid='.$page->id.'&from='.urlencode($PAGE->url->out()),'Unlike',array('class'=>'socialwiki_unlikelink socialwiki_link'));
+				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title,array('class'=>'socialwiki_link'));
+				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/like.php?pageid='.$page->id.'&from='.urlencode($PAGE->url->out()),'Unlike',array('class'=>'socialwiki_unlikelink socialwiki_link'));
 				$html .= "<br/><br/>";
 			}
 			
