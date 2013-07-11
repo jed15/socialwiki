@@ -854,7 +854,7 @@ class page_socialwiki_search extends page_socialwiki {
         $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/search.php');
     }
     function print_content() {
-        global $PAGE;
+        global $PAGE,$OUTPUT;
 		
         require_capability('mod/socialwiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'socialwiki');
 		$tree= new socialwiki_tree();
@@ -863,6 +863,9 @@ class page_socialwiki_search extends page_socialwiki {
 			$tree->add_node($page);
 		}
 		$tree->sort();
+		echo $OUTPUT->container_start('php_tree');
+		$tree->display();
+		echo $OUTPUT->container_end();
 		$json=json_encode($tree);
 		//send the tree to javascript
 		echo '<script> var searchResluts='.$json.';</script>';
