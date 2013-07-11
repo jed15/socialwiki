@@ -861,6 +861,7 @@ margin-left:25px;
 margin-left:25px;
 }
 
+
 .php_display
 {
 	overflow:auto;
@@ -871,3 +872,21 @@ margin-left:25px;
 	display:inline-block;
 	margin-left:50px;
 }
+
+#socialwiki_searchresults_area
+{
+overflow:auto;
+}
+
+#page-mod-socialwiki-search #socialwiki_content_area
+{
+overflow:auto;
+position:relative;
+text-align:left;
+}
+
+.wikititle
+{
+text-align:center;
+}
+

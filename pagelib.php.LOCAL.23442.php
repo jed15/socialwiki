@@ -832,6 +832,7 @@ class page_socialwiki_editcomment extends page_socialwiki {
  */
 class page_socialwiki_search extends page_socialwiki {
     private $search_result;
+	private $search_string;
 
     protected function create_navbar() {
         global $PAGE, $CFG;
@@ -850,6 +851,7 @@ class page_socialwiki_search extends page_socialwiki {
 
     function set_search_string($search, $searchcontent) {
         $swid = $this->subwiki->id;
+		$this->search_string = $search;
         if ($searchcontent) {
             $this->search_result = socialwiki_search_all($swid, $search);
         } else {
@@ -868,7 +870,7 @@ class page_socialwiki_search extends page_socialwiki {
         require_capability('mod/socialwiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'socialwiki');
 		
 		echo $this->wikioutput->content_area_begin();
-		echo $this->wikioutput->title_block("Search results for: ".$search);
+		echo $this->wikioutput->title_block("Search results for: ".$this->search_string);
         //echo $this->wikioutput->search_result($this->search_result, $this->subwiki);
 		echo $this->wikioutput->content_area_end();
     }

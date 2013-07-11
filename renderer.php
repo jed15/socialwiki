@@ -626,7 +626,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         public function content_area_begin()
         {
                 $html = '';
-                $html .= html_writer::start_div('wikicontent');
+                $html .= html_writer::start_div('wikicontent', array("id"=>"socialwiki_content_area"));
                 return $html;
         }
 
@@ -634,6 +634,22 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         {
                 $html = '';
                 $html .= html_writer::end_div();
+                return $html;
+        }
+        
+        public function search_results_area()
+        {
+                $html = '';
+                $html .= html_writer::div('', '',array("id"=>"socialwiki_searchresults_area"));
+                return $html;
+        }
+        
+        public function title_block($title)
+        {
+                $html = '';
+                $html .= html_writer::start_div('wikititle whitetext');
+                $html .= html_writer::tag('h1', $title);
+                $html .= html_writer::end_div('wikititle whitetext');
                 return $html;
         }
 

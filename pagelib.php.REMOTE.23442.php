@@ -839,15 +839,6 @@ class page_socialwiki_search extends page_socialwiki {
         $PAGE->navbar->add(format_string($this->title));
     }
 
-	function __construct($wiki, $subwiki, $cm)
-	{
-		global $PAGE;
-		parent::__construct($wiki, $subwiki, $cm);
-		$PAGE->requires->js(new moodle_url("/mod/socialwiki/tree_jslib/tree.js"));
-		$PAGE->requires->css(new moodle_url("/mod/socialwiki/tree_jslib/tree_styles.css"));
-		$PAGE->requires->js(new moodle_url("/mod/socialwiki/search.js"));
-	}
-
     function set_search_string($search, $searchcontent) {
         $swid = $this->subwiki->id;
         if ($searchcontent) {
@@ -864,13 +855,17 @@ class page_socialwiki_search extends page_socialwiki {
     }
     function print_content() {
         global $PAGE;
-
-        require_capability('mod/socialwiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'socialwiki');
 		
-		echo $this->wikioutput->content_area_begin();
-		echo $this->wikioutput->title_block("Search results for: ".$search);
-        //echo $this->wikioutput->search_result($this->search_result, $this->subwiki);
-		echo $this->wikioutput->content_area_end();
+        require_capability('mod/socialwiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'socialwiki');
+		$tree= new socialwiki_tree();
+		//create a tree from the search results
+        foreach($this->search_result as $page){
+			$tree->add_node($page);
+		}
+		$tree->sort();
+		$json=json_encode($tree);
+		//send the tree to javascript
+		echo '<script> var searchResluts='.$json.';</script>';
     }
 }
 
