@@ -812,6 +812,7 @@ text-align:left;
 .socialwiki_link
 {
 text-decoration:underline;
+margin-left:25px;
 font-weight:bold;
 font-style:italic;
 }
@@ -851,6 +852,11 @@ text-align:left;
 }
 
 .following
+{
+margin-left:25px;
+}
+
+.userpicture
 {
 margin-left:25px;
 }

@@ -5,6 +5,13 @@
 	$from=required_param('from',PARAM_TEXT);
 	$pageid=optional_param('pageid',-1, PARAM_INT);
 	$user2=optional_param('user2',-1,PARAM_INT);
+        $swid = optional_param('swid', -1, PARAM_INT);
+        
+        if ($swid != -1)
+        {
+                $subwiki = socialwiki_get_subwiki($swid);
+        }
+        
 	if($pageid>-1){
 		if (!$page = socialwiki_get_page($pageid)) {
 		print_error('incorrectpageid', 'socialwiki');
@@ -27,7 +34,7 @@
 		$page=socialwiki_get_wiki_page_version($pageid,0);
 		$user2=$page->userid;
 		//check if the user is following themselves
-		if($USER->id==$user2){t
+		if($USER->id==$user2){
 			//display error with a link back to the page they came from
 			$PAGE->set_context($context);
 			$PAGE->set_cm($cm);
@@ -39,11 +46,11 @@
 			echo $OUTPUT->box_end();
 			echo $OUTPUT->footer();
 		}else{
-		
 			//check if the use is already following the author
 			if(socialwiki_is_following($USER->id,$user2,$subwiki->id)){
 				//delete the record if the user is already following the author
 				socialwiki_unfollow($USER->id,$user2, $subwiki->id);
+                                redirect($from);
 			}else{
 				//if the user isn't following the author add a new follow
 				$record=new StdClass();
@@ -59,9 +66,10 @@
 	}elseif($user2!=-1){
 
 		//check if the use is already following the author
-		if(socialwiki_is_following($USER->id,$user2,$subwiki)){
+		if(socialwiki_is_following($USER->id,$user2,$subwiki->id)){
 			//delete the record if the user is already following the author
 			socialwiki_unfollow($USER->id,$user2, $subwiki->id);
+                        redirect($from);
 		}else{
 			//if the user isn't following the author add a new follow
 			$record=new StdClass();
