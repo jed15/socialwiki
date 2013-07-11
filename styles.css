@@ -861,6 +861,18 @@ margin-left:25px;
 margin-left:25px;
 }
 
+
+.php_display
+{
+	overflow:auto;
+	text-align:center;
+}
+.socialwiki_treebox
+{
+	display:inline-block;
+	margin-left:50px;
+}
+
 #socialwiki_searchresults_area
 {
 overflow:auto;
@@ -877,3 +889,4 @@ text-align:left;
 {
 text-align:center;
 }
+
