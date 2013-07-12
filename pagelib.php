@@ -872,17 +872,16 @@ class page_socialwiki_search extends page_socialwiki {
 		echo $this->wikioutput->content_area_begin();
 		echo $this->wikioutput->title_block("Search results for: ".$this->search_string);
         //echo $this->wikioutput->search_result($this->search_result, $this->subwiki);
-		echo $this->wikioutput->content_area_end();
 		$tree= new socialwiki_tree();
 		//create a tree from the search results
         foreach($this->search_result as $page){
 			$tree->add_node($page);
 		}
-		//$tree->sort();
+		$tree->sort();
 		echo $OUTPUT->container_start('phptree');
-		//$tree->display();
+		$tree->display();
 		echo $OUTPUT->container_end();
-print_object($tree);
+		echo $this->wikioutput->content_area_end();
 		$json=json_encode($tree);
 		//send the tree to javascript
 		echo '<script> var searchResults='.$json.';</script>';

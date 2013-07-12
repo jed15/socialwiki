@@ -15,6 +15,8 @@
 		public $parent;
 		//whether the mode has been added to the tree
 		public $added;
+		//the level of the tree the node is on
+		public $level;
 		
 		function __construct($page){
 			$this->id='l'.$page->id;
@@ -38,7 +40,7 @@
 		}
 		
 		function add_child($child){
-		$this->children[]='l'.$child;
+			$this->children[]=$child;
 		}
 		
 		function display(){
@@ -82,37 +84,76 @@
 			foreach($this->nodes as $node){
 				if($node->parent==-1){
 					$parents[]=$node;
+					}	
 				}
-			
-			}
-			//add the children of the nodes
-			for($i=0;$i<count($parents);$i++){
-				$treear=$this->build_tree($parents[$i]);
-				$sorted=array_merge($sorted,$treear);
-			}
+				//make a tree array for each parent so the sorted array has one complete tree followed by another tree
+				foreach ($parents as $parent){
+					
+					//add the new array to the end of the sorted array
+					$sorted=$this->add_children($parent->id,$sorted,1);
+				}
+			//set nodes to the sorted array
 			$this->nodes=$sorted;
 		}
+		
+		//recursively add chid nodes to an array
+		function add_children($nodeid,$ar,$level){
+			$node=$this->find_node($nodeid);
+			$node->level=$level;
+			//add the child to the array
+			$ar[$nodeid]=$node;
+			//increase level
+			$level++;
+			if(count($node->children)>0){
+				foreach($node->children as $childid){
+					$ar=$this->add_children($childid,$ar,$level);
+				}
+			}
+			return $ar;
+		}
+		/*
+		//returns an array of children
+		function add_children($parent){
+			$childar=array();
+			foreach($parent->children as $childid){
+				$childar[$childid]=$this->find_node($childid);
+			}
+			return $childar;
+		}
+		*/
+		/*returns an array for a tree 
+		 *the array starts with the parent node then the children of the parent
+		 *then the children's children and so on until the leaf nodes
+		 */
+		/*
 		function build_tree($parent){
-			$treear=array(); //an array of nodes that is an entire tree for a parent node
-			$treear[]=$parent;
-			for($i=0;$i<count($treear);$i++){
-				foreach($treear[$i]->children as $childid){
-					$treear[]=$this->find_node($childid);
-				}	
+			//add the parent to the array
+			$treear[$parent->id]=$parent;
+			$keys=array_keys($treear);
+			//go through the array adding the children for each node until the leaf nodes
+			for($i=0;$i<count($keys);$i++){
+				if(count($treear[$keys[$i]]->children)>0){
+					$childar=$this->add_children($treear[$keys[$i]]);
+					//add the children to the end of the array
+					$treear=array_merge($treear,$childar);
+					//update keys array so it contains the keys for the nodes that where just added
+					$keys=array_keys($treear);
+				}
 			}
 			return $treear;
-		}
+		}*/
 		
 		function display(){
-			$i=0;
-			while($i<count($this->nodes)){
-				$this->nodes[$i]->display();
-				echo '<br/><br/>';
-				for($j=1;$j<=count($this->nodes[$i]->children);$j++){
-						$this->nodes[$i+$j]->display();
+			Global $OUTPUT;
+			foreach($this->nodes as $node){
+				if($node->parent==-1){
+					echo'<br/><br/><br/>';
 				}
-				echo '<br/><br/><br/><br/>';
-				$i+=count($this->nodes[$i]->children)+1;
+				echo $OUTPUT->container_start();
+				echo str_repeat('&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp',$node->level-1);
+				$node->display();
+				echo $OUTPUT->container_end();
 			}
 		}
+
 	}
