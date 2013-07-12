@@ -34,7 +34,7 @@
 			Global $PAGE,$CFG;
 			$user = socialwiki_get_user_info($page->userid);
 			$userlink = new moodle_url('/user/view.php', array('id' => $user->id, 'course' => $PAGE->cm->course));
-			$this->content=html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title).'<br/>'.html_writer::link($userlink->out(false),fullname($user));
+			$this->content=html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title,array("class"=>"whitetext")).'<br/>'.html_writer::link($userlink->out(false),fullname($user),array("class"=>"whitetext"));
 		}
 		
 		function add_child($child){
@@ -56,9 +56,9 @@
 			$this->nodes['l'.$page->id]=new socialwiki_node($page);
 			//if the array has a parent add it to the parents child array
 			if($page->parent!=NULL){
-				$parent=$this->find_node($page->parent);
+				$parent=$this->find_node('l'.$page->parent);
 				if($parent){
-					$parent->add_child('l'+$page->id);
+					$parent->add_child('l'.$page->id);
 				}else{
 					print_error('nonode','socialwiki');
 				}

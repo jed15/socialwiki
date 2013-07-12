@@ -882,6 +882,7 @@ class page_socialwiki_search extends page_socialwiki {
 		echo $OUTPUT->container_start('php_tree');
 		//$tree->display();
 		echo $OUTPUT->container_end();
+print_object($tree);
 		$json=json_encode($tree);
 		//send the tree to javascript
 		echo '<script> var searchResults='.$json.';</script>';

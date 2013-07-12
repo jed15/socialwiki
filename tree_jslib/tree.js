@@ -116,6 +116,11 @@ function TreeControl(myTree, divID)
     //Toggles a node's parent's visibility
     function toggleParent(id)
     {
+        //Do nothing when a root node is clicked
+        if (this.myTree.nodes[id].parent == -1)
+        {
+            return;
+        }
         if (this.myTree.nodes[this.myTree.nodes[id].parent].hidden == false)
         {
             this.hideNode(this.myTree.nodes[id].parent);
@@ -219,8 +224,8 @@ function TreeControl(myTree, divID)
         {
             this.columns[level].push(id);
             this.myTree.nodes[id].column = level;
-            $('#tree_col'+level).append('<li tabindex=5 class="tree_node" id="tree_'+id+'" index='+id+'><p class="test_label"> ID:'+id+'<br/>Parent:'+this.myTree.nodes[id].parent+'</p></li><br/>  ');
-            
+            //$('#tree_col'+level).append('<li tabindex=5 class="tree_node" id="tree_'+id+'" index='+id+'><p class="test_label"> ID:'+id+'<br/>Parent:'+this.myTree.nodes[id].parent+'</p></li><br/>  ');
+            $('#tree_col'+level).append('<li tabindex=5 class="tree_node" id="tree_'+id+'" index='+id+'><p class="test_label whitetext">'+this.myTree.nodes[id].content+'</p></li><br/>  ');
             if (level != 0)
             {
                 $('#tree_'+id).css("opacity", "0");
