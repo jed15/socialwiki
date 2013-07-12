@@ -865,12 +865,16 @@ margin-left:25px;
 .phptree
 {
 	overflow:auto;
-	text-align:center;
 }
 .socialwiki_treebox
 {
+	margin-left:5px;
 	display:inline-block;
-	margin-left:50px;
+	border-color:white;
+	border-width:1px;
+	border-style:solid;
+	margin-bottom:0px;
+	padding:10px;
 }
 
 #socialwiki_searchresults_area
