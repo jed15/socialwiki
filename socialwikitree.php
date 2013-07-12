@@ -20,7 +20,7 @@
 		
 		function __construct($page){
 			$this->id='l'.$page->id;
-			if($page->parent==NULL){
+			if($page->parent==NULL||$page->parent==0){
 				$this->parent=-1;
 			}else{
 				$this->parent='l'.$page->parent;
@@ -57,7 +57,7 @@
 		function add_node($page){
 			$this->nodes['l'.$page->id]=new socialwiki_node($page);
 			//if the array has a parent add it to the parents child array
-			if($page->parent!=NULL){
+			if($page->parent!=NULL&&$page->parent!=0){
 				$parent=$this->find_node('l'.$page->parent);
 				if($parent){
 					$parent->add_child('l'.$page->id);
@@ -114,6 +114,7 @@
 		
 		function display(){
 			Global $OUTPUT;
+			echo $OUTPUT->heading('OLDEST--->NEWEST',1,'whitetext');
 			foreach($this->nodes as $node){
 				if($node->parent==-1){
 					echo'<br/><br/><br/>';
