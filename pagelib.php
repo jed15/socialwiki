@@ -879,7 +879,7 @@ class page_socialwiki_search extends page_socialwiki {
 			$tree->add_node($page);
 		}
 		$tree->sort();
-		echo $OUTPUT->container_start('php_tree');
+		echo $OUTPUT->container_start('phptree');
 		$tree->display();
 		echo $OUTPUT->container_end();
 		$json=json_encode($tree);
