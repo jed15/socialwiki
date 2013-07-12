@@ -27,7 +27,7 @@ sampleTree.addNode(21);
 sampleTree.addNode(21);
 
 sampleTree.nodes = searchResults.nodes;
-console.log(searchResults.nodes);
+console.log(searchResults.node);
 
 mTree = new TreeControl(sampleTree, "socialwiki_content_area");
 

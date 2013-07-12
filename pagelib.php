@@ -878,9 +878,9 @@ class page_socialwiki_search extends page_socialwiki {
         foreach($this->search_result as $page){
 			$tree->add_node($page);
 		}
-		$tree->sort();
+		//$tree->sort();
 		echo $OUTPUT->container_start('php_tree');
-		$tree->display();
+		//$tree->display();
 		echo $OUTPUT->container_end();
 		$json=json_encode($tree);
 		//send the tree to javascript
