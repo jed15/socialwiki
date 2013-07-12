@@ -27,8 +27,6 @@ sampleTree.addNode(21);
 sampleTree.addNode(21);
 
 sampleTree.nodes = searchResults.nodes;
-console.log(searchResults.nodes);
-
 mTree = new TreeControl(sampleTree, "socialwiki_content_area");
 
 /*Trying to see how javascript array really work

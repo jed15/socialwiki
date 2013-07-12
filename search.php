@@ -31,6 +31,8 @@ $search = optional_param('searchstring', null, PARAM_TEXT);
 $courseid = optional_param('courseid', 0, PARAM_INT);
 $searchcontent = optional_param('searchwikicontent', 0, PARAM_INT);
 $cmid = optional_param('cmid', 0, PARAM_INT);
+$pageid = optional_param('pageid', -1, PARAM_INT);
+
 
 if (!$course = $DB->get_record('course', array('id' => $courseid))) {
     echo $courseid;
@@ -58,6 +60,12 @@ $wikipage = new page_socialwiki_search($wiki, $subwiki, $cm);
 $wikipage->set_search_string($search, $searchcontent);
 
 $wikipage->set_title(get_string('search'));
+$page = socialwiki_get_page($pageid);
+
+if ($pageid != -1)
+{
+    $wikipage->set_page($page);
+}
 
 $wikipage->print_header();
 

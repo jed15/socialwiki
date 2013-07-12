@@ -38,6 +38,7 @@ function TreeControl(myTree, divID)
     this.async = async;
     this.when = when;
     this.cssLoaded = cssLoaded;
+    this.addListElements = addListElements;
     
 
     
@@ -72,15 +73,6 @@ function TreeControl(myTree, divID)
     function showTree()
     {
         //Find the maximum depth of the tree
-        /*
-        for (var i=0; i<this.myTree.nodes.length;i++) 
-        {
-            if (this.myTree.nodes[i].children.length == 0)
-            {
-                this.childDepths.push(this.myTree.depth( '#' + this.myTree.nodes[i].id));
-            }
-        }*/
-        
         for (var node in this.myTree.nodes)
         {
             if (this.myTree.nodes[node].children.length == 0)
@@ -92,23 +84,21 @@ function TreeControl(myTree, divID)
         this.maxDepth = Math.max.apply(Math, this.childDepths);
 
         //Add all of the nodes to the tree display
-        /*
-        for (var i=0; i< this.myTree.nodes.length;i++) 
-        {
-            this.addNodeToColumn(this.myTree.nodes[i].id, this.maxDepth);
-        }*/
-
         for (var node in this.myTree.nodes)
         {
             this.addNodeToColumn(this.myTree.nodes[node].id, this.maxDepth);
         }
         
+        //Add the nodes to the html
+        this.addListElements();
         
-        //Position the nodes, position the lines and add new ones as necessary
+        //Position the nodes
         this.updateNodePositions();
+        
         //Make sure that the container is not scrolled at all, to avoid all kinds of nasty problems
         $("#"+this.divID).scrollTop(0);
-
+        
+        //Add and position the lines
         this.updateLines();
     }
     
@@ -136,9 +126,10 @@ function TreeControl(myTree, divID)
     //Shows a specified node, and all of its children. Might end up changing
     function showNode(id)
     {
-        this.myTree.nodes[id].show();
+        this.myTree.nodes[id].hidden = false;
         $('#tree_'+id).stop();
         $('#tree_'+id).animate({opacity:1},duration=500);
+        $('#tree_'+id).css("visibility", "visible");
         
         for (var i=0;i<this.myTree.nodes[id].children.length; i++)
         {
@@ -147,10 +138,21 @@ function TreeControl(myTree, divID)
         
         $('[id^=line_'+id+'b]').stop();
         $('[id^=line_'+id+'b]').animate({opacity:1},duration=500);
+        $('[id^=line_'+id+'b]').css("visibility", "visible");
+        
+        $('[id^=line_tick_'+id+'b]').stop();
+        $('[id^=line_tick_'+id+'b]').animate({opacity:1},duration=500);
+        $('[id^=line_tick_'+id+'b]').css("visibility", "visible");
+        
+        $('[id^=line_extender_'+id+'b]').stop();
+        $('[id^=line_extender_'+id+'b]').animate({opacity:1},duration=500);
+        $('[id^=line_extender_'+id+'b]').css("visibility", "visible");
+        
         if (this.myTree.nodes[id].parent != -1)
         {
             $('#line_'+this.myTree.nodes[id].parent+'b'+id).stop();
             $('#line_'+this.myTree.nodes[id].parent+'b'+id).animate({opacity:1},duration=500);
+            $('#line_'+this.myTree.nodes[id].parent+'b'+id).css("visibility","visible");
         }
     }
 
@@ -162,17 +164,20 @@ function TreeControl(myTree, divID)
             return
         }
         
-        this.myTree.nodes[id].hide();
+        this.myTree.nodes[id].hidden = true;
         var flag = false;
         
         //Hide the node and all of the lines associated with it
         $('[id^=line_'+id+'b]').stop();
         $('#line_'+this.myTree.nodes[id].parent+'b'+id).stop();
         $('#tree_'+id).stop();
-        $('[id^=line_'+id+'b]').animate({opacity:0}, duration=500);
-        $('#line_'+this.myTree.nodes[id].parent+'b'+id).animate({opacity:0},duration=500);
-        $('#tree_'+id).animate({opacity:0}, duration=500);
         
+        $('[id^=line_'+id+'b]').animate({opacity:0}, duration=500, complete=function(){$(this).css("visibility", "hidden")});
+        $('[id^=line_tick_'+id+'b]').animate({opacity:0}, duration=500, complete=function(){$(this).css("visibility", "hidden")});
+        $('[id^=line_extender_'+id+'b]').animate({opacity:0}, duration=500, complete=function(){$(this).css("visibility", "hidden")});
+        $('#line_'+this.myTree.nodes[id].parent+'b'+id).animate({opacity:0},duration=500, complete=function(){$(this).css("visibility", "hidden")});
+        $('#tree_'+id).animate({opacity:0}, duration=500, complete=function(){$(this).css("visibility", "hidden")});
+
         //If the node being hidden is the last visible child of its parent, its parent should be hidden as well
         pid = this.myTree.nodes[id].parent;
         if (pid !=-1)
@@ -214,31 +219,69 @@ function TreeControl(myTree, divID)
             level = 0;
         }
 
+        //Making sure there are enough columns to hold a node of this depth, if not, add one
         while(level>=(this.columns.length))
         {
             this.columns.push([]);
             $('#'+this.divID).append('<ul class="tree_column" id="tree_col'+(this.columns.length-1)+'"></ul>');
         }
         
+        //Only add the node if it has not already been added
         if (this.columns[level].indexOf(id) < 0)
         {
-            this.columns[level].push(id);
-            this.myTree.nodes[id].column = level;
-            //$('#tree_col'+level).append('<li tabindex=5 class="tree_node" id="tree_'+id+'" index='+id+'><p class="test_label"> ID:'+id+'<br/>Parent:'+this.myTree.nodes[id].parent+'</p></li><br/>  ');
-            $('#tree_col'+level).append('<li tabindex=5 class="tree_node" id="tree_'+id+'" index='+id+'><p class="test_label whitetext">'+this.myTree.nodes[id].content+'</p></li><br/>  ');
-            if (level != 0)
+            //Adding it to columns
+            var firstSiblingLocation = -1;
+            var myRelations = this.myTree.getRelationsInColumn(id, level);
+
+            //Go through all the related nodes in this column, see if they have been added yet
+            //If so, add the new node in a position adjacent to thiers, to avoid drawing lines over nodes
+            if (myTree.nodes[id].parent!= -1)
             {
-                $('#tree_'+id).css("opacity", "0");
-                this.myTree.nodes[id].hide();
+                var i = 0;
+                while (firstSiblingLocation < 0 && i < myRelations.length)
+                {
+                    firstSiblingLocation = this.columns[level].indexOf(myRelations[i]);
+                    i++;
+                }
+                i = 0;
+                
+                if (firstSiblingLocation >= 0)
+                    this.columns[level].splice(firstSiblingLocation, 0, id);
+                else
+                    this.columns[level].push(id);                
+            }
+            else
+            {
+                this.columns[level].push(id);
             }
             
-            $('#tree_'+id).click(this,function(e)
+            this.myTree.nodes[id].column = level;
+        }
+    }
+    
+    //This function adds an html list item for every node in the tree, in the proper column
+    function addListElements()
+    {
+        for (var i=0; i < this.columns.length; i++)
+        {
+            for (var j=0; j < this.columns[i].length; j++)
+            {
+            //Adding to the list in hmtl
+            $('#tree_col'+i).append('<li tabindex=5 class="tree_node" id="tree_'+this.columns[i][j]+'" index='+this.columns[i][j]+'><p class="test_label whitetext">'+this.myTree.nodes[this.columns[i][j]].content+'</p></li><br/>  ');
+            if (i != 0)
+            {
+                $('#tree_'+this.columns[i][j]).css("opacity", "0");
+                $('#tree_'+this.columns[i][j]).css("visibility", "hidden");
+                this.myTree.nodes[this.columns[i][j]].hidden = true;
+            }
+            
+            $('#tree_'+this.columns[i][j]).click(this,function(e)
             {
                 e.data.toggleParent($(this).attr("index"));
             });
             
             //to make this somewhat accessible, provide some keyboard navigation through tabbing and pressing enter
-            $('#tree_'+id).keypress(function(e)
+            $('#tree_'+this.columns[i][j]).keypress(function(e)
             {
                 if (e.which == 13)
                 {
@@ -246,15 +289,16 @@ function TreeControl(myTree, divID)
                 }
             });
                     
+            }
         }
     }
+    
 
     //Positions the nodes
     function updateNodePositions()
     {
         for (var j=0; j<this.columns.length; j++)
         {
-            //Positioning loop
             for (var i=0; i<this.columns[j].length; i++)
             {
                 if (j==0)
@@ -276,8 +320,6 @@ function TreeControl(myTree, divID)
                 var offset = avY -myY;
                 $('#tree_'+this.columns[j][i]).css("position", "relative");
                 $('#tree_'+this.columns[j][i]).css("top", offset +"px");
-                
-                    
             }
         }
     }
@@ -290,32 +332,55 @@ function TreeControl(myTree, divID)
                 //Line drawing loop
             for (var n=0; n<this.columns[j].length;n++)
             {
+                var childrenTops = Array();
+                if (this.myTree.nodes[this.columns[j][n]].children.length > 0)
+                {
+                    //Add and position the little lines that connect the extenders to the nodes
+                    $('#' + this.divID).append('<div class="relation_line" id = "line_tick_'+this.columns[j][n]+'b""></div>')
+                    lineTop = $('#tree_'+this.myTree.nodes[this.columns[j][n]].id).position().top+ parseInt($('#tree_'+this.myTree.nodes[this.columns[j][n]].id).css("height"))/2 + parseInt($('#tree_'+this.myTree.nodes[this.columns[j][n]].id).css("margin-top"));
+                    lineLeft = $('#tree_'+this.myTree.nodes[this.columns[j][n]].id).position().left+parseInt($('#tree_'+this.myTree.nodes[this.columns[j][n]].id).css("margin-left"));
+                    $('#line_tick_'+this.columns[j][n]+'b').css("top", lineTop);
+                    $('#line_tick_'+this.columns[j][n]+'b').css("left", lineLeft);
+                    $('#line_tick_'+this.columns[j][n]+'b').css("height", "15px");
+                    $('#line_tick_'+this.columns[j][n]+'b').css("transform", "rotate("+Math.PI/2+"rad)");
+                    $('#line_tick_'+this.columns[j][n]+'b').css("-webkit-transform", "rotate("+Math.PI/2+"rad)");
+                    $('#line_tick_'+this.columns[j][n]+'b').css("-ms-transform", "rotate("+Math.PI/2+"rad)");
+                    $('#line_tick_'+this.columns[j][n]+'b').css("visiblity", "hidden");
+                    $('#line_tick_'+this.columns[j][n]+'b').css("opacity", "0");
+                    
+                    //Add the extender lines
+                    $('#' + this.divID).append('<div class="relation_line" id = "line_extender_'+this.columns[j][n]+'b""></div>')
+                    $('#line_extender_'+this.columns[j][n]+'b').css("visibility", "hidden");
+                    $('#line_extender_'+this.columns[j][n]+'b').css("opacity", "0");
+                }
+                
+                //Add and position the main lines
                 for (var m=0; m < this.myTree.nodes[this.columns[j][n]].children.length;m++)
                 {
                     $('#'+this.divID+'').append('<div class="relation_line" id = "line_'+this.columns[j][n]+'b'+this.myTree.nodes[this.columns[j][n]].children[m]+'""></div>');
-                    lineTop = $('#tree_'+this.myTree.nodes[this.columns[j][n]].id).position().top+ parseInt($('#tree_'+this.myTree.nodes[this.columns[j][n]].id).css("height"))/2 + parseInt($('#tree_'+this.myTree.nodes[this.columns[j][n]].id).css("margin-top"));
-                    lineLeft = $('#tree_'+this.myTree.nodes[this.columns[j][n]].id).position().left+parseInt($('#tree_'+this.myTree.nodes[this.columns[j][n]].id).css("margin-left"));
-                    $('#line_'+this.columns[j][n]+'b'+this.myTree.nodes[this.columns[j][n]].children[m]).css("top", lineTop);
-                    $('#line_'+this.columns[j][n]+'b'+this.myTree.nodes[this.columns[j][n]].children[m]).css("left", lineLeft);
                     lineBottom = $('#tree_' + this.myTree.nodes[this.columns[j][n]].children[m]).position().top+ parseInt($('#tree_'+this.myTree.nodes[this.columns[j][n]].id).css("height"))/2 + parseInt($('#tree_'+this.myTree.nodes[this.columns[j][n]].id).css("margin-top"));
                     lineRight  = $('#tree_' + this.myTree.nodes[this.columns[j][n]].children[m]).position().left+ parseInt($('#tree_'+this.myTree.nodes[this.columns[j][n]].id).css("width")) + parseInt($('#tree_'+this.myTree.nodes[this.columns[j][n]].id).css("margin-top")) +3;
-                    length = Math.sqrt((lineBottom-lineTop)*(lineBottom-lineTop) + (lineRight-lineLeft)*(lineRight-lineLeft));
+                    childrenTops.push(lineBottom);
+                    length = lineLeft-lineRight-15;
                     $('#line_'+this.columns[j][n]+'b'+this.myTree.nodes[this.columns[j][n]].children[m]).css("height", length);
-                    rotAngle = Math.acos((lineLeft-lineRight)/length);
-                    if (lineTop <= lineBottom)
-                    {
-                        $('#line_'+this.columns[j][n]+'b'+this.myTree.nodes[this.columns[j][n]].children[m]).css("transform", 'rotate('+((Math.PI/2)-rotAngle)+'rad)');
-                        $('#line_'+this.columns[j][n]+'b'+this.myTree.nodes[this.columns[j][n]].children[m]).css("-webkit-transform",'rotate('+((Math.PI/2)-rotAngle)+'rad)');
-                        $('#line_'+this.columns[j][n]+'b'+this.myTree.nodes[this.columns[j][n]].children[m]).css("-ms-transform",'rotate('+((Math.PI/2)-rotAngle)+'rad)');
-                        
-                    }else{
-                        $('#line_'+this.columns[j][n]+'b'+this.myTree.nodes[this.columns[j][n]].children[m]).css("transform", 'rotate('+((Math.PI/2)+rotAngle)+'rad)');
-                        $('#line_'+this.columns[j][n]+'b'+this.myTree.nodes[this.columns[j][n]].children[m]).css("-webkit-transform", 'rotate('+((Math.PI/2)+rotAngle)+'rad)');
-                        $('#line_'+this.columns[j][n]+'b'+this.myTree.nodes[this.columns[j][n]].children[m]).css("-ms-transform", 'rotate('+((Math.PI/2)+rotAngle)+'rad)');
-                    }
+                    $('#line_'+this.columns[j][n]+'b'+this.myTree.nodes[this.columns[j][n]].children[m]).css("top", lineBottom);
+                    $('#line_'+this.columns[j][n]+'b'+this.myTree.nodes[this.columns[j][n]].children[m]).css("left", lineRight+length);
+                    $('#line_'+this.columns[j][n]+'b'+this.myTree.nodes[this.columns[j][n]].children[m]).css("transform", 'rotate('+((Math.PI/2))+'rad)');
+                    $('#line_'+this.columns[j][n]+'b'+this.myTree.nodes[this.columns[j][n]].children[m]).css("-webkit-transform", 'rotate('+((Math.PI/2))+'rad)');
+                    $('#line_'+this.columns[j][n]+'b'+this.myTree.nodes[this.columns[j][n]].children[m]).css("-ms-transform", 'rotate('+((Math.PI/2))+'rad)');
                     $('#line_'+this.columns[j][n]+'b'+this.myTree.nodes[this.columns[j][n]].children[m]).css("opacity", "0");
+                    $('#line_'+this.columns[j][n]+'b'+this.myTree.nodes[this.columns[j][n]].children[m]).css("visibility", "hidden");
                 }
                 
+                //Position the extender lines
+                if (this.myTree.nodes[this.columns[j][n]].children.length > 0)
+                {
+                    var extenderLength = Math.max.apply(Math,childrenTops) - Math.min.apply(Math,childrenTops) + 3;
+                    var lineLeft = $('#tree_'+this.myTree.nodes[this.columns[j][n]].id).position().left+parseInt($('#tree_'+this.myTree.nodes[this.columns[j][n]].id).css("margin-left")) - 15;
+                    $('#line_extender_'+this.columns[j][n]+'b').css("top", Math.min.apply(Math,childrenTops));
+                    $('#line_extender_'+this.columns[j][n]+'b').css("left", lineLeft);
+                    $('#line_extender_'+this.columns[j][n]+'b').css("height", extenderLength);
+                }
             }
         }
     }
@@ -365,6 +430,8 @@ function tree()
     this.addNode = addNode;
     this.depth = depth;
     this.addRoot = addRoot;
+    this.getRoot = getRoot;
+    this.getRelationsInColumn = getRelationsInColumn;
     
     function addRoot()
     {
@@ -393,6 +460,30 @@ function tree()
             nextNode = this.nodes[nextNode.parent];
         }
         return depth;
+    }
+    
+    function getRoot(id)
+    {
+        nextNode = this.nodes[id];
+        while (nextNode.parent != -1)
+        {
+           nextNode = this.nodes[nextNode.parent]; 
+        }
+        return nextNode;
+    }
+    
+    function getRelationsInColumn(id, column)
+    {
+        var root = this.getRoot(id);
+        var returnList = Array();
+        for (var node in this.nodes)
+        {
+            if (this.nodes[node].column == column && this.getRoot(node) == root)
+            {
+                returnList.push(node);
+            }
+        }
+        return returnList;
     }
     
 }

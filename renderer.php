@@ -575,6 +575,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
                         <input id="socialwiki_searchbox" name="searchstring" type="text" value="Search..."></input>
                         <input type="hidden" name="cmid" value="'.$this->page->cm->id.'"></input>
                         <input type="hidden" name="courseid" value="'.$COURSE->id.'"></input>
+                        <input type="hidden" name="pageid" value="'.$pageid.'"></input>
                     </form>
                 </div>';	
 

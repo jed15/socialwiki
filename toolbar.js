@@ -2,8 +2,10 @@ console.log("toolbar.js included");
 
 $(document).ready(function(){
     
+    /*Making use of these buttons would require some heavy modifications
     $("#socialwiki_backbutton").css("display", "inline-block");
     $("#socialwiki_forwardbutton").css("display", "inline-block");
+    */
     
     //The searchbox should be cleared automatically when the user clicks on it, and "Search..." should appear if box has lost focus
     $("#socialwiki_searchbox").click(function()
