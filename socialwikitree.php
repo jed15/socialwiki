@@ -111,37 +111,6 @@
 			}
 			return $ar;
 		}
-		/*
-		//returns an array of children
-		function add_children($parent){
-			$childar=array();
-			foreach($parent->children as $childid){
-				$childar[$childid]=$this->find_node($childid);
-			}
-			return $childar;
-		}
-		*/
-		/*returns an array for a tree 
-		 *the array starts with the parent node then the children of the parent
-		 *then the children's children and so on until the leaf nodes
-		 */
-		/*
-		function build_tree($parent){
-			//add the parent to the array
-			$treear[$parent->id]=$parent;
-			$keys=array_keys($treear);
-			//go through the array adding the children for each node until the leaf nodes
-			for($i=0;$i<count($keys);$i++){
-				if(count($treear[$keys[$i]]->children)>0){
-					$childar=$this->add_children($treear[$keys[$i]]);
-					//add the children to the end of the array
-					$treear=array_merge($treear,$childar);
-					//update keys array so it contains the keys for the nodes that where just added
-					$keys=array_keys($treear);
-				}
-			}
-			return $treear;
-		}*/
 		
 		function display(){
 			Global $OUTPUT;
