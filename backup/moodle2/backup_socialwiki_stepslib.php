@@ -45,17 +45,21 @@ class backup_socialwiki_activity_structure_step extends backup_activity_structur
 
         $pages = new backup_nested_element('pages');
 
-        $page = new backup_nested_element('page', array('id'), array('title', 'cachedcontent', 'timecreated', 'timemodified', 'timerendered', 'userid', 'pageviews', 'readonly'));
+        $page = new backup_nested_element('page', array('id'), array('title', 'cachedcontent', 'timecreated', 'timemodified', 'timerendered', 'userid', 'pageviews', 'readonly','parent'));
 
-        $synonyms = new backup_nested_element('synonyms');
+        $likes = new backup_nested_element('likes');
 
-        $synonym = new backup_nested_element('synonym', array('id'), array('pageid', 'pagesynonym'));
+        $like = new backup_nested_element('like', array('id'), array('userid', 'pageid'));
 
         $links = new backup_nested_element('links');
 
         $link = new backup_nested_element('link', array('id'), array('frompageid', 'topageid', 'tomissingpage'));
+		
+		$follows = new backup_nested_element('follows');
 
-        $versions = new backup_nested_element('versions');
+        $follow = new backup_nested_element('follow', array('id'), array('userfromid', 'usertoid'));
+        
+		$versions = new backup_nested_element('versions');
 
         $version = new backup_nested_element('version', array('id'), array('content', 'contentformat', 'version', 'timecreated', 'userid'));
 
@@ -70,12 +74,15 @@ class backup_socialwiki_activity_structure_step extends backup_activity_structur
         $subwiki->add_child($pages);
         $pages->add_child($page);
 
-        $subwiki->add_child($synonyms);
-        $synonyms->add_child($synonym);
+        $subwiki->add_child($likes);
+        $likes->add_child($like);
 
         $subwiki->add_child($links);
         $links->add_child($link);
-
+		
+		$subwiki->add_child($follows);
+		$follows->add_child($follow);
+		
         $page->add_child($versions);
         $versions->add_child($version);
 
@@ -94,11 +101,13 @@ class backup_socialwiki_activity_structure_step extends backup_activity_structur
 
             $page->set_source_table('socialwiki_pages', array('subwikiid' => backup::VAR_PARENTID));
 
-            $synonym->set_source_table('socialwiki_synonyms', array('subwikiid' => backup::VAR_PARENTID));
+            $like->set_source_table('socialwiki_likes', array('subwikiid' => backup::VAR_PARENTID));
 
             $link->set_source_table('socialwiki_links', array('subwikiid' => backup::VAR_PARENTID));
-
-            $version->set_source_table('socialwiki_versions', array('pageid' => backup::VAR_PARENTID));
+			
+			$follow->set_source_table('socialwiki_follows', array('subwikiid' => backup::VAR_PARENTID));
+            
+			$version->set_source_table('socialwiki_versions', array('pageid' => backup::VAR_PARENTID));
 
             $tag->set_source_sql('SELECT t.id, t.name, t.rawname
                                     FROM {tag} t
