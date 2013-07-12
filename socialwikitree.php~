@@ -38,7 +38,7 @@
 		}
 		
 		function add_child($child){
-		$this->children[]='l'.$child;
+		$this->children []='l'.$child;
 		}
 		
 		function display(){
