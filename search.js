@@ -37,6 +37,6 @@ console.log(testArray);*/
 
 
 $(document).ready(function() {
-	$(".php_tree").attr("display", "none");
+	$(".phptree").css("display", "none");
     mTree.display();
 });

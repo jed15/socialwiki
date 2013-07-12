@@ -60,7 +60,7 @@
 			if($page->parent!=NULL){
 				$parent=$this->find_node('l'.$page->parent);
 				if($parent){
-					$parent->add_child($page->id);
+					$parent->add_child('l'.$page->id);
 				}else{
 					print_error('nonode','socialwiki');
 				}
