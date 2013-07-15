@@ -1226,9 +1226,9 @@ class page_socialwiki_history extends page_socialwiki {
         global $PAGE;
         parent::__construct($wiki, $subwiki, $cm);
         $PAGE->requires->js_init_call('M.mod_socialwiki.history', null, true);
-		$PAGE->requires->js(new moodle_url("/mod/socialwiki/history.js"));
 		$PAGE->requires->js(new moodle_url("/mod/socialwiki/tree_jslib/tree.js"));
 		$PAGE->requires->css(new moodle_url("/mod/socialwiki/tree_jslib/tree_styles.css"));
+		$PAGE->requires->js(new moodle_url("/mod/socialwiki/history.js"));
     }
 
     function print_header() {

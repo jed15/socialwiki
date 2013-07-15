@@ -627,7 +627,11 @@ function socialwiki_parse_content($markup, $pagecontent, $options = array()) {
  * @TODO Doc return and options
  */
 function socialwiki_parser_link($link, $options = null) {
-    global $CFG;
+    global $CFG, $COURSE, $PAGE;
+
+	$beforeSub = $link;
+	$matches = [];
+
 
     if (is_object($link)) {
         $parsedlink = array('content' => $link->title, 'url' => $CFG->wwwroot . '/mod/socialwiki/view.php?pageid=' . $link->id, 'new' => false, 'link_info' => array('link' => $link->title, 'pageid' => $link->id, 'new' => false));
@@ -639,10 +643,39 @@ function socialwiki_parser_link($link, $options = null) {
         return $parsedlink;
     } else {
         $swid = $options['swid'];
+		$specific = false;
+
+		if (preg_match('/@(([0-9]+)|(\.))/', $link, $matches))
+		{
+			$link = preg_replace('/@(([0-9]+)|(\.))/', '', $link);
+			$specific = true;
+		}
 
         if ($page = socialwiki_get_page_by_title($swid, $link)) {
-            $parsedlink = array('content' => $link, 'url' => $CFG->wwwroot . '/mod/socialwiki/view.php?pageid=' . $page->id, 'new' => false, 'link_info' => array('link' => $link, 'pageid' => $page->id, 'new' => false));
-
+			if ($specific == false)
+			{
+			$currentpage = optional_param('pageid',0,PARAM_INT);
+            $parsedlink = array('content' => $link, 'url' => $CFG->wwwroot.'/mod/socialwiki/search.php?searchstring='.$link.'&pageid='.$currentpage.'&courseid='.$COURSE->id.'&cmid='.$PAGE->cm->id, 'new' => false, 'link_info' => array('link' => $link, 'pageid' => $page->id, 'new' => false));
+			}
+			else
+			{
+				if ($matches[1] == '.')
+				{
+									$parsedlink = array('content' => $link, 'url' => $CFG->wwwroot . '/mod/socialwiki/view.php?pageid='.$page->id, 'new' => false, 'link_info' => array('link' => $link, 'pageid' => $page->id, 'new' => false));
+				}
+			else
+				{
+				if (socialwiki_get_page($matches[1]))
+				{
+				$parsedlink = array('content' => $link, 'url' => $CFG->wwwroot . '/mod/socialwiki/view.php?pageid='.$matches[1], 'new' => false, 'link_info' => array('link' => $link, 'pageid' => $page->id, 'new' => false));
+				}
+				else
+				{
+				$parsedlink = array('content' => $link, 'url' => $CFG->wwwroot . '/mod/socialwiki/view.php?pageid='.socialwiki_get_first_page(socialwiki_get_subwiki($swid)->wikiid)->id, 'new' => false, 'link_info' => array('link' => $link, 'pageid' => $page->id, 'new' => false));
+				}
+				}
+			}
+		
             $version = socialwiki_get_current_version($page->id);
             if ($version->version == 0) {
                 $parsedlink['new'] = true;
@@ -650,7 +683,7 @@ function socialwiki_parser_link($link, $options = null) {
 
             return $parsedlink;
 
-        } else {
+        } else {//May want to change what happens in here later, kind of like the ability to make a link to a new page by just creating a link to it
             return array('content' => $link, 'url' => $CFG->wwwroot . '/mod/socialwiki/create.php?swid=' . $swid . '&amp;title=' . urlencode($link) . '&amp;action=new', 'new' => true, 'link_info' => array('link' => $link, 'new' => true, 'pageid' => 0));
         }
     }

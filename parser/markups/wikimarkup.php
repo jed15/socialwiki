@@ -381,9 +381,7 @@ abstract class socialwiki_markup_parser extends socialgeneric_parser {
         } else {
             $pageid = $this->wiki_page_id;
             $searchstring = urlencode($link['content']);
-            //need cmid and courseid
 
-            $link['url'] = $CFG->wwwroot.'/mod/socialwiki/search.php?searchstring='.$searchstring.'&pageid='.$pageid.'&courseid='.$COURSE->id.'&cmid='.$PAGE->cm->id;
             $options = array();
         }
 

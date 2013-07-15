@@ -207,7 +207,7 @@ function TreeControl(myTree, divID)
     {
         for (var x=0; x <this.myTree.nodes[id].children.length;x++)
         {
-            if (this.myTree.nodes[id].children[x] != noHide && this.myTree.nodes[this.myTree.nodes[id].children[x]].column != 0)
+            if (this.myTree.nodes[id].children[x] != noHide && this.myTree.nodes[this.myTree.nodes[id].children[x]].column != 0 && this.myTree.nodes[this.myTree.nodes[id].children[x]].children.length >0)
             {
                 this.hideNode(this.myTree.nodes[id].children[x]);
                 this.hideChildren(this.myTree.nodes[id].children[x], id);
