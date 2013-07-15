@@ -1014,7 +1014,7 @@ class page_socialwiki_preview extends page_socialwiki_edit {
 
     function __construct($wiki, $subwiki, $cm) {
         global $PAGE, $CFG, $OUTPUT;
-        parent::__construct($wiki, $subwiki, $cm);
+        parent::__construct($wiki, $subwiki, $cm, 0);
         $buttons = $OUTPUT->update_module_button($cm->id, 'socialwiki');
         $PAGE->set_button($buttons);
 
@@ -1160,7 +1160,8 @@ class page_socialwiki_diff extends page_socialwiki {
         parent::create_navbar();
         $PAGE->navbar->add(get_string('history', 'socialwiki'), $CFG->wwwroot . '/mod/socialwiki/history.php?pageid=' . $this->page->id);
         $PAGE->navbar->add(get_string('diff', 'socialwiki'));
-        /**
+	}
+     /**
      * Given two , prints a page displaying the differences between them.
      *
      * @global object $CFG
@@ -1238,11 +1239,8 @@ class page_socialwiki_history extends page_socialwiki {
 			$tree->add_node($page);
 		}
 		foreach($tree->nodes as $node){
-			$node->content.="this";
 			$node->content.=$this->choose_from_radio(array($node->id => null), 'compare', '', '', true). $this->choose_from_radio(array($node->id  => null), 'comparewith', '', '', true);
 
-			$node->content.=$this->choose_from_radio(array(substr($node->id,1) => null), 'compare', 'M.mod_socialwiki.history()', '', true). $this->choose_from_radio(array(substr($node->id,1)  => null), 'comparewith', 'M.mod_socialwiki.history()', '', true);
-		
 		}
 		echo $this->wikioutput->content_area_begin();
 		echo $this->wikioutput->title_block($this->title);
