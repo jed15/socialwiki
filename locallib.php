@@ -1506,3 +1506,27 @@ function socialwiki_get_children($pageid){
 		  WHERE parent=?';
 	return $DB->get_records_sql($sql,array($pageid));
 }
+
+//returns an array with all the parent and child pages
+function socialwiki_get_relations($pageid){
+	$relations=array();
+	$added=array();  //an array of page id's already added to $relations
+	//add all parents up to root node
+	while($pageid!=Null&&$pageid!=0){
+		$relations[]=socialwiki_get_page($pageid);
+		$added[]=$pageid;
+		$pageid=socialwiki_get_parent($pageid)->parent;
+	}
+	//add all the children 
+	for($i=0;$i<count($relations);$i++){
+		$pages=socialwiki_get_children($relations[$i]->id);
+		foreach($pages as $page){
+			//make sure it hasn't already been added
+			if(!in_array($page->id,$added)){
+				$relations[]=socialwiki_get_page($page->id);
+			}
+		}
+	}
+	return $relations;
+}
+	

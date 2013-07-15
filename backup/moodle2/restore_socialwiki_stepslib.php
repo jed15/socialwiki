@@ -42,8 +42,9 @@ class restore_socialwiki_activity_structure_step extends restore_activity_struct
             $paths[] = new restore_path_element('socialwiki_page', '/activity/socialwiki/subwikis/subwiki/pages/page');
             $paths[] = new restore_path_element('socialwiki_version', '/activity/socialwiki/subwikis/subwiki/pages/page/versions/version');
             $paths[] = new restore_path_element('socialwiki_tag', '/activity/socialwiki/subwikis/subwiki/pages/page/tags/tag');
-            $paths[] = new restore_path_element('socialwiki_synonym', '/activity/socialwiki/subwikis/subwiki/synonyms/synonym');
+            $paths[] = new restore_path_element('socialwiki_like', '/activity/socialwiki/subwikis/subwiki/likes/like');
             $paths[] = new restore_path_element('socialwiki_link', '/activity/socialwiki/subwikis/subwiki/links/link');
+			$paths[] = new restore_path_element('socialwiki_follow', '/activity/socialwiki/subwikis/subwiki/follows/follow');
         }
 
         // Return the paths wrapped into standard activity structure
@@ -90,6 +91,7 @@ class restore_socialwiki_activity_structure_step extends restore_activity_struct
         $data->timemodified = $this->apply_date_offset($data->timemodified);
         $data->timecreated = $this->apply_date_offset($data->timecreated);
         $data->timerendered = $this->apply_date_offset($data->timerendered);
+		$data->parent = $this->get_mappingid('socialwiki_page', $data->parent);
 
         $newitemid = $DB->insert_record('socialwiki_pages', $data);
         $this->set_mapping('socialwiki_page', $oldid, $newitemid, true); // There are files related to this
@@ -106,17 +108,17 @@ class restore_socialwiki_activity_structure_step extends restore_activity_struct
         $newitemid = $DB->insert_record('socialwiki_versions', $data);
         $this->set_mapping('socialwiki_version', $oldid, $newitemid);
     }
-    protected function process_socialwiki_synonym($data) {
+    protected function process_socialwiki_like($data) {
         global $DB;
 
         $data = (object)$data;
         $oldid = $data->id;
         $data->subwikiid = $this->get_new_parentid('socialwiki_subwiki');
         $data->pageid = $this->get_mappingid('socialwiki_page', $data->pageid);
+		$data->userid = $this->get_mappingid('user', $data->userid);
+		
+        $newitemid = $DB->insert_record('socialwiki_likes', $data);
 
-        $newitemid = $DB->insert_record('socialwiki_synonyms', $data);
-        // No need to save this mapping as far as nothing depend on it
-        // (child paths, file areas nor links decoder)
     }
     protected function process_socialwiki_link($data) {
         global $DB;
@@ -132,6 +134,19 @@ class restore_socialwiki_activity_structure_step extends restore_activity_struct
         // (child paths, file areas nor links decoder)
     }
 
+	protected function process_socialwiki_follow($data) {
+        global $DB;
+
+        $data = (object)$data;
+        $oldid = $data->id;
+        $data->subwikiid = $this->get_new_parentid('socialwiki_subwiki');
+        $data->userfromid = $this->get_mappingid('user', $data->userfromid);
+		$data->usertoid = $this->get_mappingid('user', $data->usertoid);
+		
+        $newitemid = $DB->insert_record('socialwiki_follows', $data);
+
+    }
+	
     protected function process_socialwiki_tag($data) {
         global $CFG, $DB;
 

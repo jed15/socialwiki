@@ -878,6 +878,7 @@ class page_socialwiki_search extends page_socialwiki {
 			$tree->add_node($page);
 		}
 		$tree->sort();
+		//display the php tree (this is hidden if JavaScript is enabled)
 		echo $OUTPUT->container_start('phptree');
 		$tree->display();
 		echo $OUTPUT->container_end();
@@ -1249,8 +1250,8 @@ class page_socialwiki_history extends page_socialwiki {
         global $PAGE;
 
         require_capability('mod/socialwiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'socialwiki');
-
-        $this->print_history_content();
+		print_object(socialwiki_get_relations($this->page->id));
+        //$this->print_history_content();
     }
 
     function set_url() {

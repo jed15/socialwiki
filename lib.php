@@ -556,8 +556,8 @@ function socialwiki_extend_navigation(navigation_node $navref, $course, $module,
         }
 
         if (has_capability('mod/socialwiki:viewpage', $context)) {
-            $link = new moodle_url('/mod/socialwiki/map.php', array('pageid' => $pageid));
-            $node = $navref->add(get_string('map', 'socialwiki'), $link, navigation_node::TYPE_SETTING);
+            $link = new moodle_url('/mod/socialwiki/manage.php', array('pageid' => $pageid));
+            $node = $navref->add(get_string('manage', 'socialwiki'), $link, navigation_node::TYPE_SETTING);
         }
 
         if (has_capability('mod/socialwiki:viewpage', $context)) {
@@ -688,7 +688,7 @@ function socialwiki_page_type_list($pagetype, $parentcontext, $currentcontext) {
         'mod-socialwiki-view'=>get_string('page-mod-socialwiki-view', 'socialwiki'),
         'mod-socialwiki-comments'=>get_string('page-mod-socialwiki-comments', 'socialwiki'),
         'mod-socialwiki-history'=>get_string('page-mod-socialwiki-history', 'socialwiki'),
-        'mod-socialwiki-map'=>get_string('page-mod-socialwiki-map', 'socialwiki')
+        'mod-socialwiki-manage'=>get_string('page-mod-socialwiki-manage', 'socialwiki')
     );
     return $module_pagetype;
 }

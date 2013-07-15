@@ -86,10 +86,7 @@ echo $OUTPUT->header();
 
 $renderer = $PAGE->get_renderer('mod_socialwiki');
 
-$tabitems = array('view' => 'view', 'edit' => 'edit', 'comments' => 'comments', 'history' => 'history', 'map' => 'map', 'files' => 'files', 'admin' => 'admin');
-
-$options = array('activetab'=>'files');
-echo $renderer->tabs($page, $tabitems, $options);
+echo $renderer->pretty_navbar($pageid);
 
 
 echo $OUTPUT->box_start('generalbox');
