@@ -630,7 +630,7 @@ function socialwiki_parser_link($link, $options = null) {
     global $CFG, $COURSE, $PAGE;
 
 	$beforeSub = $link;
-	$matches = [];
+	$matches = array();
 
 
     if (is_object($link)) {
