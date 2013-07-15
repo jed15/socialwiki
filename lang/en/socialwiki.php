@@ -65,7 +65,7 @@ $string['editingpage'] = 'Editing this page \'{$a}\'';
 $string['editsection'] = 'edit';
 $string['files'] = 'Files';
 $string['filenotuploadederror'] = 'File \'{$a}\' could not be uploaded correctly.';
-$string['filtername'] = 'Wiki auto-linking';
+$string['filtername'] = 'Social Wiki auto-linking';
 $string['firstpagetitle'] = 'First page name';
 $string['firstpagetitle_help'] = 'Title of the first page of the wiki.';
 $string['forceformat'] = 'Force format';
@@ -77,16 +77,19 @@ $string['format_help'] = '* HTML - The HTML editor is available
 $string['formathtml'] = 'HTML format';
 $string['formathtml_help'] = 'The HTML editor may be used for formatting content.
 
-To create a new page, type the new page name enclosed in double square brackets, for example [[Page 2]].';
+To create a new page, type the new page name enclosed in double square brackets, for example [[Page 2]]. 
+To link to a page copy the page url double square brackets with an existing page title inside links to a search for that page.';
 $string['formatcreole'] = 'Creole format';
 $string['formatcreole_help'] = 'Creole is a common wiki markup language with an edit toolbar for inserting appropriate markup.
 
-To create a new page, type the new page name enclosed in double square brackets, for example [[Page 2]].';
+To create a new page, type the new page name enclosed in double square brackets, for example [[Page 2]].
+To link to a page copy the page url, double square brackets with an existing page title inside links to a search for that page.';
 $string['formatcreole_link'] = 'mod/socialwiki/creole';
 $string['formatnwiki'] = 'NWiki format';
 $string['formatnwiki_help'] = 'Nwiki is the Mediawiki-like markup language used in the contributed Nwiki module.
 
-To create a new page, type the new page name enclosed in double square brackets, for example [[Page 2]].';
+To create a new page, type the new page name enclosed in double square brackets, for example [[Page 2]].
+To link to a page copy the page url double square brackets with an existing page title inside links to a search for that page.';
 $string['formatnwiki_link'] = 'mod/socialwiki/nwiki';
 $string['history'] = 'History';
 $string['history_help'] = 'The history lists links to previous versions of the page.';
@@ -114,20 +117,20 @@ $string['migrationfinishednowikis'] = 'Migration finished, no wikis were migrate
 $string['missingpages'] = 'Pages without content';
 $string['modified'] = 'Modified';
 $string['modulename'] = 'Social Wiki';
-$string['modulename_help'] = 'The wiki activity module enables participants to add and edit a collection of web pages. A wiki can be collaborative, with everyone being able to edit it, or individual, where everyone has their own wiki which only they can edit.
+$string['modulename_help'] = 'The Social Wiki activity module enables participants to add and edit a collection of web pages. A new wiki page is created for every edit someone makes to a page. Pages only exist while someone likes it, if a page has 0 likes it is deleted.
 
+Participants can follow each other and like pages so that search results are specialy tailored for each participant.
 A history of previous versions of each page in the wiki is kept, listing the edits made by each participant.
 
-Wikis have many uses, such as
+Social Wikis have many uses, such as
 
 * For group lecture notes or study guides
 * For members of a faculty to plan a scheme of work or meeting agenda together
 * For students to collaboratively author an online book, creating content on a topic set by their tutor
-* For collaborative storytelling or poetry creation, where each participant writes a line or verse
-* As a personal journal for examination notes or revision (using an individual wiki)';
+* For collaborative storytelling or poetry creation, where each participant writes a line or verse';
 $string['create'] = 'New';
 $string['modulename_link'] = 'mod/socialwiki/view';
-$string['modulenameplural'] = 'Wikis';
+$string['modulenameplural'] = 'Social Wikis';
 $string['navigation'] = 'Navigation';
 $string['navigationfrom'] = 'This page comes from';
 $string['navigationfrom_help'] = 'The wiki pages linking to this page';
@@ -167,11 +170,11 @@ $string['orphaned'] = 'Orphaned pages';
 $string['orphaned_help'] = 'List of pages that are not linked from other page.';
 $string['overridelocks'] = 'Override locks';
 $string['overridinglocks'] = 'Overriding locks...';
-$string['page-mod-socialwiki-x'] = 'Any wiki module page';
-$string['page-mod-socialwiki-view'] = 'Wiki module main page';
-$string['page-mod-socialwiki-comments'] = 'Wiki module comments page';
-$string['page-mod-socialwiki-history'] = 'Wiki history page';
-$string['page-mod-socialwiki-map'] = 'Wiki map page';
+$string['page-mod-socialwiki-x'] = 'Any social wiki module page';
+$string['page-mod-socialwiki-view'] = 'Social Wiki module main page';
+$string['page-mod-socialwiki-comments'] = 'Social Wiki module comments page';
+$string['page-mod-socialwiki-history'] = 'Social Wiki history page';
+$string['page-mod-socialwiki-manage'] = 'Social Wiki manage page';
 $string['pageexists'] = 'This page already exists. Redirecting to it.';
 $string['pageindex'] = 'Page Index';
 $string['pageindex_help'] = 'This wiki\'s page tree';
@@ -180,7 +183,7 @@ $string['pagelist'] = 'Page list';
 $string['pagelist_help'] = 'Page list categorized by alphabetical order';
 $string['pagename'] = 'Page name';
 $string['peerreview'] = 'Peer review';
-$string['pluginadministration'] = 'Wiki administration';
+$string['pluginadministration'] = 'Social Wiki administration';
 $string['pluginname'] = 'Social Wiki';
 $string['prettyprint'] = 'Printer-friendly version';
 $string['previewwarning'] = 'This is a preview. Changes have not been saved yet.';
@@ -227,7 +230,7 @@ $string['viewallhistory'] = 'View all history';
 $string['viewperpage'] = 'Show {$a} versions per page';
 $string['viewversion'] = 'Viewing page version #{$a}';
 $string['viewcurrent'] = 'Current version';
-$string['socialwiki'] = 'Wiki';
+$string['socialwiki'] = 'Social Wiki';
 $string['wikiattachments'] = 'Wiki attachments';
 $string['wikiboldtext'] = 'Bold text';
 $string['wikiexternalurl'] = 'External URL';
@@ -249,7 +252,7 @@ $string['wikinowikitext'] = 'No wiki text';
 $string['wikiorderedlist'] = 'Ordered list';
 $string['wikisettings'] = 'Wiki settings';
 $string['wikiunorderedlist'] = 'Unordered list';
-$string['socialwiki:addinstance'] = 'Add a new wiki';
+$string['socialwiki:addinstance'] = 'Add a new Socail Wiki';
 $string['socialwiki:createpage'] = 'Create new wiki pages';
 $string['socialwiki:editcomment'] = 'Add comments to pages';
 $string['socialwiki:editpage'] = 'Save wiki pages';
@@ -259,8 +262,8 @@ $string['socialwiki:managefiles'] = 'Manage wiki files';
 $string['socialwiki:overridelock'] = 'Override wiki locks';
 $string['socialwiki:viewcomment'] = 'View page comments';
 $string['socialwiki:viewpage'] = 'View wiki pages';
-$string['socialwikipages'] = 'Wiki pages';
+$string['socialwikipages'] = 'Social Wiki pages';
 $string['wrongversionlock'] = 'Another user has edited this page while you were editing and your content is obsolete.';
 $string['wrongversionsave'] = 'Another user has created a version while you were editing and you have overwritten his changes, check the page history.';
-$string['socialwiki:managewiki'] = 'Manage Wiki';
+$string['socialwiki:managewiki'] = 'Manage Social Wiki';
 
