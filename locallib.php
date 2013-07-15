@@ -1560,6 +1560,7 @@ function socialwiki_get_relations($pageid){
 			}
 		}
 	}
-	return $relations;
+	 sort($relations);
+	 return $relations;
 }
 	

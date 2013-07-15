@@ -35,6 +35,7 @@ require_once('../../config.php');
 require_once($CFG->dirroot . '/mod/socialwiki/lib.php');
 require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
 require_once($CFG->dirroot . '/mod/socialwiki/pagelib.php');
+require_once($CFG->dirroot.'/mod/socialwiki/socialwikitree.php');
 
 $pageid = required_param('pageid', PARAM_TEXT);
 $paging = optional_param('page', 0, PARAM_INT);

@@ -877,7 +877,6 @@ class page_socialwiki_search extends page_socialwiki {
         foreach($this->search_result as $page){
 			$tree->add_node($page);
 		}
-		$tree->sort();
 		//display the php tree (this is hidden if JavaScript is enabled)
 		echo $OUTPUT->container_start('phptree');
 		$tree->display();
@@ -1233,25 +1232,35 @@ class page_socialwiki_history extends page_socialwiki {
 
     function print_header() {
         parent::print_header();
-        $this->print_pagetitle();
-    }
-
-    function print_pagetitle() {
-        global $OUTPUT;
-        $html = '';
-
-        $html .= $OUTPUT->container_start();
-        $html .= $OUTPUT->heading_with_help(format_string($this->title), 'history', 'socialwiki');
-        $html .= $OUTPUT->container_end();
-        echo $html;
     }
 
     function print_content() {
-        global $PAGE;
+        global $PAGE,$OUTPUT;
 
         require_capability('mod/socialwiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'socialwiki');
-		print_object(socialwiki_get_relations($this->page->id));
-        //$this->print_history_content();
+		$history=socialwiki_get_relations($this->page->id);
+		$tree=new socialwiki_tree();
+		foreach($history as $page){
+			$tree->add_node($page);
+		}
+		foreach($tree->nodes as $node){
+			$node->content.=$this->choose_from_radio(array($node->id => null), 'compare', 'M.mod_socialwiki.history()', '', true). $this->choose_from_radio(array($node->id  => null), 'comparewith', 'M.mod_socialwiki.history()', '', true);
+		
+		}
+		echo $this->wikioutput->content_area_begin();
+		echo $this->wikioutput->title_block($this->title);
+		echo $OUTPUT->container_start('phptree');
+		$tree->display();
+		echo html_writer::start_tag('form', array('action'=>new moodle_url('/mod/socialwiki/diff.php'), 'method'=>'get', 'id'=>'diff'));
+		echo html_writer::empty_tag('input', array('type'=>'submit', 'class'=>'socialwiki_form-button', 'value'=>get_string('comparesel', 'socialwiki')));
+		echo html_writer::end_tag('form');
+		echo $OUTPUT->container_end();
+		echo $this->wikioutput->content_area_end();
+		$json=json_encode($tree);
+		//send the tree to javascript
+		
+		echo '<script> var searchResults='.$json.';</script>';
+
     }
 
     function set_url() {
