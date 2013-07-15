@@ -1160,14 +1160,8 @@ class page_socialwiki_diff extends page_socialwiki {
         parent::create_navbar();
         $PAGE->navbar->add(get_string('history', 'socialwiki'), $CFG->wwwroot . '/mod/socialwiki/history.php?pageid=' . $this->page->id);
         $PAGE->navbar->add(get_string('diff', 'socialwiki'));
-    }
-
-    protected function setup_tabs($options = array()) {
-        parent::setup_tabs(array('linkedwhenactive' => 'history', 'activetab' => 'history'));
-    }
-
-    /**
-     * Given two versions of a page, prints a page displaying the differences between them.
+        /**
+     * Given two , prints a page displaying the differences between them.
      *
      * @global object $CFG
      * @global object $OUTPUT
@@ -1179,9 +1173,9 @@ class page_socialwiki_diff extends page_socialwiki {
         $pageid = $this->page->id;
         $total = socialwiki_count_wiki_page_versions($pageid) - 1;
 
-        $oldversion = socialwiki_get_wiki_page_version($pageid, $this->compare);
+        $oldversion = socialwiki_get_wiki_page_version($this->compare,1 );
 
-        $newversion = socialwiki_get_wiki_page_version($pageid, $this->comparewith);
+        $newversion = socialwiki_get_wiki_page_version($this->comparewith,1);
 
         if ($oldversion && $newversion) {
 
@@ -1227,7 +1221,7 @@ class page_socialwiki_history extends page_socialwiki {
         $PAGE->requires->js_init_call('M.mod_socialwiki.history', null, true);
 		$PAGE->requires->js(new moodle_url("/mod/socialwiki/tree_jslib/tree.js"));
 		$PAGE->requires->css(new moodle_url("/mod/socialwiki/tree_jslib/tree_styles.css"));
-		$PAGE->requires->js(new moodle_url("/mod/socialwiki/history.js"));
+		//$PAGE->requires->js(new moodle_url("/mod/socialwiki/history.js"));
     }
 
     function print_header() {
@@ -1244,16 +1238,21 @@ class page_socialwiki_history extends page_socialwiki {
 			$tree->add_node($page);
 		}
 		foreach($tree->nodes as $node){
-			$node->content.='<br/>';
+			$node->content.="this";
 			$node->content.=$this->choose_from_radio(array($node->id => null), 'compare', '', '', true). $this->choose_from_radio(array($node->id  => null), 'comparewith', '', '', true);
+
+			$node->content.=$this->choose_from_radio(array(substr($node->id,1) => null), 'compare', 'M.mod_socialwiki.history()', '', true). $this->choose_from_radio(array(substr($node->id,1)  => null), 'comparewith', 'M.mod_socialwiki.history()', '', true);
 		
 		}
 		echo $this->wikioutput->content_area_begin();
 		echo $this->wikioutput->title_block($this->title);
 		echo $OUTPUT->container_start('phptree');
-		$tree->display();
 		echo html_writer::start_tag('form', array('action'=>new moodle_url('/mod/socialwiki/diff.php'), 'method'=>'get', 'id'=>'diff'));
+		echo html_writer::tag('div', html_writer::empty_tag('input', array('type'=>'hidden', 'name'=>'pageid', 'value'=>$this->page->id)));
+		$tree->display();
+		echo $OUTPUT->container_start('socialwiki_diffbutton');
 		echo html_writer::empty_tag('input', array('type'=>'submit', 'class'=>'socialwiki_form-button', 'value'=>get_string('comparesel', 'socialwiki')));
+		echo $OUTPUT->container_end();
 		echo html_writer::end_tag('form');
 		echo $OUTPUT->container_end();
 		echo $this->wikioutput->content_area_end();

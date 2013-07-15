@@ -62,9 +62,6 @@ if (!$cm = get_coursemodule_from_instance('socialwiki', $wiki->id)) {
 
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
-if ($compare >= $comparewith) {
-    print_error("A page version can only be compared with an older version.");
-}
 
 require_login($course, true, $cm);
 

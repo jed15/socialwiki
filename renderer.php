@@ -83,15 +83,11 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         $strdatetime = get_string('strftimedatetime', 'langconfig');
 
         $olduser = $old->user;
-        $versionlink = new moodle_url('/mod/socialwiki/viewversion.php', array('pageid' => $pageid, 'versionid' => $old->id));
-        $restorelink = new moodle_url('/mod/socialwiki/restoreversion.php', array('pageid' => $pageid, 'versionid' => $old->id));
+        $versionlink = new moodle_url('/mod/socialwiki/view.php', array('pageid' => $old->pageid));
         $userlink = new moodle_url('/user/view.php', array('id' => $olduser->id));
         // view version link
         $oldversionview = ' ';
         $oldversionview .= html_writer::link($versionlink->out(false), get_string('view', 'socialwiki'), array('class' => 'socialwiki_diffview'));
-        $oldversionview .= ' ';
-        // restore version link
-        $oldversionview .= html_writer::link($restorelink->out(false), get_string('restore', 'socialwiki'), array('class' => 'socialwiki_diffview'));
 
         // userinfo container
         $oldheading = $this->output->container_start('socialwiki_diffuserleft');
@@ -103,7 +99,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 
         // version number container
         $oldheading .= $this->output->container_start('socialwiki_diffversion');
-        $oldheading .= get_string('version') . ' ' . $old->version . $oldversionview;
+        $oldheading .= get_string('page') . ' ' . $old->pageid . $oldversionview;
         $oldheading .= $this->output->container_end();
         // userdate container
         $oldheading .= $this->output->container_start('socialwiki_difftime');
@@ -111,8 +107,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         $oldheading .= $this->output->container_end();
 
         $newuser = $new->user;
-        $versionlink = new moodle_url('/mod/socialwiki/viewversion.php', array('pageid' => $pageid, 'versionid' => $new->id));
-        $restorelink = new moodle_url('/mod/socialwiki/restoreversion.php', array('pageid' => $pageid, 'versionid' => $new->id));
+        $versionlink = new moodle_url('/mod/socialwiki/view.php', array('pageid' => $new->pageid));
         $userlink = new moodle_url('/user/view.php', array('id' => $newuser->id));
 
         $newversionview = ' ';
@@ -126,7 +121,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 
         // version
         $newheading .= $this->output->container_start('socialwiki_diffversion');
-        $newheading .= get_string('version') . '&nbsp;' . $new->version . $newversionview;
+        $newheading .= get_string('page') . '&nbsp;' . $new->pageid . $newversionview;
         $newheading .= $this->output->container_end();
         // userdate
         $newheading .= $this->output->container_start('socialwiki_difftime');
@@ -142,12 +137,12 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         $html .= html_writer::tag('div', $newheading.$diff2, array('class'=>'socialwiki-diff-rightside'));
         $html .= html_writer::end_tag('div');
 
-        if (!empty($total)) {
+       /* if (!empty($total)) {
             $html .= '<div class="socialwiki_diff_paging">';
             $html .= $this->output->container($this->diff_paging_bar(1, $new->version - 1, $old->version, $CFG->wwwroot . '/mod/socialwiki/diff.php?pageid=' . $pageid . '&amp;comparewith=' . $new->version . '&amp;', 'compare', false, true), 'socialwiki_diff_oldpaging');
             $html .= $this->output->container($this->diff_paging_bar($old->version + 1, $total, $new->version, $CFG->wwwroot . '/mod/socialwiki/diff.php?pageid=' . $pageid . '&amp;compare=' . $old->version . '&amp;', 'comparewith', false, true), 'socialwiki_diff_newpaging');
             $html .= '</div>';
-        }
+        }*/
 
         return $html;
     }

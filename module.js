@@ -60,7 +60,7 @@ M.mod_socialwiki.history = function(Y, args) {
     var radio2 = document.getElementsByName('comparewith');
     for(var i=0; i<radio.length;i++){
           if(radio[i].checked){
-             radio2[i].disabled=true;
+				radio2[i].disabled=true;
 			}else{
 				radio2[i].disabled=false;
 			}
