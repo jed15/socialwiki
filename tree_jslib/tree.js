@@ -272,7 +272,7 @@ function TreeControl(myTree, divID)
             for (var j=0; j < this.columns[i].length; j++)
             {
             //Adding to the list in hmtl
-            $('#tree_col'+i).append('<li tabindex=5 class="tree_node" id="tree_'+this.columns[i][j]+'" index='+this.columns[i][j]+'><p class="test_label whitetext">'+this.myTree.nodes[this.columns[i][j]].content+'</p></li><br/>  ');
+            $('#tree_col'+i).append('<li tabindex=5 class="tree_node" id="tree_'+this.columns[i][j]+'" index='+this.columns[i][j]+'><p id="description'+i+''+j+'" class="test_label whitetext">'+this.myTree.nodes[this.columns[i][j]].content+'</p></li><br/>  ');
             if (i != 0)
             {
                 $('#tree_'+this.columns[i][j]).css("opacity", "0");

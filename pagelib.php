@@ -1244,7 +1244,8 @@ class page_socialwiki_history extends page_socialwiki {
 			$tree->add_node($page);
 		}
 		foreach($tree->nodes as $node){
-			$node->content.=$this->choose_from_radio(array($node->id => null), 'compare', 'M.mod_socialwiki.history()', '', true). $this->choose_from_radio(array($node->id  => null), 'comparewith', 'M.mod_socialwiki.history()', '', true);
+			$node->content.='<br/>';
+			$node->content.=$this->choose_from_radio(array($node->id => null), 'compare', '', '', true). $this->choose_from_radio(array($node->id  => null), 'comparewith', '', '', true);
 		
 		}
 		echo $this->wikioutput->content_area_begin();

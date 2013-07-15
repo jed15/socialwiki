@@ -9,4 +9,9 @@ mTree = new TreeControl(historyTree, "socialwiki_content_area");
 $(document).ready(function() {
 	$(".phptree").css("display", "none");
     mTree.display();
+    
+    $(".radiogroup .comparewith").click(function(e) {
+    alert("hello");
+    });
 });
+
