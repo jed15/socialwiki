@@ -114,6 +114,7 @@
 		
 		function display(){
 			Global $OUTPUT;
+			$this->sort();
 			echo $OUTPUT->heading('OLDEST--->NEWEST',1,'whitetext');
 			foreach($this->nodes as $node){
 				if($node->parent==-1){

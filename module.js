@@ -60,22 +60,15 @@ M.mod_socialwiki.history = function(Y, args) {
     var radio2 = document.getElementsByName('comparewith');
     for(var i=0; i<radio.length;i++){
           if(radio[i].checked){
-            compare = true;
-        }
-        if(!comparewith){
-            radio[i].disabled=true;
-            radio2[i].disabled=false;
-        } else if(!compare && comparewith){
-            radio[i].disabled=false;
-            radio2[i].disabled=false;
-        } else {
-            radio[i].disabled=false;
-            radio2[i].disabled=true;
-        }
-
+             radio2[i].disabled=true;
+			}else{
+				radio2[i].disabled=false;
+			}
         if(radio2[i].checked){
-            comparewith = true;
-        }
+            radio[i].disabled=true;
+        }else{
+			radio[i].disabled=false;
+		}
     }
 }
 
