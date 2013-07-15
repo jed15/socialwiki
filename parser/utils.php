@@ -27,6 +27,7 @@ class socialparser_utils {
 
     public static function socialwiki_parser_link_callback($link, $options) {
         $l = urlencode($link);
+
         if(!empty($options['anchor'])) {
             $l .= "#".urlencode($options['anchor']);
         }

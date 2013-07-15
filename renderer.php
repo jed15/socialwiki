@@ -564,14 +564,14 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 		$html .= html_writer::end_tag('li');
 		$html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
 		$html .= html_writer::start_span('socialwiki_navspan');
-		$html .= html_writer::link('','', array('id' => 'socialwiki_versionbutton'));
+		$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/history.php?pageid='.$pageid,'', array('id' => 'socialwiki_versionbutton'));
 		$html .= html_writer::end_span();
 		$html .= html_writer::end_tag('ul');
 		$html .= html_writer::end_div();
 
 		//Search box
                 $html .=  '<div id="socialwiki_search">
-                    <form id="socialwiki_searchform" action="'.$CFG->wwwroot.'/mod/socialwiki/search.php" method="post">
+                    <form id="socialwiki_searchform" action="'.$CFG->wwwroot.'/mod/socialwiki/search.php" method="get">
                         <input id="socialwiki_searchbox" name="searchstring" type="text" value="Search..."></input>
                         <input type="hidden" name="cmid" value="'.$this->page->cm->id.'"></input>
                         <input type="hidden" name="courseid" value="'.$COURSE->id.'"></input>

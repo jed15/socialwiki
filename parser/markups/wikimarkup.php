@@ -340,6 +340,7 @@ abstract class socialwiki_markup_parser extends socialgeneric_parser {
         } else {
             $callbackargs = $this->linkgeneratorcallbackargs;
             $callbackargs['anchor'] = $anchor;
+
             $link = call_user_func_array($this->linkgeneratorcallback, array($link, $callbackargs));
 
             if (isset($link['link_info'])) {
@@ -356,6 +357,8 @@ abstract class socialwiki_markup_parser extends socialgeneric_parser {
      */
 
     protected function format_link($text) {
+        global $CFG, $COURSE, $PAGE;
+
         $matches = array();
         if (preg_match("/^([^\|]+)\|(.+)$/i", $text, $matches)) {
             $link = $matches[1];
@@ -376,6 +379,11 @@ abstract class socialwiki_markup_parser extends socialgeneric_parser {
         if (isset($link['new']) && $link['new']) {
             $options = array('class' => 'socialwiki_newentry');
         } else {
+            $pageid = $this->wiki_page_id;
+            $searchstring = urlencode($link['content']);
+            //need cmid and courseid
+
+            $link['url'] = $CFG->wwwroot.'/mod/socialwiki/search.php?searchstring='.$searchstring.'&pageid='.$pageid.'&courseid='.$COURSE->id.'&cmid='.$PAGE->cm->id;
             $options = array();
         }
 

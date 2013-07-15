@@ -870,7 +870,7 @@ class page_socialwiki_search extends page_socialwiki {
         require_capability('mod/socialwiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'socialwiki');
 		
 		echo $this->wikioutput->content_area_begin();
-		echo $this->wikioutput->title_block("Search results for: ".$this->search_string);
+		echo $this->wikioutput->title_block("Search results for: ".$this->search_string."(".count($this->search_result)."&nbsptotal)");
         //echo $this->wikioutput->search_result($this->search_result, $this->subwiki);
 		$tree= new socialwiki_tree();
 		//create a tree from the search results
@@ -1225,6 +1225,9 @@ class page_socialwiki_history extends page_socialwiki {
         global $PAGE;
         parent::__construct($wiki, $subwiki, $cm);
         $PAGE->requires->js_init_call('M.mod_socialwiki.history', null, true);
+		$PAGE->requires->js(new moodle_url("/mod/socialwiki/history.js"));
+		$PAGE->requires->js(new moodle_url("/mod/socialwiki/tree_jslib/tree.js"));
+		$PAGE->requires->css(new moodle_url("/mod/socialwiki/tree_jslib/tree_styles.css"));
     }
 
     function print_header() {
