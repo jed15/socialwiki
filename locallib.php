@@ -1473,6 +1473,12 @@ function socialwiki_unfollow($userfromid,$usertoid, $subwikiid){
 	$DB->delete_records_select('socialwiki_follows',$select,array($userfromid,$usertoid, $subwikiid));
 }
 
+//retursn the number of poeple following the user
+function socialwiki_get_followers($userid,$subwikiid){
+	Global $DB;
+	$select='usertoid=? AND subwikiid=?';
+	return count($DB->get_records_select('socialwiki_follows',$select,array($userid, $subwikiid)));
+}
 
 //returns true if the user likes the page
 function socialwiki_liked($userid,$pageid){
@@ -1578,4 +1584,16 @@ function socialwiki_get_currentstyle($wikiid){
 	FROM {socialwiki}
 	WHERE id=?';
 	return $DB->get_record_sql($sql,array($wikiid));
+}
+
+function socialwiki_sort_bylikes($tree){
+	$leaves=$tree->find_leaves();
+	foreach ($leaves as $leaf){
+		$leaf->likes=socialwiki_numlikes(substr($leaf->id,1));
+	}
+}
+
+
+
+function scoialewiki_sort_byfollows($tree){
 }

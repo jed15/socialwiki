@@ -77,7 +77,7 @@
 			return NULL;
 		}
 		
-		//sort the array with the children of a node apearing directly after it in the array
+		//sort the array with the children of a node appearing directly after it in the array
 		function sort(){
 			$sorted=array();
 			$parents=array();
@@ -110,6 +110,17 @@
 				}
 			}
 			return $ar;
+		}
+		
+		//returns an array with all the leaves of the tree
+		function find_leaves(){
+			$leaves=array();
+			foreach($this->nodes as $node){
+				if(count($node->children)==0){
+				$leaves[]=$node;
+				}
+			}
+			return $leaves;
 		}
 		
 		function display(){

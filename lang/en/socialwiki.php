@@ -244,6 +244,7 @@ $string['viewallhistory'] = 'View all history';
 $string['viewperpage'] = 'Show {$a} versions per page';
 $string['viewversion'] = 'Viewing page version #{$a}';
 $string['viewcurrent'] = 'Current version';
+$string['viewuserpages']='View User\'s Pages';
 $string['socialwiki'] = 'Social Wiki';
 $string['wikiattachments'] = 'Wiki attachments';
 $string['wikiboldtext'] = 'Bold text';
