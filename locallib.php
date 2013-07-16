@@ -1571,3 +1571,11 @@ function socialwiki_get_relations($pageid){
 	 return $relations;
 }
 	
+function socialwiki_get_currentstyle($wikiid){
+
+	Global $DB;
+	$sql='SELECT style 
+	FROM {socialwiki}
+	WHERE id=?';
+	return $DB->get_record_sql($sql,array($wikiid));
+}
