@@ -98,7 +98,6 @@ abstract class page_socialwiki {
 		$PAGE->requires->js(new moodle_url("/mod/socialwiki/toolbar.js"));
         $this->subwiki = $subwiki;
         $this->modcontext = context_module::instance($PAGE->cm->id);
-		
         // initialise wiki renderer
         $this->wikioutput = $PAGE->get_renderer('mod_socialwiki');
         $PAGE->set_cacheable(true);
