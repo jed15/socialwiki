@@ -519,47 +519,31 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
                 
 		$html  = '';
 		$html .= html_writer::start_div('', array('id' => 'socialwiki_nav'));
-		$html .= html_writer::start_div('', array('id' => 'socialwiki_container'));
-
-		//Back/Forward buttons
-		$html .= html_writer::start_div('', array('id' => 'socialwiki_bfbuttons'));
-		$html .= html_writer::start_tag('ul', array('id' => 'socialwiki_bflist', 'class' => 'horizontal_list'));
-		$html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
-		$html .= html_writer::start_span('socialwiki_navspan');
-		$html .= html_writer::link('','', array('id' => 'socialwiki_forwardbutton'));
-		$html .= html_writer::end_span();
-		$html .= html_writer::end_tag('li');
-		$html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
-		$html .= html_writer::start_span('socialwiki_navspan');
-		$html .= html_writer::link('','', array('id' => 'socialwiki_backbutton'));
-		$html .= html_writer::end_span();
-		$html .= html_writer::end_tag('li');
-		$html .= html_writer::end_tag('ul');
-		$html .= html_writer::end_div();
+		$html .= html_writer::start_div('', array('id' => 'socialwiki_container', 'class' => ''));
 
 		//Page navigation buttons
 		$html .= html_writer::start_div('', array('id' => 'socialwiki_navbuttons'));
 		$html .= html_writer::start_tag('ul', array('id' => 'socialwiki_navlist', 'class' => 'horizontal_list'));
-                
+
                 $html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
 		$html .= html_writer::start_span('socialwiki_navspan');
-		$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.socialwiki_get_first_page($page->subwikiid)->id,'', array('id' => 'socialwiki_homebutton'));
+		$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.socialwiki_get_first_page($page->subwikiid)->id,'Front Page', array('class' => 'socialwiki_toolbarlink','id' => 'socialwiki_homebutton', 'title' => get_string('frontpagetooltip', 'mod_socialwiki')));
 		$html .= html_writer::end_span();
 		$html .= html_writer::end_tag('li');
                 
 		$html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
 		$html .= html_writer::start_span('socialwiki_navspan');
-		$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$pageid,'', array('id' => 'socialwiki_viewbutton'));
+		$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$pageid,'View', array('class' => 'socialwiki_toolbarlink', 'id' => 'socialwiki_viewbutton','title' => get_string('viewpagetooltip', 'mod_socialwiki')));
 		$html .= html_writer::end_span();
 		$html .= html_writer::end_tag('li');
 		$html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
 		$html .= html_writer::start_span('socialwiki_navspan');
-		$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/edit.php?pageid='.$pageid,'', array('id' => 'socialwiki_editbutton'));
+		$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/edit.php?pageid='.$pageid,'Edit', array('class' => 'socialwiki_toolbarlink','id' => 'socialwiki_editbutton', 'title' => get_string('editpagetooltip', 'mod_socialwiki')));
 		$html .= html_writer::end_span();
 		$html .= html_writer::end_tag('li');
 		$html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
 		$html .= html_writer::start_span('socialwiki_navspan');
-		$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/history.php?pageid='.$pageid,'', array('id' => 'socialwiki_versionbutton'));
+		$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/history.php?pageid='.$pageid,'Versions', array('class' => 'socialwiki_toolbarlink','id' => 'socialwiki_versionbutton','title' => get_string('versiontooltip', 'mod_socialwiki')));
 		$html .= html_writer::end_span();
 		$html .= html_writer::end_tag('ul');
 		$html .= html_writer::end_div();
@@ -582,31 +566,31 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 
 		if (socialwiki_liked($USER->id, $pageid))
 		{
-			$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/like.php?pageid='.$pageid.'&from='.urlencode($PAGE->url->out()),'', array('id' => 'socialwiki_likebutton', 'like' =>'no'));
+			$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/like.php?pageid='.$pageid.'&from='.urlencode($PAGE->url->out()),'Unlike', array('class' => 'socialwiki_toolbarlink','id' => 'socialwiki_likebutton', 'like' =>'no','title' => get_string('liketooltip', 'mod_socialwiki')));
 		}else
 		{
-			$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/like.php?pageid='.$pageid.'&from='.urlencode($PAGE->url->out()),'', array('id' => 'socialwiki_likebutton', 'like' =>'yes'));
+			$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/like.php?pageid='.$pageid.'&from='.urlencode($PAGE->url->out()),'Like', array('class' => 'socialwiki_toolbarlink','id' => 'socialwiki_likebutton', 'like' =>'yes','title' => get_string('liketooltip', 'mod_socialwiki')));
 		}
 		$html .= html_writer::end_tag('li');
 		$html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
 		$userto = socialwiki_get_author($pageid);
 		if (socialwiki_is_following($USER->id,$userto->userid,$page->subwikiid))
 		{
-		$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/follow.php?pageid='.$pageid.'&from='.urlencode($PAGE->url->out()),'', array('id' => 'socialwiki_friendbutton',  'friend' => 'no'));
+		$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/follow.php?pageid='.$pageid.'&from='.urlencode($PAGE->url->out()),'Unfollow', array('class' => 'socialwiki_toolbarlink','id' => 'socialwiki_friendbutton',  'friend' => 'no', 'title' => get_string('followtooltip', 'mod_socialwiki')));
 		}
 		else
 		{
-		$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/follow.php?pageid='.$pageid.'&from='.urlencode($PAGE->url->out()),'', array('id' => 'socialwiki_friendbutton',  'friend' => 'yes'));
+		$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/follow.php?pageid='.$pageid.'&from='.urlencode($PAGE->url->out()),'Follow', array('class' => 'socialwiki_toolbarlink','id' => 'socialwiki_friendbutton',  'friend' => 'yes', 'title' => get_string('followtooltip', 'mod_socialwiki')));
 		}
 		$html .= html_writer::end_tag('li');
 		$html .= html_writer::end_tag('li');
 		$html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
-		$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/manage.php?pageid='.$pageid,'', array('id' => 'socialwiki_managebutton'));
+		$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/manage.php?pageid='.$pageid,'Manage', array('class' => 'socialwiki_toolbarlink','id' => 'socialwiki_managebutton', 'title' => get_string('managetooltip', 'mod_socialwiki')));
 		$html .= html_writer::end_tag('li');
                 
                 $html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
 		$html .= html_writer::start_span('socialwiki_navspan');
-		$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/comments.php?pageid='.$pageid,'', array('id' => 'socialwiki_commentsbutton'));
+		$html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/comments.php?pageid='.$pageid,'Comments', array('class' => 'socialwiki_toolbarlink','id' => 'socialwiki_commentsbutton', 'title' => get_string('commentstooltip', 'mod_socialwiki')));
 		$html .= html_writer::end_span();
 		$html .= html_writer::end_tag('li');
 		$html .= html_writer::end_tag('ul');
