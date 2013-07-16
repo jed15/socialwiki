@@ -10,3 +10,4 @@ $(document).ready(function() {
 	$(".phptree").css("display", "none");
     mTree.display();
 });
+    //$(".radiogroup").click(function(e){console.log($(document))});

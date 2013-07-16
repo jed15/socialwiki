@@ -17,11 +17,11 @@ function TreeControl(myTree, divID)
 {
 
     //Need to make these hidden elements, or else the css won't load before it is needed.
-    $('head').prepend('<link rel="stylesheet" type="text/css" href="'+$('script[src$="tree.js"]').attr('src').replace('tree.js','')+'tree_styles.css"></link>')
-    $("#"+divID).append('<ul class="tree_column" style="display:none"></ul>')
-    $("#"+divID).append('<ul class="tree_node" style="display:none"></ul>')
-    $("#"+divID).append('<div class="relation_line" style="display:none"></div>')
-
+    $('head').prepend('<link rel="stylesheet" type="text/css" href="'+$('script[src$="tree.js"]').attr('src').replace('tree.js','')+'tree_styles.css"></link>');
+    $("#"+divID).append('<ul class="tree_column" style="display:none"></ul>');
+    $("#"+divID).append('<ul class="tree_node" style="display:none"></ul>');
+    $("#"+divID).append('<div class="relation_line" style="display:none"></div>');
+    $("#"+divID).css('text-align', 'left');
     this.columns = Array();
     this.childDepths = Array();
     this.myTree = myTree;
@@ -272,7 +272,7 @@ function TreeControl(myTree, divID)
             for (var j=0; j < this.columns[i].length; j++)
             {
             //Adding to the list in hmtl
-            $('#tree_col'+i).append('<li tabindex=5 class="tree_node" id="tree_'+this.columns[i][j]+'" index='+this.columns[i][j]+'><p class="test_label whitetext">'+this.myTree.nodes[this.columns[i][j]].content+'</p></li><br/>  ');
+            $('#tree_col'+i).append('<li tabindex=5 class="tree_node" id="tree_'+this.columns[i][j]+'" index='+this.columns[i][j]+'><p id="socialwiki_node_description" class="test_label whitetext">'+this.myTree.nodes[this.columns[i][j]].content+'</p></li><br/>  ');
             if (i != 0)
             {
                 $('#tree_'+this.columns[i][j]).css("opacity", "0");
@@ -282,7 +282,11 @@ function TreeControl(myTree, divID)
             
             $('#tree_'+this.columns[i][j]).click(this,function(e)
             {
-                e.data.toggleParent($(this).attr("index"));
+                var pattern = /^tree_/;
+                if (e.target.attributes.id.ownerElement.id == "socialwiki_node_description" || pattern.test(e.target.attributes.id.ownerElement.id))
+                {
+                    e.data.toggleParent($(this).attr("index"));
+                }
             });
             
             //to make this somewhat accessible, provide some keyboard navigation through tabbing and pressing enter

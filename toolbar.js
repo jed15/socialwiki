@@ -19,5 +19,6 @@ $(document).ready(function(){
         $("#socialwiki_searchbox").attr("value", "Search...");
     });
     
+    $(".socialwiki_toolbarlink").html("");
 
 });

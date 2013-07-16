@@ -76,8 +76,7 @@ abstract class page_socialwiki {
      * @var array The tabs set used in wiki module
      */
     protected $tabs = array('view' => 'view', 'edit' => 'edit', 'comments' => 'comments',
-                            'history' => 'history', 'map' => 'map', 'files' => 'files',
-                            'admin' => 'admin');
+                            'versions' => 'history','manage' => 'manage');
     /**
      * @var array tabs options
      */
@@ -106,8 +105,11 @@ abstract class page_socialwiki {
         $PAGE->set_cm($cm);
         $PAGE->set_activity_record($wiki);
 		$PAGE->requires->jquery();
+        $PAGE->requires->css(new moodle_url("/mod/socialwiki/stylish_styles.css"));
+        //To disable the nice theme, do not include toolbar.js and include plain_styles.css instead of the stylish_styles.css
+        //$PAGE->requires->css(new moodle_url("/mod/socialwiki/plain_styles.css"));
         // the search box
-			//$PAGE->set_button(socialwiki_search_form($cm));
+        $PAGE->set_button(socialwiki_search_form($cm));
     }
 
     /**
@@ -138,10 +140,17 @@ abstract class page_socialwiki {
 		}
 
         //echo $this->wikioutput->socialwiki_info();
-        
+        //print_object(array_keys($GLOBALS));
         // tabs are associated with pageid, so if page is empty, tabs should be disabled
         if (!empty($this->page) && !empty($this->tabs)) {
-           //echo $this->wikioutput->tabs($this->page, $this->tabs, $this->tabs_options);
+            if (socialwiki_liked($USER->id, $this->page->id))
+            {
+                $this->tabs['like'] = 'unlike';
+            }else
+            {
+                $this->tabs['like'] = 'like';
+            }
+            //echo $this->wikioutput->tabs($this->page, $this->tabs, $this->tabs_options);
         }
     }
 
@@ -1014,7 +1023,7 @@ class page_socialwiki_preview extends page_socialwiki_edit {
 
     function __construct($wiki, $subwiki, $cm) {
         global $PAGE, $CFG, $OUTPUT;
-        parent::__construct($wiki, $subwiki, $cm);
+        parent::__construct($wiki, $subwiki, $cm, 0);
         $buttons = $OUTPUT->update_module_button($cm->id, 'socialwiki');
         $PAGE->set_button($buttons);
 
@@ -1160,11 +1169,9 @@ class page_socialwiki_diff extends page_socialwiki {
         parent::create_navbar();
         $PAGE->navbar->add(get_string('history', 'socialwiki'), $CFG->wwwroot . '/mod/socialwiki/history.php?pageid=' . $this->page->id);
         $PAGE->navbar->add(get_string('diff', 'socialwiki'));
-    }
-
-
-    /**
-     * Given two pages of in a tree, prints a page displaying the differences between them.
+	}
+     /**
+     * Given two , prints a page displaying the differences between them.
      *
      * @global object $CFG
      * @global object $OUTPUT
@@ -1222,9 +1229,10 @@ class page_socialwiki_history extends page_socialwiki {
         global $PAGE;
         parent::__construct($wiki, $subwiki, $cm);
         $PAGE->requires->js_init_call('M.mod_socialwiki.history', null, true);
+		$PAGE->requires->jquery();
 		$PAGE->requires->js(new moodle_url("/mod/socialwiki/tree_jslib/tree.js"));
 		$PAGE->requires->css(new moodle_url("/mod/socialwiki/tree_jslib/tree_styles.css"));
-		//$PAGE->requires->js(new moodle_url("/mod/socialwiki/history.js"));
+		$PAGE->requires->js(new moodle_url("/mod/socialwiki/history.js"));
     }
 
     function print_header() {
@@ -1234,31 +1242,35 @@ class page_socialwiki_history extends page_socialwiki {
     function print_content() {
         global $PAGE,$OUTPUT;
 
+
         require_capability('mod/socialwiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'socialwiki');
 		$history=socialwiki_get_relations($this->page->id);
 		$tree=new socialwiki_tree();
 		foreach($history as $page){
-			$tree->add_node($page);
+		$tree->add_node($page);
 		}
+
 		foreach($tree->nodes as $node){
-			$node->content.=$this->choose_from_radio(array(substr($node->id,1) => null), 'compare', 'M.mod_socialwiki.history()', '', true). $this->choose_from_radio(array(substr($node->id,1)  => null), 'comparewith', 'M.mod_socialwiki.history()', '', true);
-		
+		$node->content .= "<br/>";
+		$node->content.=$this->choose_from_radio(array(substr($node->id,1) => null), 'compare', 'M.mod_socialwiki.history()', '', true). $this->choose_from_radio(array(substr($node->id,1) => null), 'comparewith', 'M.mod_socialwiki.history()', '', true);
+
 		}
 		echo $this->wikioutput->content_area_begin();
 		echo $this->wikioutput->title_block($this->title);
-		echo $OUTPUT->container_start('phptree');
+
 		echo html_writer::start_tag('form', array('action'=>new moodle_url('/mod/socialwiki/diff.php'), 'method'=>'get', 'id'=>'diff'));
 		echo html_writer::tag('div', html_writer::empty_tag('input', array('type'=>'hidden', 'name'=>'pageid', 'value'=>$this->page->id)));
+		echo $OUTPUT->container_start('phptree');		
 		$tree->display();
+		echo $OUTPUT->container_end();
 		echo $OUTPUT->container_start('socialwiki_diffbutton');
 		echo html_writer::empty_tag('input', array('type'=>'submit', 'class'=>'socialwiki_form-button', 'value'=>get_string('comparesel', 'socialwiki')));
 		echo $OUTPUT->container_end();
 		echo html_writer::end_tag('form');
-		echo $OUTPUT->container_end();
 		echo $this->wikioutput->content_area_end();
 		$json=json_encode($tree);
 		//send the tree to javascript
-		
+
 		echo '<script> var searchResults='.$json.';</script>';
 
     }
@@ -1423,7 +1435,7 @@ class page_socialwiki_history extends page_socialwiki {
             foreach ($options as $value => $label) {
                 $htmlid = 'auto-rb' . sprintf('%04d', ++$idcounter);
                 $output .= ' <span class="radioelement ' . $name . ' rb' . $currentradio . "\">";
-                $output .= '<input name="' . $name . '" id="' . $htmlid . '" type="radio" value="' . $value . '"';
+                $output .= '<input form = "diff" name="' . $name . '" id="' . $htmlid . '" type="radio" value="' . $value . '"';
                 if ($value == $checked) {
                     $output .= ' checked="checked"';
                 }

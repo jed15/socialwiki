@@ -1,0 +1,66 @@
+.socialwiki_navlistitem
+{
+  float:left;
+  color:white;
+  margin-left:3px;
+  margin-right:3px;
+  margin-top: 0px;
+  margin-bottom:0px;
+}
+
+.horizontal_list
+{
+  list-style:none;
+  margin:0px 0px 0px 0px;
+}
+
+#socialwiki_searchbox
+{
+display:inline-block;
+padding:3px 3px 3px 3px;
+}
+
+#socialwiki_container
+{
+width:100%;
+height:50px;
+text-align:center;
+}
+
+
+#socialwiki-nav
+{
+clear:both;
+width:100%;
+text-align:center;
+border:solid;
+}
+
+#socialwiki_navbuttons
+{
+display:inline-block;
+clear:both;
+position:relative;
+}
+
+ #socialwiki_bfbuttons
+{
+display:inline-block;
+float:left;
+position:relative;
+}
+
+
+#socialwiki_search
+{
+display:inline-block;
+clear:both;
+position:relative;
+top:-10%;
+}
+
+#socialwiki_socialbuttons
+{
+display:inline-block;
+clear:both;
+}

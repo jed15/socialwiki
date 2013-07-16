@@ -2,7 +2,6 @@
 .tree_node
 {
 width:100px;
-height:50px;
 border:solid;
 text-align:center;
 margin:15px 15px 15px 15px;
@@ -14,7 +13,6 @@ display:inline-block;
 .tree_node:hover
 {
 width:100px;
-height:50px;
 border:solid;
 text-align:center;
 margin:15px 15px 15px 15px;

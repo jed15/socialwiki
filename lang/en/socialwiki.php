@@ -41,10 +41,21 @@ $string['createddate'] = 'Created: {$a->date} by {$a->username}';
 $string['creole'] = 'Creole';
 $string['defaultformat'] = 'Default format';
 $string['defaultformat_help'] = 'This setting determines the default format used when editing wiki pages.
-
 * HTML - The HTML editor is available
 * Creole - A common wiki markup language for which a small edit toolbar is available
 * Nwiki - Mediawiki-like markup language used in the contributed Nwiki module';
+
+$string['frontpagetooltip'] = 'Front Page';
+$string['viewpagetooltip'] = 'View the page';
+$string['editpagetooltip'] = 'Edit this page';
+$string['versiontooltip'] = 'Other versions of this page';
+$string['liketooltip'] = 'Like/Unlike';
+$string['followtooltip'] = 'Follow this user';
+$string['managetooltip'] = 'Manage your likes and follows';
+$string['commentstooltip'] = 'Comments';
+$string['like'] = 'Like';
+$string['unlike'] = 'Unlike';
+
 $string['deletecomment'] = 'Deleting comment';
 $string['deletecommentcheck'] = 'Delete comment';
 $string['deletecommentcheckfull'] = 'Are you sure you want to delete the comment?';
