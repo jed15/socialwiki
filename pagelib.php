@@ -105,9 +105,10 @@ abstract class page_socialwiki {
         $PAGE->set_cm($cm);
         $PAGE->set_activity_record($wiki);
 		$PAGE->requires->jquery();
-        $PAGE->requires->css(new moodle_url("/mod/socialwiki/stylish_styles.css"));
+
+        //$PAGE->requires->css(new moodle_url("/mod/socialwiki/stylish_styles.css"));
         //To disable the nice theme, do not include toolbar.js and include plain_styles.css instead of the stylish_styles.css
-        //$PAGE->requires->css(new moodle_url("/mod/socialwiki/plain_styles.css"));
+        $PAGE->requires->css(new moodle_url("/mod/socialwiki/plain_styles.css"));
         // the search box
         $PAGE->set_button(socialwiki_search_form($cm));
     }
@@ -136,7 +137,7 @@ abstract class page_socialwiki {
 		if (isset($this->page))
 		{
 			$wiki_renderer = $PAGE->get_renderer('mod_socialwiki');
-			echo $wiki_renderer->pretty_navbar($this->page->id);
+			//echo $wiki_renderer->pretty_navbar($this->page->id);
 		}
 
         //echo $this->wikioutput->socialwiki_info();
@@ -150,7 +151,16 @@ abstract class page_socialwiki {
             {
                 $this->tabs['like'] = 'like';
             }
-            //echo $this->wikioutput->tabs($this->page, $this->tabs, $this->tabs_options);
+            $userto = socialwiki_get_author($this->page->id);
+            if (socialwiki_is_following($USER->id,$userto->userid,$this->page->subwikiid))
+            {
+                $this->tabs['follow'] = 'unfollow';
+            }
+            else
+            {
+                $this->tabs['follow'] = 'follow';
+            }
+            echo $this->wikioutput->tabs($this->page, $this->tabs, $this->tabs_options);
         }
     }
 

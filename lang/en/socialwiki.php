@@ -54,6 +54,7 @@ $string['followtooltip'] = 'Follow this user';
 $string['managetooltip'] = 'Manage your likes and follows';
 $string['commentstooltip'] = 'Comments';
 $string['like'] = 'Like';
+$string['follow'] = 'Follow';
 $string['unlike'] = 'Unlike';
 
 $string['deletecomment'] = 'Deleting comment';
