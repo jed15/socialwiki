@@ -48,7 +48,14 @@ function xmldb_socialwiki_upgrade($oldversion) {
     // Moodle v2.3.0 release upgrade line
     // Put any upgrade step following this
 
-        if ($oldversion < 2013071001) {
+
+    // Moodle v2.4.0 release upgrade line
+    // Put any upgrade step following this
+
+
+    // Moodle v2.5.0 release upgrade line.
+    // Put any upgrade step following this.
+	   if ($oldversion < 2013071001) {
 
         // Define field subwikiid to be added to socialwiki_likes.
         $table = new xmldb_table('socialwiki_likes');
@@ -67,16 +74,20 @@ function xmldb_socialwiki_upgrade($oldversion) {
         // Socialwiki savepoint reached.
         upgrade_mod_savepoint(true, 2013071001, 'socialwiki');
     }
+	  if ($oldversion < 2013071600) {
 
+        // Define field style to be added to socialwiki.
+        $table = new xmldb_table('socialwiki');
+        $field = new xmldb_field('style', XMLDB_TYPE_CHAR, '255', null, null, null, 'classic', 'editend');
 
+        // Conditionally launch add field style.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    // Moodle v2.4.0 release upgrade line
-    // Put any upgrade step following this
-
-
-    // Moodle v2.5.0 release upgrade line.
-    // Put any upgrade step following this.
-
+        // Socialwiki savepoint reached.
+        upgrade_mod_savepoint(true, 2013071600, 'socialwiki');
+    }
 
     return true;
 }

@@ -107,7 +107,7 @@ abstract class page_socialwiki {
         $PAGE->set_activity_record($wiki);
 		$PAGE->requires->jquery();
         // the search box
-        //$PAGE->set_button(socialwiki_search_form($cm));
+			//$PAGE->set_button(socialwiki_search_form($cm));
     }
 
     /**

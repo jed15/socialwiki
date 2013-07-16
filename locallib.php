@@ -563,6 +563,13 @@ function socialwiki_increment_pageviews($page) {
 //----------------------------------------------------------
 
 /**
+ * style formats
+ */
+ function socialwiki_get_styles(){
+	return array('classic','modern');
+ }
+
+/**
  * Text format supported by wiki module
  */
 function socialwiki_get_formats() {

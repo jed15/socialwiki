@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/socialwiki/db" VERSION="20130710" COMMENT="XMLDB file for Moodle mod/socialwiki"
+<XMLDB PATH="mod/socialwiki/db" VERSION="20130716" COMMENT="XMLDB file for Moodle mod/socialwiki"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -19,6 +19,7 @@
         <FIELD NAME="forceformat" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Forces the default editor"/>
         <FIELD NAME="editbegin" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="editbegin"/>
         <FIELD NAME="editend" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="editend"/>
+        <FIELD NAME="style" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="classic" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

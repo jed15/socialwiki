@@ -45,7 +45,7 @@
  **/
 function socialwiki_add_instance($wiki) {
     global $DB;
-
+	
     $wiki->timemodified = time();
     # May have to add extra stuff in here #
     if (empty($wiki->forceformat)) {

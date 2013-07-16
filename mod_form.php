@@ -74,7 +74,14 @@ class mod_socialwiki_mod_form extends moodleform_mod {
         if (empty($this->_instance)) {
             $mform->addRule('firstpagetitle', $required, 'required', null, 'client');
         }
-
+		$styles=socialwiki_get_styles();
+		$styleoptions = array();
+        foreach ($styles as $style) {
+            $styleoptions[$style] = get_string($style, 'socialwiki');
+        }
+		//style
+		$mform->addElement('select', 'style', get_string('style', 'socialwiki'),$styleoptions);
+		
         // Format.
         $mform->addElement('header', 'wikifieldset', get_string('format'));
 
