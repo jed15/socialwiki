@@ -2788,6 +2788,7 @@ class page_socialwiki_manage extends page_socialwiki{
 		//get the follows and likes for a user
 		$follows=socialwiki_get_follows($USER->id,$this->subwiki->id);
 		$likes=socialwiki_getlikes($USER->id,$this->subwiki->id);
+		$numfollowers=socialwiki_get_followers($USER->id,$this->subwiki->id);
 		
 		$html=$this->wikioutput->content_area_begin();
 		$html.=$OUTPUT->container_start('socialwiki_manageheading');
@@ -2806,12 +2807,13 @@ class page_socialwiki_manage extends page_socialwiki{
 				$picture = $OUTPUT->user_picture($user, array('popup' => true));
 				$html.=$picture;
 				$html.=html_writer::link($userlink->out(false),fullname($user),array('class'=>'socialwiki_username socialwiki_link'));
+				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/viewuserpages.php?pageid='.$this->page->id.'&userid='.$user->id,'   view user\'s likes',array('class'=>'socialwiki_link'));
 				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/follow.php?user2='.$follow->usertoid.'&from='.urlencode($PAGE->url->out()).'&swid='.$this->subwiki->id,'Unfollow',array('class'=>'socialwiki_unfollowlink socialwiki_link'));
 			}
-		
+
 		}
 		$html .= $OUTPUT->container_end();
-
+		//display the users likes
 		$html.=$OUTPUT->container_start('socialwiki_manageheading');
 		$html.='<br/><br/><br/>'. $OUTPUT->heading('LIKES',1,'colourtext');
 		$html.=$OUTPUT->container_end();
@@ -2830,7 +2832,10 @@ class page_socialwiki_manage extends page_socialwiki{
 			}
 			$html .= $OUTPUT->container_end();
 		}
-
+		//display the number of people following the user
+		$html.=$OUTPUT->container_start('socialwiki_manageheading');
+		$html.= $OUTPUT->heading('YOU HAVE '.$numfollowers.' FOLLOWERS',1,'whitetext');
+		$html.=$OUTPUT->container_end();
 		$html.=$this->wikioutput->content_area_end();
 		echo $html;
 	}
@@ -2844,5 +2849,46 @@ class page_socialwiki_manage extends page_socialwiki{
         global $PAGE, $CFG;
         parent::create_navbar();
         $PAGE->navbar->add(get_string('manage', 'socialwiki'), $CFG->wwwroot . '/mod/socialwiki/manage.php?pageid=' . $this->page->id);
+    }
+}
+
+class page_socialwiki_viewuserpages extends page_socialwiki{
+
+	function print_content(){
+		Global $OUTPUT,$CFG;
+		$likes=socialwiki_getlikes($this->uid,$this->subwiki->id);
+		$html='';
+		$html.=$this->wikioutput->content_area_begin();
+		$html.=$OUTPUT->container_start('socialwiki_manageheading');
+		$html.='<br/><br/><br/>'. $OUTPUT->heading('LIKES',1,'whitetext');
+		$html.=$OUTPUT->container_end();
+		if (count($likes)==0){
+			$html.=$OUTPUT->container_start('socialwiki_manageheading');
+			$html.= $OUTPUT->heading('They have not liked any pages', 3, "whitetext");
+			$html.=$OUTPUT->container_end();
+		}else{
+			//display all the pages the current user likes
+			$html .= $OUTPUT->container_start('socialwiki_likelist');
+			foreach($likes as $like){
+				$page=socialwiki_get_page($like->pageid);
+				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title,array('class'=>'socialwiki_link'));
+				$html .= "<br/><br/>";
+			}
+			$html .= $OUTPUT->container_end();
+		}
+		$html.=$this->wikioutput->content_area_end();
+		echo $html;
+	}
+
+	function set_url() {
+        global $PAGE, $CFG;
+        
+		$params = array('userid' => $this->uid,'pageid'=>$this->page->id);
+		$PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/viewuserpages.php', $params);
+	}
+	protected function create_navbar() {
+        global $PAGE, $CFG;
+        parent::create_navbar();
+        $PAGE->navbar->add(get_string('viewuserpages', 'socialwiki'), $CFG->wwwroot . '/mod/socialwiki/viewuserpages.php?userid=' . $this->uid.'&pageid='.$this->page->id);
     }
 }
