@@ -22,6 +22,9 @@ function TreeControl(myTree, divID)
     $("#"+divID).append('<ul class="tree_node" style="display:none"></ul>');
     $("#"+divID).append('<div class="relation_line" style="display:none"></div>');
     $("#"+divID).css('text-align', 'left');
+    $("#"+divID).append('<div id="tree_div" class="tree_wrapper"></div>');
+    divID = "tree_div";
+    this.divID = "tree_div";
     this.columns = Array();
     this.childDepths = Array();
     this.myTree = myTree;

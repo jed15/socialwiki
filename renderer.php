@@ -544,7 +544,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 
                 //Page navigation buttons
                 $html .= html_writer::start_div('', array('id' => 'socialwiki_navbuttons'));
-                $html .= html_writer::start_tag('ul', array('id' => 'socialwiki_navlist', 'class' => 'horizontal_list'));
+                $html .= html_writer::start_tag('ul', array('id' => 'socialwiki_navlist', 'class' => 'socialwiki_horizontal_list'));
 
                 $html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
                 $html .= html_writer::start_span('socialwiki_navspan');
@@ -581,7 +581,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 
                 //Social buttons
                 $html .= html_writer::start_div('', array('id' => 'socialwiki_socialbuttons'));
-                $html .= html_writer::start_tag('ul', array('id' => 'socialwiki_socialbuttons', 'class' => 'horizontal_list'));
+                $html .= html_writer::start_tag('ul', array('id' => 'socialwiki_socialbuttons', 'class' => 'socialwiki_horizontal_list'));
                 $html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
                 require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
 
@@ -627,7 +627,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         public function content_area_begin()
         {
                 $html = '';
-                $html .= html_writer::start_div('wikicontent', array("id"=>"socialwiki_content_area"));
+                $html .= html_writer::start_div('socialwiki_wikicontent', array("id"=>"socialwiki_content_area"));
                 return $html;
         }
 
@@ -648,9 +648,9 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         public function title_block($title)
         {
                 $html = '';
-                $html .= html_writer::start_div('wikititle whitetext');
-                $html .= html_writer::tag('h1', $title);
-                $html .= html_writer::end_div('wikititle whitetext');
+                $html .= html_writer::start_div('wikititle');
+                $html .= html_writer::tag('h1', $title, array('class' => 'colourtext'));
+                $html .= html_writer::end_div('wikititle colourtext');
                 return $html;
         }
 
@@ -672,7 +672,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
                 $html.=html_writer::link($userlink->out(false),fullname($user));
                 
                 $html .= html_writer::end_div();
-                $html .= html_writer::start_div('', array('id' => 'wikicontent'));
+                $html .= html_writer::start_div('', array('id' => 'socialwiki_wikicontent'));
                 $html .= $pagecontent;
                 $html .= html_writer::end_div();
                 $html .= html_writer::end_div();

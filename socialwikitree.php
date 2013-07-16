@@ -36,7 +36,7 @@
 			Global $PAGE,$CFG;
 			$user = socialwiki_get_user_info($page->userid);
 			$userlink = new moodle_url('/user/view.php', array('id' => $user->id, 'course' => $PAGE->cm->course));
-			$this->content=html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title,array("class"=>"whitetext")).'<br/>'.html_writer::link($userlink->out(false),fullname($user),array("class"=>"whitetext"));
+			$this->content=html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title,array("class"=>"colourtext")).'<br/>'.html_writer::link($userlink->out(false),fullname($user),array("class"=>"colourtext"));
 		}
 		
 		function add_child($child){
@@ -115,7 +115,7 @@
 		function display(){
 			Global $OUTPUT;
 			$this->sort();
-			echo $OUTPUT->heading('OLDEST--->NEWEST',1,'whitetext');
+			echo $OUTPUT->heading('OLDEST--->NEWEST',1,'colourtext');
 			foreach($this->nodes as $node){
 				if($node->parent==-1){
 					echo'<br/><br/><br/>';

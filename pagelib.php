@@ -86,6 +86,8 @@ abstract class page_socialwiki {
      */
     protected $wikioutput;
 
+    protected $style;
+
     /**
      * page_socialwiki constructor
      *
@@ -104,10 +106,8 @@ abstract class page_socialwiki {
         $PAGE->set_cm($cm);
         $PAGE->set_activity_record($wiki);
 		$PAGE->requires->jquery();
-
-        //$PAGE->requires->css(new moodle_url("/mod/socialwiki/stylish_styles.css"));
-        //To disable the nice theme, do not include toolbar.js and include plain_styles.css instead of the stylish_styles.css
-        $PAGE->requires->css(new moodle_url("/mod/socialwiki/plain_styles.css"));
+        $this->style = socialwiki_get_currentstyle($wiki->id);
+        $PAGE->requires->css(new moodle_url("/mod/socialwiki/".$this->style->style."_style.css"));
         // the search box
         $PAGE->set_button(socialwiki_search_form($cm));
     }
@@ -133,16 +133,16 @@ abstract class page_socialwiki {
 		$html = $OUTPUT->header();
         echo $html;
 
-		if (isset($this->page))
+		if (isset($this->page) && $this->style->style != 'classic')
 		{
 			$wiki_renderer = $PAGE->get_renderer('mod_socialwiki');
-			//echo $wiki_renderer->pretty_navbar($this->page->id);
+			echo $wiki_renderer->pretty_navbar($this->page->id);
 		}
 
         //echo $this->wikioutput->socialwiki_info();
         //print_object(array_keys($GLOBALS));
         // tabs are associated with pageid, so if page is empty, tabs should be disabled
-        if (!empty($this->page) && !empty($this->tabs)) {
+        if (!empty($this->page) && !empty($this->tabs) && $this->style->style == 'classic') {
             if (socialwiki_liked($USER->id, $this->page->id))
             {
                 $this->tabs['like'] = 'unlike';
@@ -2791,12 +2791,12 @@ class page_socialwiki_manage extends page_socialwiki{
 		
 		$html=$this->wikioutput->content_area_begin();
 		$html.=$OUTPUT->container_start('socialwiki_manageheading');
-		$html.= $OUTPUT->heading('FOLLOWING',1,'whitetext');
+		$html.= $OUTPUT->heading('FOLLOWING',1,'colourtext');
 		$html.=$OUTPUT->container_end();
 		$html .= $OUTPUT->container_start('socialwiki_followlist');
 		if (count($follows)==0){
 			$html.=$OUTPUT->container_start('socialwiki_manageheading');
-			$html.= $OUTPUT->heading('You are not following anyone',3,'whitetext');
+			$html.= $OUTPUT->heading('You are not following anyone',3,'colourtext');
 			$html.=$OUTPUT->container_end();
 		}else{
 			//display all the users being followed by the current user
@@ -2813,11 +2813,11 @@ class page_socialwiki_manage extends page_socialwiki{
 		$html .= $OUTPUT->container_end();
 
 		$html.=$OUTPUT->container_start('socialwiki_manageheading');
-		$html.='<br/><br/><br/>'. $OUTPUT->heading('LIKES',1,'whitetext');
+		$html.='<br/><br/><br/>'. $OUTPUT->heading('LIKES',1,'colourtext');
 		$html.=$OUTPUT->container_end();
 		if (count($likes)==0){
 			$html.=$OUTPUT->container_start('socialwiki_manageheading');
-			$html.= $OUTPUT->heading('You have not liked any pages', 3, "whitetext");
+			$html.= $OUTPUT->heading('You have not liked any pages', 3, "colourtext");
 			$html.=$OUTPUT->container_end();
 		}else{
 			//display all the pages the current user likes

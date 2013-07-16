@@ -2773,12 +2773,12 @@ class page_socialwiki_manage extends page_socialwiki{
 		
 		$html=$this->wikioutput->content_area_begin();
 		$html.=$OUTPUT->container_start('socialwiki_manageheading');
-		$html.= $OUTPUT->heading('FOLLOWING',1,'whitetext');
+		$html.= $OUTPUT->heading('FOLLOWING',1,'colourtext');
 		$html.=$OUTPUT->container_end();
 		$html .= $OUTPUT->container_start('socialwiki_followlist');
 		if (count($follows)==0){
 			$html.=$OUTPUT->container_start('socialwiki_manageheading');
-			$html.= $OUTPUT->heading('You are not following anyone',3,'whitetext');
+			$html.= $OUTPUT->heading('You are not following anyone',3,'colourtext');
 			$html.=$OUTPUT->container_end();
 		}else{
 			//display all the users being followed by the current user
@@ -2795,11 +2795,11 @@ class page_socialwiki_manage extends page_socialwiki{
 		$html .= $OUTPUT->container_end();
 
 		$html.=$OUTPUT->container_start('socialwiki_manageheading');
-		$html.='<br/><br/><br/>'. $OUTPUT->heading('LIKES',1,'whitetext');
+		$html.='<br/><br/><br/>'. $OUTPUT->heading('LIKES',1,'colourtext');
 		$html.=$OUTPUT->container_end();
 		if (count($likes)==0){
 			$html.=$OUTPUT->container_start('socialwiki_manageheading');
-			$html.= $OUTPUT->heading('You have not liked any pages', 3, "whitetext");
+			$html.= $OUTPUT->heading('You have not liked any pages', 3, "colourtext");
 			$html.=$OUTPUT->container_end();
 		}else{
 			//display all the pages the current user likes

@@ -281,4 +281,3 @@ $string['socialwikipages'] = 'Social Wiki pages';
 $string['wrongversionlock'] = 'Another user has edited this page while you were editing and your content is obsolete.';
 $string['wrongversionsave'] = 'Another user has created a version while you were editing and you have overwritten his changes, check the page history.';
 $string['socialwiki:managewiki'] = 'Manage Social Wiki';
-

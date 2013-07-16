@@ -1,3 +1,7 @@
+/*
+The default styles for the tree library
+By default the tree has white lines and borders, this means it will not show up on a white background
+To change the colours, either change this css or in your own css use !important to override these colours*/
 
 .tree_node
 {
@@ -23,10 +27,6 @@ background-color:rgba(255,255,255,0.4);
 cursor:pointer;
 }
 
-.test_label
-{
-vertical-align:middle;
-}
 
 .tree_column
 {
@@ -52,6 +52,12 @@ transform-origin: top left;
 text-align:center;
 }
 
-
-
-
+.tree_wrapper
+{
+float:left;
+white-space:nowrap;
+}
+#socialwiki_node_description
+{
+white-space:normal;
+}
