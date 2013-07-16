@@ -235,6 +235,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
     }
 
     public function tabs($page, $tabitems, $options) {
+        global $PAGE;
         $tabs = array();
         $context = context_module::instance($this->page->cm->id);
 
@@ -274,7 +275,18 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
             if ($tab == 'admin' && !has_capability('mod/socialwiki:managewiki', $context)) {
                 continue;
             }
+            
+            
             $link = new moodle_url('/mod/socialwiki/'. $tab. '.php', array('pageid' => $pageid));
+            if ($tab == 'like')
+            {
+                $link = new moodle_url('/mod/socialwiki/'. $tab. '.php', array('pageid' => $pageid, 'from' => $PAGE->url->out()));
+            }elseif ($tab == 'unlike')
+            {
+                $link = new moodle_url('/mod/socialwiki/like.php', array('pageid' => $pageid, 'from' => $PAGE->url->out()));   
+            }
+            
+            
             if ($linked == $tab) {
                 $tabs[] = new tabobject($tab, $link, get_string($tab, 'socialwiki'), '', true);
             } else {

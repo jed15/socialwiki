@@ -140,16 +140,16 @@ abstract class page_socialwiki {
 		}
 
         //echo $this->wikioutput->socialwiki_info();
-
+        //print_object(array_keys($GLOBALS));
         // tabs are associated with pageid, so if page is empty, tabs should be disabled
         if (!empty($this->page) && !empty($this->tabs)) {
-            /*if (socialwiki_liked($USER->id, $this->page->id))
+            if (socialwiki_liked($USER->id, $this->page->id))
             {
-                $this->tabs['like'] = 'like';
+                $this->tabs['like'] = 'unlike';
             }else
             {
-                $this->tabs['unlike'] = 'like';
-            }*/
+                $this->tabs['like'] = 'like';
+            }
             //echo $this->wikioutput->tabs($this->page, $this->tabs, $this->tabs_options);
         }
     }
