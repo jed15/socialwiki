@@ -1178,7 +1178,7 @@ class page_socialwiki_diff extends page_socialwiki {
 
         $oldversion = socialwiki_get_wiki_page_version($this->compare,1 );
 
-        $newversion = socialwiki_get_wiki_page_version($this->comparewith,1);
+        $newversion = socialwiki_get_wiki_page_version($this->comparewith,1 );
 
         if ($oldversion && $newversion) {
 
