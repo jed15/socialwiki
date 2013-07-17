@@ -62,11 +62,11 @@ if ($search == "*")
 $wikipage->set_search_string($search, $searchcontent);
 
 $wikipage->set_title(get_string('search'));
-$page = socialwiki_get_page($pageid);
 
+	$page = socialwiki_get_page($pageid);
 if ($pageid != -1)
 {
-    $wikipage->set_page($page);
+	$wikipage->set_page($page);
 }
 
 $wikipage->print_header();
