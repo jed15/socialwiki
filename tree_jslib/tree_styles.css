@@ -60,6 +60,7 @@ white-space:nowrap;
 #socialwiki_node_description
 {
 white-space:normal;
+word-wrap:break-word;
 }
 
 #tree_container_div

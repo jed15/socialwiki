@@ -515,37 +515,11 @@ class page_socialwiki_edit extends page_socialwiki {
         $PAGE->navbar->add(get_string('edit', 'socialwiki'));
     }
 
-    protected function check_locks() {
-        global $OUTPUT, $USER, $CFG;
-
-        if (!socialwiki_set_lock($this->page->id, $USER->id, $this->section, true)) {
-            print $OUTPUT->box(get_string('pageislocked', 'socialwiki'), 'generalbox boxwidthnormal boxaligncenter');
-
-            if ($this->overridelock) {
-                $params = 'pageid=' . $this->page->id;
-
-                if ($this->section) {
-                    $params .= '&section=' . urlencode($this->section);
-                }
-
-                $form = '<form method="post" action="' . $CFG->wwwroot . '/mod/socialwiki/overridelocks.php?' . $params . '">';
-                $form .= '<input type="hidden" name="sesskey" value="' . sesskey() . '" />';
-                $form .= '<input type="submit" value="' . get_string('overridelocks', 'socialwiki') . '" />';
-                $form .= '</form>';
-
-                print $OUTPUT->box($form, 'generalbox boxwidthnormal boxaligncenter');
-            }
-            return false;
-        }
-        return true;
-    }
 
     protected function print_edit($content = null) {
         global $CFG, $OUTPUT, $USER, $PAGE;
 
-        if (!$this->check_locks()) {
-            return;
-        }
+
 
         //delete old locks (> 1 hour)
         socialwiki_delete_old_locks();
@@ -2840,7 +2814,7 @@ class page_socialwiki_manage extends page_socialwiki{
 		}
 		//display the number of people following the user
 		$html.=$OUTPUT->container_start('socialwiki_manageheading');
-		$html.= $OUTPUT->heading('YOU HAVE '.$numfollowers.' FOLLOWERS',1,'whitetext');
+		$html.= $OUTPUT->heading('YOU HAVE '.$numfollowers.' FOLLOWERS',1,'colourtext');
 		$html.=$OUTPUT->container_end();
 		$html.=$this->wikioutput->content_area_end();
 		echo $html;
@@ -2866,11 +2840,11 @@ class page_socialwiki_viewuserpages extends page_socialwiki{
 		$html='';
 		$html.=$this->wikioutput->content_area_begin();
 		$html.=$OUTPUT->container_start('socialwiki_manageheading');
-		$html.='<br/><br/><br/>'. $OUTPUT->heading('LIKES',1,'whitetext');
+		$html.='<br/><br/><br/>'. $OUTPUT->heading('LIKES',1,'colourtext');
 		$html.=$OUTPUT->container_end();
 		if (count($likes)==0){
 			$html.=$OUTPUT->container_start('socialwiki_manageheading');
-			$html.= $OUTPUT->heading('They have not liked any pages', 3, "whitetext");
+			$html.= $OUTPUT->heading('They have not liked any pages', 3, "colourtext");
 			$html.=$OUTPUT->container_end();
 		}else{
 			//display all the pages the current user likes
