@@ -514,8 +514,15 @@ function socialwiki_get_orphaned_pages($swid) {
  */
 function socialwiki_search_title($swid, $search) {
     global $DB;
+    
+    $sql = "SELECT *, COUNT(pageid) AS total 
+    FROM  {socialwiki_pages}  
+    LEFT JOIN  {socialwiki_likes}  ON {socialwiki_pages}.id = {socialwiki_likes}.pageid 
+    WHERE {socialwiki_pages}.subwikiid=? AND ({socialwiki_pages}.title LIKE ?)  
+    GROUP BY {socialwiki_pages}.id 
+    ORDER BY total DESC";
 
-    return $DB->get_records_select('socialwiki_pages', "subwikiid = ? AND title LIKE ?", array($swid, '%'.$search.'%'));
+    return $DB->get_records_sql($sql, array($swid, '%'.$search.'%'));
 }
 
 /**
@@ -536,8 +543,15 @@ function socialwiki_search_content($swid, $search) {
  */
 function socialwiki_search_all($swid, $search) {
     global $DB;
+    
+    $sql = "SELECT *, COUNT(pageid) AS total 
+    FROM  {socialwiki_pages}  
+    LEFT JOIN  {socialwiki_likes}  ON {socialwiki_pages}.id = {socialwiki_likes}.pageid 
+    WHERE {socialwiki_pages}.subwikiid=? AND ({socialwiki_pages}.cachedcontent LIKE ? OR {socialwiki_pages}.title LIKE ?)  
+    GROUP BY {socialwiki_pages}.id 
+    ORDER BY total DESC";
 
-    return $DB->get_records_select('socialwiki_pages', "subwikiid = ? AND (cachedcontent LIKE ? OR title LIKE ?)", array($swid, '%'.$search.'%', '%'.$search.'%'));
+    return $DB->get_records_sql($sql, array($swid, '%'.$search.'%', '%'.$search.'%'));
 }
 
 /**
@@ -575,6 +589,7 @@ function socialwiki_increment_pageviews($page) {
 function socialwiki_get_formats() {
     return array('html', 'creole', 'nwiki');
 }
+
 
 /**
  * Parses a string with the wiki markup language in $markup.

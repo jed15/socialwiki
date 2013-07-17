@@ -884,7 +884,6 @@ class page_socialwiki_search extends page_socialwiki {
     }
     function print_content() {
         global $PAGE,$OUTPUT;
-		
         require_capability('mod/socialwiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'socialwiki');
 		
 		echo $this->wikioutput->content_area_begin();
@@ -895,15 +894,16 @@ class page_socialwiki_search extends page_socialwiki {
         foreach($this->search_result as $page){
 			$tree->add_node($page);
 		}
+
+        $json=json_encode($tree);
+		//send the tree to javascript
+		echo '<script> var searchResults='.$json.';</script>';
 		//display the php tree (this is hidden if JavaScript is enabled)
 		echo $OUTPUT->container_start('phptree');
 		$tree->display();
 		echo $OUTPUT->container_end();
 
 		echo $this->wikioutput->content_area_end();
-		$json=json_encode($tree);
-		//send the tree to javascript
-		echo '<script> var searchResults='.$json.';</script>';
 
     }
 }
