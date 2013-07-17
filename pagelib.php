@@ -885,7 +885,7 @@ class page_socialwiki_search extends page_socialwiki {
     function print_content() {
         global $PAGE,$OUTPUT;
         require_capability('mod/socialwiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'socialwiki');
-		
+		print_object($this->search_result);
 		echo $this->wikioutput->content_area_begin();
 		echo $this->wikioutput->title_block("Search results for: ".$this->search_string."(".count($this->search_result)."&nbsptotal)");
         //echo $this->wikioutput->search_result($this->search_result, $this->subwiki);

@@ -515,7 +515,7 @@ function socialwiki_get_orphaned_pages($swid) {
 function socialwiki_search_title($swid, $search) {
     global $DB;
     
-    $sql = "SELECT *, COUNT(pageid) AS total 
+    $sql = "SELECT {socialwiki_pages}.*, COUNT(pageid) AS total 
     FROM  {socialwiki_pages}  
     LEFT JOIN  {socialwiki_likes}  ON {socialwiki_pages}.id = {socialwiki_likes}.pageid 
     WHERE {socialwiki_pages}.subwikiid=? AND ({socialwiki_pages}.title LIKE ?)  
