@@ -229,7 +229,6 @@ $string['tagsdeleted'] = 'Wiki tags have been deleted';
 $string['tagtitle'] = 'See the "{$a}" tag';
 $string['teacherrating'] = 'Teacher rating';
 $string['timesrating']='This page has been rated  {$a->c} times with an average of: {$a->s}';
-$string['unfollow']='Unfollow';
 $string['updatedpages'] = "Updated pages";
 $string['updatedpages_help'] = "Recently updated wiki pages";
 $string['updatedwikipages'] = "Updated wiki pages";

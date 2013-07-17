@@ -894,10 +894,6 @@ class page_socialwiki_search extends page_socialwiki {
         foreach($this->search_result as $page){
 			$tree->add_node($page);
 		}
-
-        $json=json_encode($tree);
-		//send the tree to javascript
-		echo '<script> var searchResults='.$json.';</script>';
 		//display the php tree (this is hidden if JavaScript is enabled)
 		echo $OUTPUT->container_start('phptree');
 		$tree->display();
@@ -2808,7 +2804,7 @@ class page_socialwiki_manage extends page_socialwiki{
 				$html.=$picture;
 				$html.=html_writer::link($userlink->out(false),fullname($user),array('class'=>'socialwiki_username socialwiki_link'));
 				$html.='&nbsp&nbsp&nbsp';
-				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/viewuserpages.php?pageid='.$this->page->id.'&userid='.$user->id,'view user\'s likes',array('class'=>'socialwiki_link'));
+				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/viewuserpages.php?subwikiid='.$this->subwiki->id.'&userid='.$user->id,'view user\'s likes',array('class'=>'socialwiki_link'));
 				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/follow.php?user2='.$follow->usertoid.'&from='.urlencode($PAGE->url->out()).'&swid='.$this->subwiki->id,'Unfollow',array('class'=>'socialwiki_unfollowlink socialwiki_link'));
 			}
 
@@ -2884,12 +2880,11 @@ class page_socialwiki_viewuserpages extends page_socialwiki{
 	function set_url() {
         global $PAGE, $CFG;
         
-		$params = array('userid' => $this->uid,'pageid'=>$this->page->id);
+		$params = array('userid' => $this->uid,'subwikiid'=>$this->subwiki->id);
 		$PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/viewuserpages.php', $params);
 	}
 	protected function create_navbar() {
         global $PAGE, $CFG;
-        parent::create_navbar();
-        $PAGE->navbar->add(get_string('viewuserpages', 'socialwiki'), $CFG->wwwroot . '/mod/socialwiki/viewuserpages.php?userid=' . $this->uid.'&pageid='.$this->page->id);
+        $PAGE->navbar->add(get_string('viewuserpages', 'socialwiki'), $CFG->wwwroot . '/mod/socialwiki/viewuserpages.php?userid=' . $this->uid.'&subwikiid='.$this->subwiki->id);
     }
 }
