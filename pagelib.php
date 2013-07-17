@@ -884,7 +884,6 @@ class page_socialwiki_search extends page_socialwiki {
     }
     function print_content() {
         global $PAGE,$OUTPUT;
-		
         require_capability('mod/socialwiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'socialwiki');
 		
 		echo $this->wikioutput->content_area_begin();
