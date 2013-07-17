@@ -1263,7 +1263,7 @@ class page_socialwiki_history extends page_socialwiki {
 		foreach($history as $page){
 		$tree->add_node($page);
 		}
-
+		$tree->add_children();
 		foreach($tree->nodes as $node){
 		$node->content .= "<br/>";
 		$node->content.=$this->choose_from_radio(array(substr($node->id,1) => null), 'compare', 'M.mod_socialwiki.history()', '', true). $this->choose_from_radio(array(substr($node->id,1) => null), 'comparewith', 'M.mod_socialwiki.history()', '', true);
@@ -1274,6 +1274,10 @@ class page_socialwiki_history extends page_socialwiki {
 
 		echo html_writer::start_tag('form', array('action'=>new moodle_url('/mod/socialwiki/diff.php'), 'method'=>'get', 'id'=>'diff'));
 		echo html_writer::tag('div', html_writer::empty_tag('input', array('type'=>'hidden', 'name'=>'pageid', 'value'=>$this->page->id)));
+		$json=json_encode($tree);
+		//send the tree to javascript
+		echo '<script> var searchResults='.$json.';</script>';
+		//display the tree in php(hidden if javascript is enabled)
 		echo $OUTPUT->container_start('phptree');		
 		$tree->display();
 		echo $OUTPUT->container_end();
@@ -1282,10 +1286,6 @@ class page_socialwiki_history extends page_socialwiki {
 		echo $OUTPUT->container_end();
 		echo html_writer::end_tag('form');
 		echo $this->wikioutput->content_area_end();
-		$json=json_encode($tree);
-		//send the tree to javascript
-
-		echo '<script> var searchResults='.$json.';</script>';
 
     }
 
@@ -2815,6 +2815,7 @@ class page_socialwiki_manage extends page_socialwiki{
 				$html.='&nbsp&nbsp&nbsp';
 				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/viewuserpages.php?subwikiid='.$this->subwiki->id.'&userid='.$user->id,'view user\'s likes',array('class'=>'socialwiki_link'));
 				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/follow.php?user2='.$follow->usertoid.'&from='.urlencode($PAGE->url->out()).'&swid='.$this->subwiki->id,'Unfollow',array('class'=>'socialwiki_unfollowlink socialwiki_link'));
+				$html.='<br/>';
 			}
 
 		}
