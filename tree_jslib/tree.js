@@ -13,7 +13,7 @@
 
 console.log("Tree library included");
 
-function TreeControl(myTree, divID, color="white")
+function TreeControl(myTree, divID)
 {
 
     //Need to make these hidden elements, or else the css won't load before it is needed.
@@ -24,9 +24,7 @@ function TreeControl(myTree, divID, color="white")
     $("#"+divID).css('text-align', 'left');
     $("#"+divID).append('<div id="tree_container_div" class="tree_container"></div>');
     $("#tree_container_div").append('<div id="tree_div" class="tree_wrapper"></div>');
-    $(".tree_node").css("color", color);
-    $(".relation_line").css("background-color", color);
-    
+
     divID = "tree_div";
     this.divID = "tree_div";
     this.columns = Array();
