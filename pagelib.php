@@ -2807,7 +2807,8 @@ class page_socialwiki_manage extends page_socialwiki{
 				$picture = $OUTPUT->user_picture($user, array('popup' => true));
 				$html.=$picture;
 				$html.=html_writer::link($userlink->out(false),fullname($user),array('class'=>'socialwiki_username socialwiki_link'));
-				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/viewuserpages.php?pageid='.$this->page->id.'&userid='.$user->id,'   view user\'s likes',array('class'=>'socialwiki_link'));
+				$html.='&nbsp&nbsp&nbsp';
+				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/viewuserpages.php?pageid='.$this->page->id.'&userid='.$user->id,'view user\'s likes',array('class'=>'socialwiki_link'));
 				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/follow.php?user2='.$follow->usertoid.'&from='.urlencode($PAGE->url->out()).'&swid='.$this->subwiki->id,'Unfollow',array('class'=>'socialwiki_unfollowlink socialwiki_link'));
 			}
 
