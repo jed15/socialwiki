@@ -9,3 +9,33 @@ color:black !important;
 {
 background-color:black !important;
 }
+
+.socialwiki_likelist
+{
+text-align:left;
+}
+
+.socialwiki_unfollowlink,.socialwiki_unlikelink
+{
+	position:relative;
+	margin-left:50px;
+}
+
+.socialwiki_link
+{
+text-decoration:underline;
+margin-left:25px;
+font-weight:bold;
+font-style:italic;
+}
+
+.socialwiki_link:link
+{
+    display:inline-block;
+    margin-left:20px;
+}
+
+.wikititle
+{
+text-align:center;
+}

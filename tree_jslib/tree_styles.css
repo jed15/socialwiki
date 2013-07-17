@@ -61,3 +61,8 @@ white-space:nowrap;
 {
 white-space:normal;
 }
+
+#tree_container_div
+{
+overflow:auto;
+}

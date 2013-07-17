@@ -369,4 +369,52 @@ a.socialwiki_edit_section {
     vertical-align: middle;
 }
 
+.socialwiki_username
+{
+	margin-left:10px;
+}
+.following .like
+{
+	margin-left:5px;
+}
+.socialwiki_manageheading
+{
+text-align:center;
+}
 
+.socialwiki_followlist
+{
+text-align:left;
+}
+
+.following
+{
+margin-left:25px;
+}
+
+.userpicture
+{
+margin-left:25px;
+}
+
+
+.phptree
+{
+	overflow:auto;
+	text-align:left;
+}
+.socialwiki_treebox
+{
+	margin-left:5px;
+	display:inline-block;
+	border-color:black;
+	border-width:1px;
+	border-style:solid;
+	margin-bottom:0px;
+	padding:10px;
+}
+
+.socialwiki_diffbutton
+{
+text-align:center;
+}
