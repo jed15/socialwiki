@@ -2,13 +2,10 @@
 	require_once('../../config.php');
 	require_once($CFG->dirroot . '/mod/socialwiki/pagelib.php');
 	require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
-	$pageid=required_param('pageid',PARAM_INT);
+	$subwikiid=required_param('subwikiid',PARAM_INT);
 	$userid=required_param('userid',PARAM_INT);
-	if (!$page = socialwiki_get_page($pageid)) {
-		print_error('incorrectpageid', 'socialwiki');
-	}
 
-	if (!$subwiki = socialwiki_get_subwiki($page->subwikiid)) {
+	if (!$subwiki = socialwiki_get_subwiki($subwikiid)) {
 		print_error('incorrectsubwikiid', 'socialwiki');
 	}
 	if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
@@ -24,7 +21,6 @@
 	
 	$viewuserpage=new page_socialwiki_viewuserpages($wiki,$subwiki,$cm);
 	$viewuserpage->set_uid($userid);
-	$viewuserpage->set_page($page);
 	$viewuserpage->print_header();
 	
 	$viewuserpage->print_content();
