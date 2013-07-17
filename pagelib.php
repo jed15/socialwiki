@@ -880,7 +880,14 @@ class page_socialwiki_search extends page_socialwiki {
 
     function set_url() {
         global $PAGE, $CFG, $COURSE;
-        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/search.php?pageid='.$this->page->id.'&courseid='.$COURSE->id.'&cmid='.$PAGE->cm->id);
+        if (isset($this->page))
+        {
+            $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/search.php?pageid='.$this->page->id.'&courseid='.$COURSE->id.'&cmid='.$PAGE->cm->id);
+        }
+        else
+        {
+            $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/search.php');
+        }
     }
     function print_content() {
         global $PAGE,$OUTPUT;
