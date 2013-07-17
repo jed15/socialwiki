@@ -880,6 +880,7 @@ class page_socialwiki_search extends page_socialwiki {
 
     function set_url() {
         global $PAGE, $CFG;
+		print_object($this->page);
         $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/search.php');
     }
     function print_content() {
