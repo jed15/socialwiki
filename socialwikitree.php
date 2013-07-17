@@ -56,13 +56,18 @@
 		
 		function add_node($page){
 			$this->nodes['l'.$page->id]=new socialwiki_node($page);
-			//if the array has a parent add it to the parents child array
-			if($page->parent!=NULL&&$page->parent!=0){
-				$parent=$this->find_node('l'.$page->parent);
-				if($parent){
-					$parent->add_child('l'.$page->id);
-				}else{
-					print_error('nonode','socialwiki');
+		}
+		
+		function add_children(){
+						//if the array has a parent add it to the parents child array
+			foreach ($this->nodes as $node){
+				if($node->parent!=-1){
+					$parent=$this->find_node($node->parent);
+					if($parent){
+						$parent->add_child($node->id);
+					}else{
+						print_error('nonode','socialwiki');
+					}
 				}
 			}
 		}
@@ -90,14 +95,14 @@
 				foreach ($parents as $parent){
 					
 					//add the new array to the end of the sorted array
-					$sorted=$this->add_children($parent->id,$sorted,1);
+					$sorted=$this->find_children($parent->id,$sorted,1);
 				}
 			//set nodes to the sorted array
 			$this->nodes=$sorted;
 		}
 		
 		//recursively add chid nodes to an array
-		function add_children($nodeid,$ar,$level){
+		function find_children($nodeid,$ar,$level){
 			$node=$this->find_node($nodeid);
 			$node->level=$level;
 			//add the child to the array
@@ -106,7 +111,7 @@
 			$level++;
 			if(count($node->children)>0){
 				foreach($node->children as $childid){
-					$ar=$this->add_children($childid,$ar,$level);
+					$ar=$this->find_children($childid,$ar,$level);
 				}
 			}
 			return $ar;

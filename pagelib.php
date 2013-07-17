@@ -895,6 +895,7 @@ class page_socialwiki_search extends page_socialwiki {
         foreach($this->search_result as $page){
 			$tree->add_node($page);
 		}
+		$tree->add_children();
 		//display the php tree (this is hidden if JavaScript is enabled)
 		echo $OUTPUT->container_start('phptree');
 		$tree->display();
