@@ -265,7 +265,7 @@ function TreeControl(myTree, divID)
                 this.columns[level].push(id);
             }
             
-            this.myTree.nodes[id].level = level;
+            this.myTree.nodes[id].column = level;
         }
     }
     
