@@ -3,7 +3,7 @@ console.log("search.js included");
 var searchTree = new tree();
 
 searchTree.nodes = searchResults.nodes;
-
+console.log(searchResults);
 mTree = new TreeControl(searchTree, "socialwiki_content_area");
 
 $(document).ready(function() {

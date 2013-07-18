@@ -120,7 +120,7 @@ function TreeControl(myTree, divID)
         
         //Add and position the lines
         this.updateLines();
-        $(".whitetext a").click(function(){
+        $(".colourtext a").click(function(){
                 jQuery.fx.off = true;
             });
     }
@@ -235,6 +235,7 @@ function TreeControl(myTree, divID)
         }
     }
 
+
     //This will add a node to the tree, in the appropriate this.column for the node to be in
     function addNodeToColumn(id,treeDepth)
     {
@@ -243,7 +244,8 @@ function TreeControl(myTree, divID)
         {
             level = 0;
         }
-
+        
+        
         //Making sure there are enough columns to hold a node of this depth, if not, add one
         while(level>=(this.columns.length))
         {
@@ -260,20 +262,62 @@ function TreeControl(myTree, divID)
 
             //Go through all the related nodes in this column, see if they have been added yet
             //If so, add the new node in a position adjacent to thiers, to avoid drawing lines over nodes
+            //Direct siblings must always appear together in the tree
             if (myTree.nodes[id].parent!= -1)
             {
-                var i = 0;
-                while (firstSiblingLocation < 0 && i < myRelations.length)
+
+                for (var i=0; i < myRelations.length; i++)
                 {
                     firstSiblingLocation = this.columns[level].indexOf(myRelations[i]);
-                    i++;
+                    if (this.myTree.nodes[myRelations[i]].parent == this.myTree.nodes[id].parent)
+                    {
+                        break;
+                    }
+                    
                 }
-                i = 0;
-                
+
+                //If there is a sibling that has already been added to the column, check to see if the priority is higher
+                //Splice the new node into the array above or below the related node, depending on the priority
+                //If no sibling has been added, we need to go through the column to find the place that it should be inserted based on its priority
                 if (firstSiblingLocation >= 0)
-                    this.columns[level].splice(firstSiblingLocation, 0, id);
+                {
+                    if  (this.myTree.nodes[id].hasOwnProperty('priority'))
+                    {
+                        
+                        if(this.myTree.nodes[id].priority > this.myTree.nodes[this.columns[level][firstSiblingLocation]].priority)
+                        {
+                            this.columns[level].splice(firstSiblingLocation+1, 0, id);
+                        }
+                        else
+                        {
+                            this.columns[level].splice(firstSiblingLocation, 0, id);
+                        }
+                    }
+                    else
+                    {
+                        this.columns[level].splice(firstSiblingLocation+1, 0, id);
+                    }
+                }
                 else
-                    this.columns[level].push(id);                
+                {
+                    if (this.myTree.nodes[id].hasOwnProperty('priority'))
+                    {
+                        var spliceAt = 0;
+                        
+                        for (var p=0; p < this.columns[level].length; p++)
+                        {
+                            if (this.myTree.nodes[this.columns[level][p]].priority <= this.myTree.nodes[id])
+                            {
+                                spliceAt = p;
+                            }
+                        }
+                        this.columns[level].splice(spliceAt, 0, id);
+                    }
+                    else
+                    {
+                        this.columns[level].push(id);
+                    }
+                }                
             }
             else
             {
