@@ -92,8 +92,8 @@ class restore_socialwiki_activity_structure_step extends restore_activity_struct
         $data->timemodified = $this->apply_date_offset($data->timemodified);
         $data->timecreated = $this->apply_date_offset($data->timecreated);
         $data->timerendered = $this->apply_date_offset($data->timerendered);
+        $data->parent = $this->get_mappingid('socialwiki_page', $data->parent);
 
-        $data->parent = NULL;
 
         $newitemid = $DB->insert_record('socialwiki_pages', $data);
         $this->set_mapping('socialwiki_page', $oldid, $newitemid, true); // There are files related to this

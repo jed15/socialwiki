@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle. If not, see <http://www.gnu.org/licenses/>.
+
 	class socialwiki_node{
 		//the page id
 		public $id;
@@ -47,129 +48,180 @@
 			$this->set_content($page);
 			$this->set_priority($page);
 		}
-		
-		private function set_content($page){
-			Global $PAGE,$CFG;
-			$user = socialwiki_get_user_info($page->userid);
-			$userlink = new moodle_url('/user/view.php', array('id' => $user->id, 'course' => $PAGE->cm->course));
-			$this->content=html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title,array("class"=>"colourtext")).'<br/>'.html_writer::link($userlink->out(false),fullname($user),array("class"=>"colourtext"));
-		}
-		
-		//sets priority to number of likes
-		function set_priority($page){
-			$this->priority=socialwiki_numlikes($page->id);
-		}
-		
-		function add_child($child){
-			$this->children[]=$child;
-		}
-		
-		function display(){
-			Global $OUTPUT;
-			echo $OUTPUT->box($this->content,'socialwiki_treebox');
-		}
-	}
-
 	
-	class socialwiki_tree{
-		//an array of socialwiki_nodes
-		public $nodes=array();
-		
-		function build_tree($pages){
-			foreach ($pages as $page){
-				$this->add_node($page);
-			}
-			$this->add_children();
-		
-		}
-		
-		function add_node($page){
-			$this->nodes['l'.$page->id]=new socialwiki_node($page);
-		}
-		
-		function add_children(){
-						//if the array has a parent add it to the parents child array
-			foreach ($this->nodes as $node){
-				if($node->parent!=-1){
-					$parent=$this->find_node($node->parent);
-					if($parent){
-						$parent->add_child($node->id);
-					}else{
-						print_error('nonode','socialwiki');
-					}
-				}
-			}
-		}
-		
-		//finds a node given an id returns that node if found. -1 if the node doesn't exist
-		function find_node($nodeid){
-			foreach($this->nodes as $node){
-				if($node->id==$nodeid){
-					return $node;
-				}
-			}
-			return NULL;
-		}
-		
-		//sort the array with the children of a node appearing directly after it in the array
-		function sort(){
-			$sorted=array();
-			$parents=array();
-			foreach($this->nodes as $node){
-				if($node->parent==-1){
-					$parents[]=$node;
-					}	
-				}
-				//make a tree array for each parent so the sorted array has one complete tree followed by another tree
-				foreach ($parents as $parent){
-					
-					//add the new array to the end of the sorted array
-					$sorted=$this->find_children($parent->id,$sorted,1);
-				}
-			//set nodes to the sorted array
-			$this->nodes=$sorted;
-		}
-		
-		//recursively add chid nodes to an array
-		function find_children($nodeid,$ar,$level){
-			$node=$this->find_node($nodeid);
-			$node->level=$level;
-			//add the child to the array
-			$ar[$nodeid]=$node;
-			//increase level
-			$level++;
-			if(count($node->children)>0){
-				foreach($node->children as $childid){
-					$ar=$this->find_children($childid,$ar,$level);
-				}
-			}
-			return $ar;
-		}
-		
-		//returns an array with all the leaves of the tree
-		function find_leaves(){
-			$leaves=array();
-			foreach($this->nodes as $node){
-				if(count($node->children)==0){
-				$leaves[]=$node;
-				}
-			}
-			return $leaves;
-		}
-		
-		function display(){
-			Global $OUTPUT;
-			$this->sort();
-			echo $OUTPUT->heading('OLDEST--->NEWEST',1,'colourtext');
-			foreach($this->nodes as $node){
-				if($node->parent==-1){
-					echo'<br/><br/><br/>';
-				}
-				echo $OUTPUT->container_start();
-				echo str_repeat('&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp',$node->level-1);
-				$node->display();
-				echo $OUTPUT->container_end();
-			}
-		}
-
+	private function set_content($page){
+		Global $PAGE,$CFG;
+		$user = socialwiki_get_user_info($page->userid);
+		$userlink = new moodle_url('/user/view.php', array('id' => $user->id, 'course' => $PAGE->cm->course));
+		$this->content=html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title,array("class"=>"colourtext")).'<br/>'.html_writer::link($userlink->out(false),fullname($user),array("class"=>"colourtext"));
 	}
+	
+	//sets priority to number of likes
+	function set_priority($page){
+		$this->priority=socialwiki_numlikes($page->id);
+	}
+	
+	function add_child($child){
+		$this->children[]=$child;
+	}
+	
+	
+	function display(){
+		Global $OUTPUT;
+		echo $OUTPUT->box($this->content,'socialwiki_treebox');
+	}
+}
+
+
+class socialwiki_tree{
+	//an array of socialwiki_nodes
+	public $nodes=array();
+	
+	//build an array of nodes
+	function build_tree($pages){
+		foreach ($pages as $page){
+			$this->add_node($page);
+		}
+		$this->add_children();
+	
+	}
+	
+	//add a node to the nodes array
+	function add_node($page){
+		$this->nodes['l'.$page->id]=new socialwiki_node($page);
+	}
+	
+	//add the children arrays to nodes
+	function add_children(){
+					//if the array has a parent add it to the parents child array
+		foreach ($this->nodes as $node){
+			if($node->parent!=-1){
+				$parent=$this->find_node($node->parent);
+				if($parent){
+					$parent->add_child($node->id);
+				}else{
+					print_error('nonode','socialwiki');
+				}
+			}
+		}
+	}
+	
+	//finds a node given an id returns that node if found. -1 if the node doesn't exist
+	function find_node($nodeid){
+		foreach($this->nodes as $node){
+			if($node->id==$nodeid){
+				return $node;
+			}
+		}
+		return NULL;
+	}
+	
+	function sort(){
+		$leaves=$this->find_leaves();
+		$sorted=array();
+		//sort leaves in order of priority
+		for($i=1;$i<count($leaves);$i++){
+			for($j=0;$j<count($leaves)&&$j<$i;$j++){
+				if($leaves[$i]->priority>$leaves[$j]->priority){
+					$temp=$leaves[$i];
+					$leaves[$i]=$leaves[$j];
+					$leaves[$j]=$temp;
+				}
+			}
+		}
+		for($i=0;$i<count($leaves);$i++){
+			$sorted[$leaves[$i]->id]=$leaves[$i];
+			if($leaves[$i]->parent!=-1){
+				$sorted=$this->add_parent($leaves[$i]->id,$sorted,1);
+			}
+		}
+		
+		$this->nodes=$sorted;
+		foreach($this->nodes as $node){
+			if($node->parent==-1){
+				$this->add_levels($node->id,1);
+			}
+		}
+	}
+	
+	function add_levels($id,$level){
+		$this->nodes[$id]->level=$level;
+		$level++;
+		if(count($this->nodes[$id]->children)>0){
+			foreach($this->nodes[$id]->children as $childid){
+				$this->add_levels($childid,$level);
+			}
+		}
+	}
+	
+	
+	//recursively add child nodes to an array
+	function add_parent($childid,$ar){
+		//get the child and parent nodes
+		$childnode=$this->nodes[$childid];
+		$node=$this->nodes[$childnode->parent];
+		//add the parent to the array
+		if(array_key_exists($childnode->parent,$ar)){
+			//if the parent is already there add child beside sibling and remove from the end of the array
+			$keyindex=$this->find_index($childnode->parent,$ar);
+			$copy=$ar;
+			$ar=array_splice($ar,0,$keyindex)+array($childnode->id=>$childnode)+array_splice($copy,$keyindex);
+		}else{
+			//add the parent ahead of the child in the array
+			$keyindex=array_search($childid,array_keys($ar));
+			$copy=$ar;
+			$ar=array_splice($ar,0,$keyindex)+array($node->id=>$node)+array_splice($copy,$keyindex);
+		}
+		//add parent if it's not already in the array
+		if($node->parent!=-1){
+			$ar=$this->add_parent($node->id,$ar);
+		}
+		return $ar;
+	}
+	
+	
+	
+	//returns an array with all the leaves of the tree
+	function find_leaves(){
+		$leaves=array();
+		foreach($this->nodes as $node){
+			if(count($node->children)==0){
+			$leaves[]=$node;
+			}
+		}
+		return $leaves;
+	}
+	
+	//finds the index a sibling node should be placed in according to priority 
+	function find_index($parentid,$ar){
+		$pos=array(); //tracks the positions of the child nodes
+		$parent=$this->nodes[$parentid];
+		foreach($parent->children as $id){
+			if(array_key_exists($id,$ar)){
+				$pos[]=array_search($id,array_keys($ar));
+			}
+			$pos[]=$this->find_index($id,$ar);
+		}
+		if(count($pos)>0){
+			return max($pos);
+		}else{
+			return 0;
+		}
+	}
+	
+	function display(){
+		Global $OUTPUT;
+		$this->sort();
+		echo $OUTPUT->heading('OLDEST--->NEWEST',1,'colourtext');
+		foreach($this->nodes as $node){
+			if($node->parent==-1){
+				echo'<br/><br/><br/>';
+			}
+			echo $OUTPUT->container_start();
+			echo str_repeat('&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp',$node->level-1);
+			$node->display();
+			echo $OUTPUT->container_end();
+		}
+	}
+
+}
