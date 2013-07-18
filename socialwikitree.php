@@ -13,40 +13,41 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle. If not, see <http://www.gnu.org/licenses/>.
-class socialwiki_node{
-	//the page id
-	public $id;
-	//page title and authors name
-	public $content;
-	//boolean true if the node isn't a leaf
-	public $hidden;
-	//the column the node is in 
-	public $column;
-	//an array of children ids
-	public $children=array();
-	//the parents id
-	public $parent;
-	//whether the mode has been added to the tree
-	public $added;
-	//the level of the tree the node is on
-	public $level;
-	//the rank of a node the higher the priority the higher it appears on the search page
-	public $priority;
-	
-	
-	function __construct($page){
-		$this->id='l'.$page->id;
-		if($page->parent==NULL||$page->parent==0){
-			$this->parent=-1;
-		}else{
-			$this->parent='l'.$page->parent;
+
+	class socialwiki_node{
+		//the page id
+		public $id;
+		//page title and authors name
+		public $content;
+		//boolean true if the node isn't a leaf
+		public $hidden;
+		//the column the node is in 
+		public $column;
+		//an array of children ids
+		public $children=array();
+		//the parents id
+		public $parent;
+		//whether the mode has been added to the tree
+		public $added;
+		//the level of the tree the node is on
+		public $level;
+		//the rank of a node the higher the priority the higher it appears on the search page
+		public $priority;
+		
+		
+		function __construct($page){
+			$this->id='l'.$page->id;
+			if($page->parent==NULL||$page->parent==0){
+				$this->parent=-1;
+			}else{
+				$this->parent='l'.$page->parent;
+			}
+			$this->column=-1;
+			$this->added=false;
+			$this->hidden = true;
+			$this->set_content($page);
+			$this->set_priority($page);
 		}
-		$this->column=-1;
-		$this->added=false;
-		$this->hidden = true;
-		$this->set_content($page);
-		$this->set_priority($page);
-	}
 	
 	private function set_content($page){
 		Global $PAGE,$CFG;

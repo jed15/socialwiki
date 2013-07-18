@@ -309,6 +309,7 @@ background-image:url(pix/editbutton_hover.png);
 {
 text-align:center;
 width:100%;
+max-height:100em;
 background-image:url(pix/background.png);
 padding-top:50px;
 overflow:hidden;
