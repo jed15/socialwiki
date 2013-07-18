@@ -82,23 +82,19 @@ class restore_socialwiki_activity_structure_step extends restore_activity_struct
         $this->set_mapping('socialwiki_subwiki', $oldid, $newitemid);
     }
     protected function process_socialwiki_page($data) {
-        global $DB;
+        global $DB, $USER;
 		
         $data = (object)$data;
 
         $oldid = $data->id;
         $data->subwikiid = $this->get_new_parentid('socialwiki_subwiki');
-        $data->userid = $this->get_mappingid('user', $data->userid);
+        $data->userid = $USER->id;
         $data->timemodified = $this->apply_date_offset($data->timemodified);
         $data->timecreated = $this->apply_date_offset($data->timecreated);
         $data->timerendered = $this->apply_date_offset($data->timerendered);
-<<<<<<< HEAD
-        $data->parent = $this->get_mappingid('socialwiki_page', $data->parent);
 
-=======
-		$data->parent = $this->get_mappingid('socialwiki_page', $data->parent);
-		
->>>>>>> e7c9c757c97f6c937d8108bf7cf5f29326ce1a82
+        $data->parent = NULL;
+
         $newitemid = $DB->insert_record('socialwiki_pages', $data);
         $this->set_mapping('socialwiki_page', $oldid, $newitemid, true); // There are files related to this
     }
