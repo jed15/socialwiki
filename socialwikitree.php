@@ -30,6 +30,9 @@
 		public $added;
 		//the level of the tree the node is on
 		public $level;
+		//the rank of a node the higher the priority the higher it appears on the search page
+		public $priority;
+		
 		
 		function __construct($page){
 			$this->id='l'.$page->id;
@@ -42,7 +45,7 @@
 			$this->added=false;
 			$this->hidden = true;
 			$this->set_content($page);
-			
+			$this->set_piority($page);
 		}
 		
 		private function set_content($page){
@@ -50,6 +53,11 @@
 			$user = socialwiki_get_user_info($page->userid);
 			$userlink = new moodle_url('/user/view.php', array('id' => $user->id, 'course' => $PAGE->cm->course));
 			$this->content=html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title,array("class"=>"colourtext")).'<br/>'.html_writer::link($userlink->out(false),fullname($user),array("class"=>"colourtext"));
+		}
+		
+		//sets priority to number of likes
+		function set_priority($page){
+			$this->priority=socialwiki_numlikes($page->id);
 		}
 		
 		function add_child($child){
@@ -66,6 +74,14 @@
 	class socialwiki_tree{
 		//an array of socialwiki_nodes
 		public $nodes=array();
+		
+		function build_tree($pages){
+			foreach ($pages as $page){
+				$this->add_node($page);
+			}
+			$this->add_children();
+		
+		}
 		
 		function add_node($page){
 			$this->nodes['l'.$page->id]=new socialwiki_node($page);
