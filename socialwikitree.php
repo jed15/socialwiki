@@ -45,7 +45,7 @@
 			$this->added=false;
 			$this->hidden = true;
 			$this->set_content($page);
-			$this->set_piority($page);
+			$this->set_priority($page);
 		}
 		
 		private function set_content($page){
