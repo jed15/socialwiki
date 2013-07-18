@@ -668,7 +668,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
                 $html .= html_writer::tag('h1', $pagetitle);
                 
                 $user = socialwiki_get_user_info($page->userid);
-		$userlink = new moodle_url('/user/view.php', array('id' => $user->id, 'course' => $PAGE->cm->course));
+				$userlink = new moodle_url('/user/view.php', array('id' => $user->id, 'course' => $PAGE->cm->course));
                 $html.=html_writer::link($userlink->out(false),fullname($user));
                 
                 $html .= html_writer::end_div();
