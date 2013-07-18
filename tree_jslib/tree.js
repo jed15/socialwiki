@@ -37,6 +37,7 @@ function TreeControl(myTree, divID) {
         this.childDepths = Array();
         this.myTree = myTree;
         this.divID = divID;
+        this.zoom = document.documentElement.clientWidth / window.innerWidth;
 
         /*Functions*/
         this.toggleParent = toggleParent;
@@ -81,6 +82,15 @@ function TreeControl(myTree, divID) {
 
         function display() {
                 when(cssLoaded, this.showTree, this);
+                $(window).resize(this, function(e){
+                        newZoom = document.documentElement.clientWidth / window.innerWidth;
+                        if (newZoom != this.zoom)
+                        {
+                             e.data.columns = Array();
+                             e.data.updateNodePositions();
+                             e.data.updateLines();
+                        }
+                });
         }
 
         /*The main function for the tree control. 
@@ -413,7 +423,7 @@ function TreeControl(myTree, divID) {
                                 for (var m = 0; m < this.myTree.nodes[this.columns[j][n]].children.length; m++) {
                                         $('#' + this.divID + '').append('<div class="relation_line" id = "line_' + this.columns[j][n] + 'b' + this.myTree.nodes[this.columns[j][n]].children[m] + '""></div>');
                                         lineBottom = $('#tree_' + this.myTree.nodes[this.columns[j][n]].children[m]).position().top + parseInt($('#tree_' + this.myTree.nodes[this.columns[j][n]].id).css("height")) / 2 + parseInt($('#tree_' + this.myTree.nodes[this.columns[j][n]].id).css("margin-top"));
-                                        lineRight = $('#tree_' + this.myTree.nodes[this.columns[j][n]].children[m]).position().left + parseInt($('#tree_' + this.myTree.nodes[this.columns[j][n]].id).css("width")) + parseInt($('#tree_' + this.myTree.nodes[this.columns[j][n]].id).css("margin-top")) + 3;
+                                        lineRight = $('#tree_' + this.myTree.nodes[this.columns[j][n]].children[m]).position().left + parseInt($('#tree_' + this.myTree.nodes[this.columns[j][n]].id).css("width")) + parseInt($('#tree_' + this.myTree.nodes[this.columns[j][n]].id).css("margin-top")) + 13;
                                         childrenTops.push(lineBottom);
                                         length = lineLeft - lineRight - 15;
                                         $('#line_' + this.columns[j][n] + 'b' + this.myTree.nodes[this.columns[j][n]].children[m]).css("height", length);

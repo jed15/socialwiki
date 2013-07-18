@@ -29,6 +29,7 @@ margin:15px 15px 15px 15px;
 color:white;
 list-style:none;
 display:inline-block;
+padding:5px;
 }
 
 .tree_node:hover
