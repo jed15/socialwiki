@@ -82,15 +82,6 @@ function TreeControl(myTree, divID) {
 
         function display() {
                 when(cssLoaded, this.showTree, this);
-                $(window).resize(this, function(e){
-                        newZoom = document.documentElement.clientWidth / window.innerWidth;
-                        if (newZoom != this.zoom)
-                        {
-                             e.data.columns = Array();
-                             e.data.updateNodePositions();
-                             e.data.updateLines();
-                        }
-                });
         }
 
         /*The main function for the tree control. 
