@@ -129,10 +129,21 @@ class socialwiki_tree{
 				}
 			}
 		}
+		
 		for($i=0;$i<count($leaves);$i++){
-			$sorted[$leaves[$i]->id]=$leaves[$i];
-			if($leaves[$i]->parent!=-1){
-				$sorted=$this->add_parent($leaves[$i]->id,$sorted,1);
+			//if the parent is already in the tree add the leaf in the proper position
+			if(array_key_exists($leaves[$i]->parent,$sorted)){
+				$keyindex=$this->find_index($leaves[$i]->parent,$sorted);
+				//print_object($leaves[$i]);
+				//print_object($keyindex);
+				//print_object(array_keys($sorted));
+				$copy=$sorted;
+				$sorted=array_splice($sorted,0,$keyindex)+array($leaves[$i]->id=>$leaves[$i])+array_splice($copy,$keyindex);
+			}else{
+				$sorted[$leaves[$i]->id]=$leaves[$i];
+				if($leaves[$i]->parent!=-1){
+					$sorted=$this->add_parent($leaves[$i]->id,$sorted,1);
+				}
 			}
 		}
 		
@@ -154,19 +165,41 @@ class socialwiki_tree{
 		}
 	}
 	
+
+	function repos_children($node,&$ar){	
+			$removed=array();
+			unset($ar[$node->id]);
+			foreach($node->children as $childid){
+				$removed[]=$childid;
+				unset($ar[$childid]);
+			}
+		$keyindex=$this->find_index($node->parent,$ar);
+		if($node->id=='l329'){
+				print_object($ar);
+				print_object($keyindex);
+			}
+		$copy=$ar;
+		$ar=array_splice($ar,0,$keyindex)+array($node->id=>$node)+array_splice($copy,$keyindex);
+		if(count($node->children)>0){
+		}
+		for($i=0;$i<count($removed);$i++){
+			$this->repos_children($this->nodes[$removed[$i]],$ar);
+		}
+	}
 	
-	//recursively add child nodes to an array
+
+	//recursively add parent nodes to an array
 	function add_parent($childid,$ar){
 		//get the child and parent nodes
 		$childnode=$this->nodes[$childid];
 		$node=$this->nodes[$childnode->parent];
+
 		//add the parent to the array
 		if(array_key_exists($childnode->parent,$ar)){
 			//if the parent is already there add child beside sibling and remove from the end of the array
-			$keyindex=$this->find_index($childnode->parent,$ar);
-			$copy=$ar;
-			$ar=array_splice($ar,0,$keyindex)+array($childnode->id=>$childnode)+array_splice($copy,$keyindex);
+			$this->repos_children($childnode,$ar);
 		}else{
+
 			//add the parent ahead of the child in the array
 			$keyindex=array_search($childid,array_keys($ar));
 			$copy=$ar;
@@ -178,7 +211,6 @@ class socialwiki_tree{
 		}
 		return $ar;
 	}
-	
 	
 	
 	//returns an array with all the leaves of the tree
@@ -198,14 +230,14 @@ class socialwiki_tree{
 		$parent=$this->nodes[$parentid];
 		foreach($parent->children as $id){
 			if(array_key_exists($id,$ar)){
-				$pos[]=array_search($id,array_keys($ar));
+				$pos[]=array_search($id,array_keys($ar))+1;
+				$pos[]=$this->find_index($id,$ar);
 			}
-			$pos[]=$this->find_index($id,$ar);
 		}
 		if(count($pos)>0){
 			return max($pos);
 		}else{
-			return 0;
+			return array_search($parentid,array_keys($ar))+1;;
 		}
 	}
 	
@@ -218,7 +250,7 @@ class socialwiki_tree{
 				echo'<br/><br/><br/>';
 			}
 			echo $OUTPUT->container_start();
-			echo str_repeat('&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp',$node->level-1);
+			echo str_repeat('&nbsp',($node->level-1)*8);
 			$node->display();
 			echo $OUTPUT->container_end();
 		}
