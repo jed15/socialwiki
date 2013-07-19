@@ -22,7 +22,7 @@ To change the colours, either change this css or in your own css use !important 
 
 .tree_node
 {
-max-width:10em;
+width:10em;
 border:solid;
 text-align:center;
 margin:15px 15px 15px 15px;

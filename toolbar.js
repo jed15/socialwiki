@@ -1,5 +1,3 @@
-console.log("toolbar.js included");
-
 $(document).ready(function(){
     
     /*Making use of these buttons would require some heavy modifications

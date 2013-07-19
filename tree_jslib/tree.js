@@ -24,8 +24,10 @@ function TreeControl(myTree, divID) {
         /*Need to make these hidden elements, or else the css won't load in time*/
         $('head').prepend('<link rel="stylesheet" type="text/css" href="' + $('script[src$="tree.js"]').attr('src').replace('tree.js', '') + 'tree_styles.css"></link>');
         $("#" + divID).append('<ul class="tree_column" style="display:none"></ul>');
-        $("#" + divID).append('<ul class="tree_node" style="display:none"></ul>');
-        $("#" + divID).append('<div class="relation_line" style="display:none"></div>');
+        $("#" + divID).append('<ul class="tree_node hideme" style="display:none"></ul>');
+        $("#" + divID).append('<div class="relation_line hideme" style="display:none"></div>');
+        $(".wikititle").append("<p class='colourtext' id='tree_zoommessage'>Return to original zoom level or refresh the page for the best experience</p>");
+        $("#tree_zoommessage").css("display", "none");
         $("#" + divID).css('text-align', 'left');
         $("#" + divID).append('<div id="tree_container_div" class="tree_container"></div>');
         $("#tree_container_div").append('<div id="tree_div" class="tree_wrapper"></div>');
@@ -53,6 +55,24 @@ function TreeControl(myTree, divID) {
         this.when = when;
         this.cssLoaded = cssLoaded;
         this.addListElements = addListElements;
+
+        $(window).resize(this, function(e){
+        newZoom = document.documentElement.clientWidth / window.innerWidth;
+        if (newZoom != this.zoom)
+        {/*
+                $(".relation_line").empty();
+                $(".tree_node").empty();
+                e.data.addListElements();
+
+                e.data.updateNodePositions();
+
+                //Make sure that the container is not scrolled at all, to avoid all kinds of nasty positioning problems
+                $("#" + e.data.divID).scrollTop(0);
+
+                e.data.updateLines();*/
+        }
+        });     
+
 
         /*Runs a function fn after 20 milliseconds*/
 
@@ -110,10 +130,6 @@ function TreeControl(myTree, divID) {
                 $("#" + this.divID).scrollTop(0);
 
                 this.updateLines();
-
-                $(".colourtext a").click(function () {
-                        jQuery.fx.off = true;
-                });
         }
 
 
