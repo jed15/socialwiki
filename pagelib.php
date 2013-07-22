@@ -1239,11 +1239,14 @@ class page_socialwiki_history extends page_socialwiki {
 		//build the tree with all of the relate pages
 		$tree=new socialwiki_tree();
 		$tree->build_tree($history);
+		
+		//add radio buttons to compare versions if there is more than one version
+		if(count($tree->nodes)>1){
+			foreach($tree->nodes as $node){
+			$node->content .= "<br/>";
+			$node->content.=$this->choose_from_radio(array(substr($node->id,1) => null), 'compare', 'M.mod_socialwiki.history()', '', true). $this->choose_from_radio(array(substr($node->id,1) => null), 'comparewith', 'M.mod_socialwiki.history()', '', true);
 
-		foreach($tree->nodes as $node){
-		$node->content .= "<br/>";
-		$node->content.=$this->choose_from_radio(array(substr($node->id,1) => null), 'compare', 'M.mod_socialwiki.history()', '', true). $this->choose_from_radio(array(substr($node->id,1) => null), 'comparewith', 'M.mod_socialwiki.history()', '', true);
-
+			}
 		}
 		echo $this->wikioutput->content_area_begin();
 		echo $this->wikioutput->title_block($this->title);
@@ -1257,9 +1260,12 @@ class page_socialwiki_history extends page_socialwiki {
 		echo $OUTPUT->container_start('phptree');		
 		$tree->display();
 		echo $OUTPUT->container_end();
-		echo $OUTPUT->container_start('socialwiki_diffbutton');
-		echo html_writer::empty_tag('input', array('type'=>'submit', 'class'=>'socialwiki_form-button', 'value'=>get_string('comparesel', 'socialwiki')));
-		echo $OUTPUT->container_end();
+		//add compare button only if there are multiple versions of a page 
+		if(count($tree->nodes)>1){
+			echo $OUTPUT->container_start('socialwiki_diffbutton');
+			echo html_writer::empty_tag('input', array('type'=>'submit', 'class'=>'socialwiki_form-button', 'value'=>get_string('comparesel', 'socialwiki')));
+			echo $OUTPUT->container_end();
+		}
 		echo html_writer::end_tag('form');
 		echo $this->wikioutput->content_area_end();
 
