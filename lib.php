@@ -569,6 +569,9 @@ function socialwiki_extend_navigation(navigation_node $navref, $course, $module,
             $link = new moodle_url('/mod/socialwiki/admin.php', array('pageid' => $pageid));
             $node = $navref->add(get_string('admin', 'socialwiki'), $link, navigation_node::TYPE_SETTING);
         }
+		
+			$link = new moodle_url('/mod/socialwiki/help.php', array('pageid' => $pageid));
+            $node = $navref->add(get_string('help', 'socialwiki'), $link, navigation_node::TYPE_SETTING);
     }
 }
 /**

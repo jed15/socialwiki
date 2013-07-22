@@ -104,6 +104,7 @@ $string['formatnwiki_help'] = 'Nwiki is the Mediawiki-like markup language used 
 To create a new page, type the new page name enclosed in double square brackets, for example [[Page 2]].
 To link to a page copy the page url double square brackets with an existing page title inside links to a search for that page.';
 $string['formatnwiki_link'] = 'mod/socialwiki/nwiki';
+$string['help']='Help';
 $string['history'] = 'History';
 $string['history_help'] = 'The history lists links to previous versions of the page.';
 $string['html'] = 'HTML';
@@ -120,6 +121,10 @@ $string['javascriptdisabledlocks'] = 'Javascript is disabled on your browser and
 $string['lockingajaxtimeout'] = 'Edit page locking refresh time';
 $string['lockingtimeout'] = 'Locking timeout';
 $string['links'] = 'Links';
+$string['links_help']='There are 3 diffrent ways to add links: <br/>
+* [[page name]] links to a search pageName <br/>
+* [[page name@pageid]] links to a specific version of a page <br/>
+* [[page name@.]] links to the most recent version of that page';
 $string['listall'] = 'List all';
 $string['listorphan'] = 'List orphan';
 $string['manage']='Manage';

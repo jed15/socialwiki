@@ -682,6 +682,29 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
                 $html .= $this->content_area_end();
                 return $html;
         }
+		
+		public function help_area_start(){
+			$html = '';
+            $html .= $this->content_area_begin();
+            $html .= html_writer::start_div('wikipage');
+			return $html;
+		}
+
+		public function help_content($heading,$content){
+			$html='';
+			$html .= html_writer::tag('h2', $heading,array('class'=>'wikititle'));
+			$html .= html_writer::start_div('', array('id' => 'socialwiki_wikicontent'));
+            $html .= $content;
+            $html .= html_writer::end_div();
+			return $html;
+		}
+		
+		public function help_area_end(){
+			$html='';
+			$html .= html_writer::end_div();
+			$html .= $this->content_area_end();
+			return $html;
+		}
         
     /**
      * Internal function - creates htmls structure suitable for YUI tree.
@@ -710,6 +733,8 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         return $result;
     }
 }
+
+
 
 class socialwiki_files_tree implements renderable {
     public $context;
