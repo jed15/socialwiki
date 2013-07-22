@@ -451,3 +451,7 @@ text-align:center;
 {
 	border-color:white !important;
 }
+.tabtree
+{
+	display:none !important;
+}

@@ -53,3 +53,8 @@ font-style:italic;
 {
 text-align:center;
 }
+
+#socialwiki_container
+{
+	display:none !important;
+}

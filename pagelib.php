@@ -133,16 +133,11 @@ abstract class page_socialwiki {
 		$html = $OUTPUT->header();
         echo $html;
 
-		if (isset($this->page) && $this->style->style != 'classic')
-		{
-			$wiki_renderer = $PAGE->get_renderer('mod_socialwiki');
-			echo $wiki_renderer->pretty_navbar($this->page->id);
-		}
 
         //echo $this->wikioutput->socialwiki_info();
         //print_object(array_keys($GLOBALS));
         // tabs are associated with pageid, so if page is empty, tabs should be disabled
-        if (!empty($this->page) && !empty($this->tabs) && $this->style->style == 'classic') {
+        if (!empty($this->page) && !empty($this->tabs)) {
             if (socialwiki_liked($USER->id, $this->page->id))
             {
                 $this->tabs['like'] = 'unlike';
@@ -161,6 +156,11 @@ abstract class page_socialwiki {
             }
             echo $this->wikioutput->tabs($this->page, $this->tabs, $this->tabs_options);
         }
+		if (isset($this->page))
+		{
+			$wiki_renderer = $PAGE->get_renderer('mod_socialwiki');
+			echo $wiki_renderer->pretty_navbar($this->page->id);
+		}
     }
 
     /**
