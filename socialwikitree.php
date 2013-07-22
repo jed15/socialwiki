@@ -58,7 +58,9 @@
 	
 	//sets priority to number of likes
 	function set_priority($page){
-		$this->priority=socialwiki_numlikes($page->id);
+		$numlikes=socialwiki_numlikes($page->id);
+		$this->priority=$numlikes;
+		$this->content.='<br/>Likes:'.$numlikes;
 	}
 	
 	function add_child($child){
@@ -68,7 +70,7 @@
 	
 	function display(){
 		Global $OUTPUT;
-		echo $OUTPUT->box($this->content,'socialwiki_treebox');
+		echo $OUTPUT->box($this->content,'socialwiki_treebox colourtext');
 	}
 }
 
@@ -134,9 +136,6 @@ class socialwiki_tree{
 			//if the parent is already in the tree add the leaf in the proper position
 			if(array_key_exists($leaves[$i]->parent,$sorted)){
 				$keyindex=$this->find_index($leaves[$i]->parent,$sorted);
-				//print_object($leaves[$i]);
-				//print_object($keyindex);
-				//print_object(array_keys($sorted));
 				$copy=$sorted;
 				$sorted=array_splice($sorted,0,$keyindex)+array($leaves[$i]->id=>$leaves[$i])+array_splice($copy,$keyindex);
 			}else{
@@ -174,10 +173,6 @@ class socialwiki_tree{
 				unset($ar[$childid]);
 			}
 		$keyindex=$this->find_index($node->parent,$ar);
-		if($node->id=='l329'){
-				print_object($ar);
-				print_object($keyindex);
-			}
 		$copy=$ar;
 		$ar=array_splice($ar,0,$keyindex)+array($node->id=>$node)+array_splice($copy,$keyindex);
 		if(count($node->children)>0){
