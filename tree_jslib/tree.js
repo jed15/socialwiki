@@ -275,12 +275,12 @@ function TreeControl(myTree, divID) {
          *2. Cousins and relations in the same column are all grouped together
          *3. Nodes with a higher priority are added closer to the start of the column*/
 
-        function addNodeToColumn(id, treeDepth) {
-                var level = treeDepth - this.myTree.depth(id);
+        function addNodeToColumn(id, treeDepth) {               
+			   var level = treeDepth - this.myTree.depth(id);
                 if (this.myTree.nodes[id].children.length == 0) {
                         level = 0;
                 }
-				
+
                 //Making sure there are enough columns to hold a node at this level, if not, add one
                 while (level >= (this.columns.length)) {
                         this.columns.push([]);
@@ -294,14 +294,17 @@ function TreeControl(myTree, divID) {
                         /*Go through all the related nodes in this column, see if they have been added yet
                          *If so, add the new node in a position adjacent to thiers, to avoid drawing lines over nodes*/
                         if (myTree.nodes[id].parent != -1) {
+
                                 for (var i = 0; i < myRelations.length; i++) {
-                                        firstSiblingLocation = this.columns[level].indexOf(myRelations[i]);
+                                        
                                         if (this.myTree.nodes[myRelations[i]].parent == this.myTree.nodes[id].parent) {
-                                                break;
+											   firstSiblingLocation = this.columns[level].indexOf(myRelations[i]);
+											   break;
                                         }
 
                                 }
-
+								
+								
                                 /*If there is a sibling that has already been added to the column, check to see which priority is higher
                                  *Splice the new node into the array above or below the related node, depending on the priority
                                  *If no sibling has been added, we need to go through the column to find the place that it should be inserted based on its priority*/
@@ -337,6 +340,7 @@ function TreeControl(myTree, divID) {
                                 this.columns[level].push(id);
                         }
                         this.myTree.nodes[id].column = level;
+						
                 }
         }
 
