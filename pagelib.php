@@ -1167,7 +1167,6 @@ class page_socialwiki_diff extends page_socialwiki {
         global $CFG, $OUTPUT, $PAGE;
 
         $pageid = $this->page->id;
-        $total = socialwiki_count_wiki_page_versions($pageid) - 1;
 
         $oldversion = socialwiki_get_wiki_page_version($this->compare,1 );
 
@@ -1183,7 +1182,7 @@ class page_socialwiki_diff extends page_socialwiki {
             $newversion->diff = $diff2;
             $newversion->user = socialwiki_get_user_info($newversion->userid);
 
-            echo $this->wikioutput->diff($pageid, $oldversion, $newversion, array('total' => $total));
+            echo $this->wikioutput->diff($pageid, $oldversion, $newversion);
         } else {
             print_error('versionerror', 'socialwiki');
         }
@@ -1253,13 +1252,14 @@ class page_socialwiki_history extends page_socialwiki {
 
 		echo html_writer::start_tag('form', array('action'=>new moodle_url('/mod/socialwiki/diff.php'), 'method'=>'get', 'id'=>'diff'));
 		echo html_writer::tag('div', html_writer::empty_tag('input', array('type'=>'hidden', 'name'=>'pageid', 'value'=>$this->page->id)));
-		$json=json_encode($tree);
-		//send the tree to javascript
-		echo '<script> var searchResults='.$json.';</script>';
+		
 		//display the tree in php(hidden if javascript is enabled)
 		echo $OUTPUT->container_start('phptree');		
 		$tree->display();
 		echo $OUTPUT->container_end();
+		$json=json_encode($tree);
+		//send the tree to javascript
+		echo '<script> var searchResults='.$json.';</script>';
 		//add compare button only if there are multiple versions of a page 
 		if(count($tree->nodes)>1){
 			echo $OUTPUT->container_start('socialwiki_diffbutton');

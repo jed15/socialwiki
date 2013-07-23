@@ -71,7 +71,8 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         return $this->output->container($html);
     }
 
-    public function diff($pageid, $old, $new, $options = array()) {
+	//compares two pages
+    public function diff($pageid, $old, $new) {
         global $CFG;
         if (!empty($options['total'])) {
             $total = $options['total'];
@@ -136,13 +137,12 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         $html .= html_writer::tag('div', $oldheading.$diff1, array('class'=>'socialwiki-diff-leftside'));
         $html .= html_writer::tag('div', $newheading.$diff2, array('class'=>'socialwiki-diff-rightside'));
         $html .= html_writer::end_tag('div');
-
-       /* if (!empty($total)) {
-            $html .= '<div class="socialwiki_diff_paging">';
-            $html .= $this->output->container($this->diff_paging_bar(1, $new->version - 1, $old->version, $CFG->wwwroot . '/mod/socialwiki/diff.php?pageid=' . $pageid . '&amp;comparewith=' . $new->version . '&amp;', 'compare', false, true), 'socialwiki_diff_oldpaging');
-            $html .= $this->output->container($this->diff_paging_bar($old->version + 1, $total, $new->version, $CFG->wwwroot . '/mod/socialwiki/diff.php?pageid=' . $pageid . '&amp;compare=' . $old->version . '&amp;', 'comparewith', false, true), 'socialwiki_diff_newpaging');
-            $html .= '</div>';
-        }*/
+	
+		//add the paging bars
+		$html .= '<div class="socialwiki_diff_paging">';
+		$html .= $this->output->container($this->diff_paging_bar( $old->pageid, $CFG->wwwroot . '/mod/socialwiki/diff.php?pageid=' . $pageid . '&amp;comparewith=' . $new->pageid . '&amp;', 'compare', false, true), 'socialwiki_diff_oldpaging');
+		$html .= $this->output->container($this->diff_paging_bar($new->pageid, $CFG->wwwroot . '/mod/socialwiki/diff.php?pageid=' . $pageid . '&amp;compare=' . $old->pageid . '&amp;', 'comparewith', false, true), 'socialwiki_diff_newpaging');
+		$html.='</div>';
 
         return $html;
     }
@@ -150,9 +150,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
     /**
      * Prints a single paging bar to provide access to other versions
      *
-     * @param int $minpage First page to be displayed in the bar
-     * @param int $maxpage Last page to be displayed in the bar
-     * @param int $page The page you are currently viewing
+     * @param int $pageid The pageid of one of the pages being compared
      * @param mixed $baseurl If this  is a string then it is the url which will be appended with $pagevar, an equals sign and the page number.
      *                          If this is a moodle_url object then the pagevar param will be replaced by the page no, for each page.
      * @param string $pagevar This is the variable name that you use for the page number in your code (ie. 'tablepage', 'blogpage', etc)
@@ -160,75 +158,76 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
      * @param bool $return whether to return an output string or echo now
      * @return bool or string
      */
-    public function diff_paging_bar($minpage, $maxpage, $page, $baseurl, $pagevar = 'page', $nocurr = false) {
-        $totalcount = $maxpage - $minpage;
+    public function diff_paging_bar($pageid, $baseurl, $pagevar = 'page', $nocurr = false) {
+        //get all pages related to the page being compared
+		$relations=socialwiki_get_relations($pageid);
+		//get the index of the current page id in the array
+		$pageindex=socialwiki_indexof_page($pageid,$relations);
+		$totalcount = count($relations)-1;
         $maxdisplay = 2;
         $html = '';
-
-        if ($totalcount > 0) {
+		
+		if($pageindex==-1){
+			print_error('invalidparameters','socialwiki');
+		}
+		//if there is more than one page create html for paging bar
+		if ($totalcount > 1) {
             $html .= '<div class="paging">';
-            $html .= get_string('version', 'socialwiki') . ':';
-            if ($page - $minpage > 0) {
-                $pagenum = $page - 1;
-                if (!is_a($baseurl, 'moodle_url')) {
-                    $html .= '&nbsp;(<a class="previous" href="' . $baseurl . $pagevar . '=' . $pagenum . '">' . get_string('previous') . '</a>)&nbsp;';
-                } else {
-                    $html .= '&nbsp;(<a class="previous" href="' . $baseurl->out(false, array($pagevar => $pagenum)) . '">' . get_string('previous') . '</a>)&nbsp;';
-                }
-            }
+			
+			//add first link to first page
+			if($pageindex!=0){
+			
+				//print link to parent page
+				if (!is_a($baseurl, 'moodle_url')) {
+					$html .= '&nbsp;<a href="' . $baseurl . $pagevar . '=' . $relations[0]->id . '">' . $relations[0]->id . '</a>&nbsp;';
+				} else {
+					$html .= '&nbsp;<a href="' . $baseurl->out(false, array($pagevar => $relations[0]->id)) . '">' . $relations[0]->id . '</a>&nbsp;';
+				}
+				
+				//print link to page before current
+				if($pageindex>2){
+					//print page that is before the current page in relations array
+					if (!is_a($baseurl, 'moodle_url')) {
+						$html .= '...&nbsp;<a href="' . $baseurl . $pagevar . '=' . $relations[$pageindex-1]->id . '">' . $relations[$pageindex-1]->id. '</a>&nbsp;';
+					} else {
+						$html .= '...&nbsp;<a href="' . $baseurl->out(false, array($pagevar => $relations[$pageindex-1]->id)) . '">' . $relations[$pageindex-1]->id . '</a>&nbsp;';
+					}
+				}else if($pageindex>1){
+					if (!is_a($baseurl, 'moodle_url')) {
+						$html .= '&nbsp;<a href="' . $baseurl . $pagevar . '=' . $relations[$pageindex-1]->id . '">' . $relations[$pageindex-1]->id . '</a>&nbsp;';
+					} else {
+						$html .= '&nbsp;<a href="' . $baseurl->out(false, array($pagevar => $relations[$pageindex-1]->id)) . '">' . $relations[$pageindex-1]->id . '</a>&nbsp;';
+					}
+				}
+			}
+			//print current page
+			$html.=$pageid;
+			if($pageindex!=$totalcount){
+				if($pageindex<$totalcount-2){
+					if (!is_a($baseurl, 'moodle_url')) {
+						$html .= '&nbsp;<a href="' . $baseurl . $pagevar . '=' . $relations[$pageindex+1]->id . '">' . $relations[$pageindex+1]->id . '</a>&nbsp;...';
+					} else {
+						$html .= '&nbsp;<a href="' . $baseurl->out(false, array($pagevar => $relations[$pageindex+1]->id)) . '">' . $relations[$pageindex+1]->id . '</a>&nbsp;...';
+					}
+				}else if($pageindex<$totalcount-1){
+					if (!is_a($baseurl, 'moodle_url')) {
+						$html .= '&nbsp;<a href="' . $baseurl . $pagevar . '=' . $relations[$pageindex+1]->id . '">' . $relations[$pageindex+1]->id . '</a>&nbsp;';
+					} else {
+						$html .= '&nbsp;<a href="' . $baseurl->out(false, array($pagevar => $relations[$pageindex+1]->id)) . '">' . $relations[$pageindex+1]->id . '</a>&nbsp;';
+					}
+				}
+				//print last page in the array
+				if (!is_a($baseurl, 'moodle_url')) {
+						$html .= '&nbsp;<a href="' . $baseurl . $pagevar . '=' . $relations[$totalcount]->id . '">' . $relations[$totalcount]->id . '</a>&nbsp;';
+					} else {
+						$html .= '&nbsp;<a href="' . $baseurl->out(false, array($pagevar => $relations[$totalcount]->id)) . '">' . $relations[$totalcount]->id . '</a>&nbsp;';
+					}
+				}
+		$html .= '</div>';
+		}		
+	 return $html;
+	}
 
-            if ($page - $minpage > 4) {
-                $startpage = $page - 3;
-                if (!is_a($baseurl, 'moodle_url')) {
-                    $html .= '&nbsp;<a href="' . $baseurl . $pagevar . '=' . $minpage . '">' . $minpage . '</a>&nbsp;...';
-                } else {
-                    $html .= '&nbsp;<a href="' . $baseurl->out(false, array($pagevar => $minpage)) . '">' . $minpage . '</a>&nbsp;...';
-                }
-            } else {
-                $startpage = $minpage;
-            }
-            $currpage = $startpage;
-            $displaycount = 0;
-            while ($displaycount < $maxdisplay and $currpage <= $maxpage) {
-                if ($page == $currpage && empty($nocurr)) {
-                    $html .= '&nbsp;&nbsp;' . $currpage;
-                } else {
-                    if (!is_a($baseurl, 'moodle_url')) {
-                        $html .= '&nbsp;&nbsp;<a href="' . $baseurl . $pagevar . '=' . $currpage . '">' . $currpage . '</a>';
-                    } else {
-                        $html .= '&nbsp;&nbsp;<a href="' . $baseurl->out(false, array($pagevar => $currpage)) . '">' . $currpage . '</a>';
-                    }
-
-                }
-                $displaycount++;
-                $currpage++;
-            }
-            if ($currpage < $maxpage) {
-                if (!is_a($baseurl, 'moodle_url')) {
-                    $html .= '&nbsp;...<a href="' . $baseurl . $pagevar . '=' . $maxpage . '">' . $maxpage . '</a>&nbsp;';
-                } else {
-                    $html .= '&nbsp;...<a href="' . $baseurl->out(false, array($pagevar => $maxpage)) . '">' . $maxpage . '</a>&nbsp;';
-                }
-            } else if ($currpage == $maxpage) {
-                if (!is_a($baseurl, 'moodle_url')) {
-                    $html .= '&nbsp;&nbsp;<a href="' . $baseurl . $pagevar . '=' . $currpage . '">' . $currpage . '</a>';
-                } else {
-                    $html .= '&nbsp;&nbsp;<a href="' . $baseurl->out(false, array($pagevar => $currpage)) . '">' . $currpage . '</a>';
-                }
-            }
-            $pagenum = $page + 1;
-            if ($page != $maxpage) {
-                if (!is_a($baseurl, 'moodle_url')) {
-                    $html .= '&nbsp;&nbsp;(<a class="next" href="' . $baseurl . $pagevar . '=' . $pagenum . '">' . get_string('next') . '</a>)';
-                } else {
-                    $html .= '&nbsp;&nbsp;(<a class="next" href="' . $baseurl->out(false, array($pagevar => $pagenum)) . '">' . get_string('next') . '</a>)';
-                }
-            }
-            $html .= '</div>';
-        }
-
-        return $html;
-    }
     public function socialwiki_info() {
         global $PAGE;
         return $this->output->box(format_module_intro('socialwiki', $this->page->activityrecord, $PAGE->cm->id), 'generalbox', 'intro');

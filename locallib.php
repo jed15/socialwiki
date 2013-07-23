@@ -1568,7 +1568,7 @@ function socialwiki_get_children($pageid){
 	return $DB->get_records_sql($sql,array($pageid));
 }
 
-//returns an array with all the parent and child pages
+//returns an array with all the parent and child pages 
 function socialwiki_get_relations($pageid){
 	$relations=array();
 	$added=array();  //an array of page id's already added to $relations
@@ -1608,7 +1608,13 @@ function socialwiki_sort_bylikes($tree){
 	}
 }
 
-
-
-function scoialewiki_sort_byfollows($tree){
+//return the index of a page given page id and an array of pages
+//returns index if page is found -1 if the page isn't in the array
+function socialwiki_indexof_page($pageid,$pages){
+	for($i=0;$i<count($pages);$i++){
+		if($pages[$i]->id==$pageid){
+			return $i;
+		}
+	}
+	return -1;
 }
