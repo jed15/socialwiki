@@ -280,7 +280,7 @@ function TreeControl(myTree, divID) {
                 if (this.myTree.nodes[id].children.length == 0) {
                         level = 0;
                 }
-
+				
                 //Making sure there are enough columns to hold a node at this level, if not, add one
                 while (level >= (this.columns.length)) {
                         this.columns.push([]);
@@ -294,7 +294,6 @@ function TreeControl(myTree, divID) {
                         /*Go through all the related nodes in this column, see if they have been added yet
                          *If so, add the new node in a position adjacent to thiers, to avoid drawing lines over nodes*/
                         if (myTree.nodes[id].parent != -1) {
-
                                 for (var i = 0; i < myRelations.length; i++) {
                                         firstSiblingLocation = this.columns[level].indexOf(myRelations[i]);
                                         if (this.myTree.nodes[myRelations[i]].parent == this.myTree.nodes[id].parent) {

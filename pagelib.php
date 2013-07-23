@@ -873,14 +873,15 @@ class page_socialwiki_search extends page_socialwiki {
 		//create a tree from the search results
         $tree->build_tree($this->search_result);
 		
-		$json=json_encode($tree);
-		//send the tree to javascript
-		echo '<script> var searchResults='.$json.';</script>';
+		
 		//display the php tree (this is hidden if JavaScript is enabled)
 		echo $OUTPUT->container_start('phptree');
 		$tree->display();
 		echo $OUTPUT->container_end();
-
+		
+		$json=json_encode($tree);
+		//send the tree to javascript
+		echo '<script> var searchResults='.$json.';</script>';
 		echo $this->wikioutput->content_area_end();
     }
 }
