@@ -35,7 +35,7 @@
 	$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 	
 	require_login($course, true, $cm);
-	
+	//display manage page
 	$managepage=new page_socialwiki_manage($wiki,$subwiki,$cm);
 	$managepage->set_page($page);
 	
