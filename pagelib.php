@@ -75,7 +75,7 @@ abstract class page_socialwiki {
     /**
      * @var array The tabs set used in wiki module
      */
-    protected $tabs = array('view' => 'view', 'edit' => 'edit', 'comments' => 'comments',
+    protected $tabs = array('view' => 'view', 'edit' => 'edit','map'=>'map', 'comments' => 'comments',
                             'versions' => 'history','manage' => 'manage');
     /**
      * @var array tabs options
@@ -1345,6 +1345,455 @@ class page_socialwiki_history extends page_socialwiki {
     }
 }
 
+
+
+/**
+ * Class that models the behavior of wiki's map page
+ *
+ */
+class page_socialwiki_map extends page_socialwiki {
+
+    /**
+     * @var int wiki view option
+     */
+    private $view;
+
+    function print_header() {
+        parent::print_header();
+		$this->print_pagetitle();
+    }
+	protected function print_pagetitle(){
+		Global $OUTPUT;
+		echo $this->wikioutput->content_area_begin();
+		echo $OUTPUT->heading($this->title,2,"colourtext");
+		echo $this->wikioutput->content_area_end();
+	}
+	
+    function print_content() {
+        global $CFG, $PAGE;
+
+        require_capability('mod/wiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'socialwiki');
+
+        if ($this->view > 0) {
+            //echo '<div><a href="' . $CFG->wwwroot . '/mod/wiki/map.php?pageid=' . $this->page->id . '">' . get_string('backtomapmenu', 'wiki') . '</a></div>';
+        }
+		
+		echo $this->wikioutput->content_area_begin();
+		
+        switch ($this->view) {
+        case 1:
+            echo $this->wikioutput->menu_map($this->page->id, $this->view);
+            $this->print_contributions_content();
+            break;
+        case 2:
+            echo $this->wikioutput->menu_map($this->page->id, $this->view);
+            $this->print_navigation_content();
+            break;
+        case 3:
+            echo $this->wikioutput->menu_map($this->page->id, $this->view);
+            $this->print_orphaned_content();
+            break;
+        case 4:
+            echo $this->wikioutput->menu_map($this->page->id, $this->view);
+            $this->print_index_content();
+            break;
+        case 5:
+            echo $this->wikioutput->menu_map($this->page->id, $this->view);
+            $this->print_page_list_content();
+            break;
+        case 6:
+            echo $this->wikioutput->menu_map($this->page->id, $this->view);
+            $this->print_updated_content();
+            break;
+        default:
+            echo $this->wikioutput->menu_map($this->page->id, $this->view);
+            $this->print_page_list_content();
+        }
+		echo $this->wikioutput->content_area_end();
+    }
+
+    function set_view($option) {
+        $this->view = $option;
+    }
+
+    function set_url() {
+        global $PAGE, $CFG;
+        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/map.php', array('pageid' => $this->page->id));
+    }
+
+    protected function create_navbar() {
+        global $PAGE;
+
+        parent::create_navbar();
+        $PAGE->navbar->add(get_string('map', 'socialwiki'));
+    }
+
+    /**
+     * Prints the contributions tab content
+     *
+     * @uses $OUTPUT, $USER
+     *
+     */
+    private function print_contributions_content() {
+        global $CFG, $OUTPUT, $USER;
+        $page = $this->page;
+
+        if ($page->timerendered + SOCIALWIKI_REFRESH_CACHE_TIME < time()) {
+            $fresh = socialwiki_refresh_cachedcontent($page);
+            $page = $fresh['page'];
+        }
+
+        $swid = $this->subwiki->id;
+
+        $table = new html_table();
+        $table->head = array(get_string('contributions', 'socialwiki') . $OUTPUT->help_icon('contributions', 'socialwiki'));
+        $table->attributes['class'] = 'socailwiki_editor generalbox colourtext';
+        $table->data = array();
+        $table->rowclasses = array();
+
+        $lastversions = array();
+        $pages = array();
+        $users = array();
+
+        if ($contribs = socialwiki_get_contributions($swid, $USER->id)) {
+            foreach ($contribs as $contrib) {
+                if (!array_key_exists($contrib->pageid, $pages)) {
+                    $page = socialwiki_get_page($contrib->pageid);
+                    $pages[$contrib->pageid] = $page;
+                } else {
+                    continue;
+                }
+
+                if (!array_key_exists($page->id, $lastversions)) {
+                    $version = socialwiki_get_last_version($page->id);
+                    $lastversions[$page->id] = $version;
+                } else {
+                    $version = $lastversions[$page->id];
+                }
+
+                if (!array_key_exists($version->userid, $users)) {
+                    $user = socialwiki_get_user_info($version->userid);
+                    $users[$version->userid] = $user;
+                } else {
+                    $user = $users[$version->userid];
+                }
+
+                $link = socialwiki_parser_link($page->title, array('swid' => $swid));
+                $class = ($link['new']) ? 'class="socialwiki_newentry"' : '';
+
+                $linkpage = '<a href="' . $link['url'] . '"' . $class . '>' . format_string($link['content'], true, array('context' => $this->modcontext)) . '</a>';
+                $icon = $OUTPUT->user_picture($user, array('popup' => true));
+
+                $table->data[] = array("$icon&nbsp;$linkpage");
+            }
+        } else {
+            $table->data[] = array(get_string('nocontribs', 'socialwiki'));
+        }
+        echo html_writer::table($table);
+    }
+
+    /**
+     * Prints the navigation tab content
+     *
+     * @uses $OUTPUT
+     *
+     */
+    private function print_navigation_content() {
+        global $OUTPUT;
+        $page = $this->page;
+
+        if ($page->timerendered + SOCIALWIKI_REFRESH_CACHE_TIME < time()) {
+            $fresh = socialwiki_refresh_cachedcontent($page);
+            $page = $fresh['page'];
+        }
+
+        $tolinks = socialwiki_get_linked_to_pages($page->id);
+        $fromlinks = socialwiki_get_linked_from_pages($page->id);
+
+        $table = new html_table();
+        $table->attributes['class'] = 'socialwiki_navigation_from colourtext';
+        $table->head = array(get_string('navigationfrom', 'socialwiki') . $OUTPUT->help_icon('navigationfrom', 'socialwiki') . ':');
+        $table->data = array();
+        $table->rowclasses = array();
+        foreach ($fromlinks as $link) {
+            $lpage = socialwiki_get_page($link->frompageid);
+            $link = new moodle_url('/mod/socialwiki/view.php', array('pageid' => $lpage->id));
+            $table->data[] = array(html_writer::link($link->out(false), format_string($lpage->title)));
+            $table->rowclasses[] = 'mdl-align';
+        }
+
+        $table_left = html_writer::table($table);
+
+        $table = new html_table();
+        $table->attributes['class'] = 'socialwiki_navigation_to colourtext';
+        $table->head = array(get_string('navigationto', 'socialwiki') . $OUTPUT->help_icon('navigationto', 'socialwiki') . ':');
+        $table->data = array();
+        $table->rowclasses = array();
+        foreach ($tolinks as $link) {
+            if ($link->tomissingpage) {
+                $viewlink = new moodle_url('/mod/socialwiki/create.php', array('swid' => $page->subwikiid, 'title' => $link->tomissingpage, 'action' => 'new'));
+                $table->data[] = array(html_writer::link($viewlink->out(false), format_string($link->tomissingpage), array('class' => 'socialwiki_newentry')));
+            } else {
+                $lpage = socialwiki_get_page($link->topageid);
+                $viewlink = new moodle_url('/mod/socialwiki/view.php', array('pageid' => $lpage->id));
+                $table->data[] = array(html_writer::link($viewlink->out(false), format_string($lpage->title)));
+            }
+            $table->rowclasses[] = 'mdl-align';
+        }
+        $table_right = html_writer::table($table);
+        echo $OUTPUT->container($table_left . $table_right, 'socialwiki_navigation_container');
+    }
+
+    /**
+     * Prints the index page tab content
+     *
+     *
+     */
+    private function print_index_content() {
+        global $OUTPUT;
+        $page = $this->page;
+
+        if ($page->timerendered + SOCIALWIKI_REFRESH_CACHE_TIME < time()) {
+            $fresh = socialwiki_refresh_cachedcontent($page);
+            $page = $fresh['page'];
+        }
+
+        // navigation_node get_content calls format string for us
+        $node = new navigation_node($page->title);
+
+        $keys = array();
+        $tree = array();
+        $tree = socialwiki_build_tree($page, $node, $keys);
+
+        $table = new html_table();
+        $table->head = array(get_string('pageindex', 'socialwiki') . $OUTPUT->help_icon('pageindex', 'socialwiki'));
+        $table->attributes['class'] = 'socialwiki_editor generalbox colourtext';
+        $table->data[] = array($this->render_navigation_node($tree));
+
+        echo html_writer::table($table);
+    }
+
+    /**
+     * Prints the page list tab content
+     *
+     *
+     */
+    private function print_page_list_content() {
+        global $OUTPUT;
+        $page = $this->page;
+
+        if ($page->timerendered + SOCIALWIKI_REFRESH_CACHE_TIME < time()) {
+            $fresh = socialwiki_refresh_cachedcontent($page);
+            $page = $fresh['page'];
+        }
+
+        $pages = socialwiki_get_page_list($this->subwiki->id);
+
+        $stdaux = new stdClass();
+        $strspecial = get_string('special', 'socialwiki');
+
+        foreach ($pages as $page) {
+            // We need to format the title here to account for any filtering
+            $letter = format_string($page->title, true, array('context' => $this->modcontext));
+            $letter = textlib::substr($letter, 0, 1);
+            if (preg_match('/^[a-zA-Z]$/', $letter)) {
+                $letter = textlib::strtoupper($letter);
+                $stdaux->{$letter}[] = socialwiki_parser_link($page);
+            } else {
+                $stdaux->{$strspecial}[] = socialwiki_parser_link($page);
+            }
+        }
+
+        $table = new html_table();
+        $table->head = array(get_string('pagelist', 'socialwiki') . $OUTPUT->help_icon('pagelist', 'socialwiki'));
+        $table->attributes['class'] = 'socialwiki_editor generalbox colourtext';
+        $table->align = array('center');
+        foreach ($stdaux as $key => $elem) {
+            $table->data[] = array($key);
+            foreach ($elem as $e) {
+                $table->data[] = array(html_writer::link($e['url'], format_string($e['content'], true, array('context' => $this->modcontext))));
+            }
+        }
+        echo html_writer::table($table);
+    }
+
+    /**
+     * Prints the orphaned tab content
+     *
+     *
+     */
+    private function print_orphaned_content() {
+        global $OUTPUT;
+
+        $page = $this->page;
+
+        if ($page->timerendered + SOCIALWIKI_REFRESH_CACHE_TIME < time()) {
+            $fresh = socialwiki_refresh_cachedcontent($page);
+            $page = $fresh['page'];
+        }
+
+        $swid = $this->subwiki->id;
+
+        $table = new html_table();
+        $table->head = array(get_string('orphaned', 'socialwiki') . $OUTPUT->help_icon('orphaned', 'socialwiki'));
+        $table->attributes['class'] = 'socialwiki_editor generalbox colourtext';
+        $table->data = array();
+        $table->rowclasses = array();
+
+        if ($orphanedpages = socialwiki_get_orphaned_pages($swid)) {
+            foreach ($orphanedpages as $page) {
+                $link = socialwiki_parser_link($page->title, array('swid' => $swid));
+                $class = ($link['new']) ? 'class="socialwiki_newentry"' : '';
+                $table->data[] = array('<a href="' . $link['url'] . '"' . $class . '>' . format_string($link['content']) . '</a>');
+            }
+        } else {
+            $table->data[] = array(get_string('noorphanedpages', 'socialwiki'));
+        }
+
+        echo html_writer::table($table);
+    }
+
+    /**
+     * Prints the updated tab content
+     *
+     * @uses $COURSE, $OUTPUT
+     *
+     */
+    private function print_updated_content() {
+        global $COURSE, $OUTPUT;
+        $page = $this->page;
+
+        if ($page->timerendered + SOCIALWIKI_REFRESH_CACHE_TIME < time()) {
+            $fresh = socialwiki_refresh_cachedcontent($page);
+            $page = $fresh['page'];
+        }
+
+        $swid = $this->subwiki->id;
+
+        $table = new html_table();
+        $table->head = array(get_string('updatedpages', 'wiki') . $OUTPUT->help_icon('updatedpages', 'socialwiki'));
+        $table->attributes['class'] = 'socialwiki_editor generalbox colourtext';
+        $table->data = array();
+        $table->rowclasses = array();
+
+        if ($pages = socialwiki_get_updated_pages_by_subwiki($swid)) {
+            $strdataux = '';
+            foreach ($pages as $page) {
+                $user = socialwiki_get_user_info($page->userid);
+                $strdata = strftime('%d %b %Y', $page->timemodified);
+                if ($strdata != $strdataux) {
+                    $table->data[] = array($OUTPUT->heading($strdata, 4));
+                    $strdataux = $strdata;
+                }
+                $link = socialwiki_parser_link($page->title, array('swid' => $swid));
+                $class = ($link['new']) ? 'class="socialwiki_newentry"' : '';
+
+                $linkpage = '<a href="' . $link['url'] . '"' . $class . '>' . format_string($link['content']) . '</a>';
+                $icon = $OUTPUT->user_picture($user, array($COURSE->id));
+                $table->data[] = array("$icon&nbsp;$linkpage");
+            }
+        } else {
+            $table->data[] = array(get_string('noupdatedpages', 'wiki'));
+        }
+
+        echo html_writer::table($table);
+    }
+
+    protected function render_navigation_node($items, $attrs = array(), $expansionlimit = null, $depth = 1) {
+
+        // exit if empty, we don't want an empty ul element
+        if (count($items) == 0) {
+            return '';
+        }
+
+        // array of nested li elements
+        $lis = array();
+        foreach ($items as $item) {
+            if (!$item->display) {
+                continue;
+            }
+            $content = $item->get_content();
+            $title = $item->get_title();
+            if ($item->icon instanceof renderable) {
+                $icon = $this->wikioutput->render($item->icon);
+                $content = $icon . '&nbsp;' . $content; // use CSS for spacing of icons
+                }
+            if ($item->helpbutton !== null) {
+                $content = trim($item->helpbutton) . html_writer::tag('span', $content, array('class' => 'clearhelpbutton'));
+            }
+
+            if ($content === '') {
+                continue;
+            }
+
+            if ($item->action instanceof action_link) {
+                //TODO: to be replaced with something else
+                $link = $item->action;
+                if ($item->hidden) {
+                    $link->add_class('dimmed');
+                }
+                $content = $this->output->render($link);
+            } else if ($item->action instanceof moodle_url) {
+                $attributes = array();
+                if ($title !== '') {
+                    $attributes['title'] = $title;
+                }
+                if ($item->hidden) {
+                    $attributes['class'] = 'dimmed_text';
+                }
+                $content = html_writer::link($item->action, $content, $attributes);
+
+            } else if (is_string($item->action) || empty($item->action)) {
+                $attributes = array();
+                if ($title !== '') {
+                    $attributes['title'] = $title;
+                }
+                if ($item->hidden) {
+                    $attributes['class'] = 'dimmed_text';
+                }
+                $content = html_writer::tag('span', $content, $attributes);
+            }
+
+            // this applies to the li item which contains all child lists too
+            $liclasses = array($item->get_css_type(), 'depth_' . $depth);
+            if ($item->has_children() && (!$item->forceopen || $item->collapse)) {
+                $liclasses[] = 'collapsed';
+            }
+            if ($item->isactive === true) {
+                $liclasses[] = 'current_branch';
+            }
+            $liattr = array('class' => join(' ', $liclasses));
+            // class attribute on the div item which only contains the item content
+            $divclasses = array('tree_item');
+            if ((empty($expansionlimit) || $item->type != $expansionlimit) && ($item->children->count() > 0 || ($item->nodetype == navigation_node::NODETYPE_BRANCH && $item->children->count() == 0 && isloggedin()))) {
+                $divclasses[] = 'branch';
+            } else {
+                $divclasses[] = 'leaf';
+            }
+            if (!empty($item->classes) && count($item->classes) > 0) {
+                $divclasses[] = join(' ', $item->classes);
+            }
+            $divattr = array('class' => join(' ', $divclasses));
+            if (!empty($item->id)) {
+                $divattr['id'] = $item->id;
+            }
+            $content = html_writer::tag('p', $content, $divattr) . $this->render_navigation_node($item->children, array(), $expansionlimit, $depth + 1);
+            if (!empty($item->preceedwithhr) && $item->preceedwithhr === true) {
+                $content = html_writer::empty_tag('hr') . $content;
+            }
+            $content = html_writer::tag('li', $content, $liattr);
+            $lis[] = $content;
+        }
+
+        if (count($lis)) {
+            return html_writer::tag('ul', implode("\n", $lis), $attrs);
+        } else {
+            return '';
+        }
+    }
+
+}
+
 /**
  * Class that models the behavior of wiki's delete comment confirmation page
  *
@@ -2195,7 +2644,7 @@ class page_socialwiki_manage extends page_socialwiki{
 			$html .= $OUTPUT->container_start('socialwiki_likelist');
 			foreach($likes as $like){
 				$page=socialwiki_get_page($like->pageid);
-				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title,array('class'=>'socialwiki_link'));
+				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title.' (ID:'.$page->id.')',array('class'=>'socialwiki_link'));
 				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/like.php?pageid='.$page->id.'&from='.urlencode($PAGE->url->out()),'Unlike',array('class'=>'socialwiki_unlikelink socialwiki_link'));
 				$html .= "<br/><br/>";
 			}
@@ -2240,7 +2689,7 @@ class page_socialwiki_viewuserpages extends page_socialwiki{
 			$html .= $OUTPUT->container_start('socialwiki_likelist');
 			foreach($likes as $like){
 				$page=socialwiki_get_page($like->pageid);
-				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title,array('class'=>'socialwiki_link'));
+				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title.' (ID:'.$page->id.')',array('class'=>'socialwiki_link'));
 				$html .= "<br/><br/>";
 			}
 			$html .= $OUTPUT->container_end();

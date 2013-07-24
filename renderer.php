@@ -495,7 +495,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         }
         $select = new single_select(new moodle_url('/mod/socialwiki/map.php', array('pageid' => $pageid)), 'option', $selectoptions, $currentselect);
         $select->label = get_string('mapmenu', 'socialwiki') . ': ';
-        return $this->output->container($this->output->render($select), 'midpad');
+        return $this->output->container($this->output->render($select), 'midpad colourtext');
     }
     public function socialwiki_files_tree($context, $subwiki) {
         return $this->render(new socialwiki_files_tree($context, $subwiki));
