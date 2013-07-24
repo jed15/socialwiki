@@ -1618,3 +1618,61 @@ function socialwiki_indexof_page($pageid,$pages){
 	}
 	return -1;
 }
+
+/*
+ *sets the follow similarity to the 
+ *@userid the current users id
+ *@swid the subwikiid
+ */
+function socialwiki_get_follow_sim($userid,$peerid,$swid){
+	$followsim=0;
+	$userfollows=socialwiki_get_follows($userid,$swid);
+	$peerfollows=socialwiki_get_follows($peerid,$swid);
+	if(count($userfollows)>0){
+		foreach($peerfollows as $follow){
+			if(socialwiki_is_following($userid,$follows->usertoid,$swid)){
+				$followsim++;
+			}
+		}
+		if(count($userfollows)>count($peerfollows)){
+			$followsim=($followsim/count($userfollows));
+		}else{
+			$followsim=($followsim/count($peerfollows));
+		}
+	}
+	return $followsim;
+}
+
+function socialwiki_get_like_sim($userid,$peerid,$swid){
+	$likesim=0;
+	$userlikes=socialwiki_getlikes($userid,$swid);
+	if(count($userlikes)>0){
+		$peerlikes=socialwiki_getlikes($peerid,$swid);
+		foreach($peerlikes as $like){
+			if(socialwiki_liked($userid,$like->pageid)){
+				$likesim++;
+			}
+		}
+		if(count($userlikes)>count($peerlikes)){
+				$likesim=($likesim/count($userlikes));
+		}else{
+				$likesim=($likesim/count($peerlikes));
+		}
+	}
+	return $likesim;
+}
+//class that describes the similarity between the current user and another student in the activity
+class peer{
+	public $trust=1; //trust indicator value
+	public $id; //the user id
+	public $likesim=0; //the similarity between likes of the peer and user
+	public $followsim=0; //the similarity between the people the user and peer are following
+
+	function __construct($id,$swid,$numpeers){
+		Global $USER;
+		$this->id=$id;
+		if(socialwiki_is_following($USER->id,$id,$swid)){
+			$this->trust+=$numpeers/count(socialwiki_get_follows($userid,$swid));
+		}
+	}
+}

@@ -2605,12 +2605,14 @@ class page_socialwiki_manage extends page_socialwiki{
 		$follows=socialwiki_get_follows($USER->id,$this->subwiki->id);
 		$likes=socialwiki_getlikes($USER->id,$this->subwiki->id);
 		$numfollowers=socialwiki_get_followers($USER->id,$this->subwiki->id);
-		
+
+		//output follow heading
 		$html=$this->wikioutput->content_area_begin();
 		$html.=$OUTPUT->container_start('socialwiki_manageheading');
 		$html.= $OUTPUT->heading('FOLLOWING',1,'colourtext');
 		$html.=$OUTPUT->container_end();
 		$html .= $OUTPUT->container_start('socialwiki_followlist');
+		
 		if (count($follows)==0){
 			$html.=$OUTPUT->container_start('socialwiki_manageheading');
 			$html.= $OUTPUT->heading('You are not following anyone',3,'colourtext');
