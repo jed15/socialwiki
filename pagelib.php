@@ -75,7 +75,7 @@ abstract class page_socialwiki {
     /**
      * @var array The tabs set used in wiki module
      */
-    protected $tabs = array('view' => 'view', 'edit' => 'edit','map'=>'map', 'comments' => 'comments',
+    protected $tabs = array('home'=>'home','view' => 'view', 'edit' => 'edit', 'comments' => 'comments',
                             'versions' => 'history','manage' => 'manage');
     /**
      * @var array tabs options
@@ -1345,10 +1345,10 @@ class page_socialwiki_history extends page_socialwiki {
 
 
 /**
- * Class that models the behavior of wiki's map page
+ * Class that models the behavior of wiki's home page
  *
  */
-class page_socialwiki_map extends page_socialwiki {
+class page_socialwiki_home extends page_socialwiki {
 
     /**
      * @var int wiki view option
@@ -1372,39 +1372,39 @@ class page_socialwiki_map extends page_socialwiki {
         require_capability('mod/wiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'socialwiki');
 
         if ($this->view > 0) {
-            //echo '<div><a href="' . $CFG->wwwroot . '/mod/wiki/map.php?pageid=' . $this->page->id . '">' . get_string('backtomapmenu', 'wiki') . '</a></div>';
+            //echo '<div><a href="' . $CFG->wwwroot . '/mod/wiki/home.php?pageid=' . $this->page->id . '">' . get_string('backtohomemenu', 'wiki') . '</a></div>';
         }
 		
 		echo $this->wikioutput->content_area_begin();
 		
         switch ($this->view) {
         case 1:
-            echo $this->wikioutput->menu_map($this->page->id, $this->view);
+            echo $this->wikioutput->menu_home($this->page->id, $this->view);
             $this->print_contributions_content();
             break;
         case 2:
-            echo $this->wikioutput->menu_map($this->page->id, $this->view);
+            echo $this->wikioutput->menu_home($this->page->id, $this->view);
             $this->print_navigation_content();
             break;
         case 3:
-            echo $this->wikioutput->menu_map($this->page->id, $this->view);
+            echo $this->wikioutput->menu_home($this->page->id, $this->view);
             $this->print_orphaned_content();
             break;
         case 4:
-            echo $this->wikioutput->menu_map($this->page->id, $this->view);
+            echo $this->wikioutput->menu_home($this->page->id, $this->view);
             $this->print_index_content();
             break;
         case 5:
-            echo $this->wikioutput->menu_map($this->page->id, $this->view);
+            echo $this->wikioutput->menu_home($this->page->id, $this->view);
             $this->print_page_list_content();
             break;
         case 6:
-            echo $this->wikioutput->menu_map($this->page->id, $this->view);
+            echo $this->wikioutput->menu_home($this->page->id, $this->view);
             $this->print_updated_content();
             break;
         default:
-            echo $this->wikioutput->menu_map($this->page->id, $this->view);
-            $this->print_page_list_content();
+            echo $this->wikioutput->menu_home($this->page->id, $this->view);
+            $this->print_updated_content();
         }
 		echo $this->wikioutput->content_area_end();
     }
@@ -1415,14 +1415,14 @@ class page_socialwiki_map extends page_socialwiki {
 
     function set_url() {
         global $PAGE, $CFG;
-        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/map.php', array('pageid' => $this->page->id));
+        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/home.php', array('pageid' => $this->page->id));
     }
 
     protected function create_navbar() {
         global $PAGE;
 
         parent::create_navbar();
-        $PAGE->navbar->add(get_string('map', 'socialwiki'));
+        $PAGE->navbar->add(get_string('home', 'socialwiki'));
     }
 
     /**

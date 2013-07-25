@@ -45,7 +45,7 @@ $string['defaultformat_help'] = 'This setting determines the default format used
 * Creole - A common wiki markup language for which a small edit toolbar is available
 * Nwiki - Mediawiki-like markup language used in the contributed Nwiki module';
 $string['unfollow'] = 'Unfollow';
-$string['frontpagetooltip'] = 'Front Page';
+$string['homepagetooltip'] = 'Home Page';
 $string['viewpagetooltip'] = 'View the page';
 $string['editpagetooltip'] = 'Edit this page';
 $string['versiontooltip'] = 'Other versions of this page';
@@ -128,8 +128,8 @@ $string['links_help']='There are 3 diffrent ways to add links: <br/>
 $string['listall'] = 'List all';
 $string['listorphan'] = 'List orphan';
 $string['manage']='Manage';
-$string['map'] = 'Map';
-$string['mapmenu'] = 'Map menu';
+$string['home'] = 'Home';
+$string['homemenu'] = 'home menu';
 $string['migrationfinished'] = 'Migration finished successfully';
 $string['migrationfinishednowikis'] = 'Migration finished, no wikis were migrated';
 $string['missingpages'] = 'Pages without content';

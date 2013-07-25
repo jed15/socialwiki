@@ -268,7 +268,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
             if ($tab == 'files' && !has_capability('mod/socialwiki:viewpage', $context)) {
                 continue;
             }
-            if (($tab == 'view' || $tab == 'map' || $tab == 'history') && !has_capability('mod/socialwiki:viewpage', $context)) {
+            if (($tab == 'view' || $tab == 'home' || $tab == 'history') && !has_capability('mod/socialwiki:viewpage', $context)) {
                 continue;
             }
             if ($tab == 'admin' && !has_capability('mod/socialwiki:managewiki', $context)) {
@@ -483,7 +483,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 
     }
 
-    function menu_map($pageid, $currentselect) {
+    function menu_home($pageid, $currentselect) {
         $options = array('contributions', 'links', 'orphaned', 'pageindex', 'pagelist', 'updatedpages');
         $items = array();
         foreach ($options as $opt) {
@@ -493,8 +493,8 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         foreach ($items as $key => $item) {
             $selectoptions[$key + 1] = $item;
         }
-        $select = new single_select(new moodle_url('/mod/socialwiki/map.php', array('pageid' => $pageid)), 'option', $selectoptions, $currentselect);
-        $select->label = get_string('mapmenu', 'socialwiki') . ': ';
+        $select = new single_select(new moodle_url('/mod/socialwiki/home.php', array('pageid' => $pageid)), 'option', $selectoptions, $currentselect);
+        $select->label = get_string('homemenu', 'socialwiki') . ': ';
         return $this->output->container($this->output->render($select), 'midpad colourtext');
     }
     public function socialwiki_files_tree($context, $subwiki) {
@@ -547,7 +547,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 
                 $html .= html_writer::start_tag('li', array('class' => 'socialwiki_navlistitem'));
                 $html .= html_writer::start_span('socialwiki_navspan');
-                $html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.socialwiki_get_first_page($page->subwikiid)->id,'', array('class' => 'socialwiki_toolbarlink','id' => 'socialwiki_homebutton', 'title' => get_string('frontpagetooltip', 'mod_socialwiki')));
+                $html .= html_writer::link($CFG->wwwroot.'/mod/socialwiki/home.php?pageid='.$pageid,'', array('class' => 'socialwiki_toolbarlink','id' => 'socialwiki_homebutton', 'title' => get_string('homepagetooltip', 'mod_socialwiki')));
                 $html .= html_writer::end_span();
                 $html .= html_writer::end_tag('li');
                 
