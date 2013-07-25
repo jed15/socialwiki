@@ -58,3 +58,17 @@ text-align:center;
 {
 	display:none !important;
 }
+
+#page-mod-socialwiki-search #socialwiki_content_area
+{
+overflow:auto;
+position:relative;
+text-align:left;
+}
+
+#page-mod-socialwiki-history #socialwiki_content_area
+{
+overflow:auto;
+position:relative;
+text-align:left;
+}
