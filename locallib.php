@@ -284,7 +284,6 @@ function socialwiki_refresh_cachedcontent($page, $newcontent = null) {
     $page->cachedcontent = $parseroutput['toc'] . $parseroutput['parsed_text'];
     $page->timerendered = time();
     $DB->update_record('socialwiki_pages', $page);
-
     socialwiki_refresh_page_links($page, $parseroutput['link_count']);
 
     return array('page' => $page, 'sections' => $parseroutput['repeated_sections'], 'version' => $version->version);
@@ -676,25 +675,26 @@ function socialwiki_parser_link($link, $options = null) {
         if ($page = socialwiki_get_page_by_title($swid, $link)) {
 			if ($specific == false)
 			{
-			$currentpage = optional_param('pageid',0,PARAM_INT);
-            $parsedlink = array('content' => $link, 'url' => $CFG->wwwroot.'/mod/socialwiki/search.php?searchstring='.$link.'&pageid='.$currentpage.'&courseid='.$COURSE->id.'&cmid='.$PAGE->cm->id, 'new' => false, 'link_info' => array('link' => $link, 'pageid' => $page->id, 'new' => false));
+				$currentpage = optional_param('pageid',0,PARAM_INT);
+				$parsedlink = array('content' => $link, 'url' => $CFG->wwwroot.'/mod/socialwiki/search.php?searchstring='.$link.'&pageid='.$currentpage.'&courseid='.$COURSE->id.'&cmid='.$PAGE->cm->id, 'new' => false, 'link_info' => array('link' => $link, 'pageid' => -$page->id, 'new' => false));
 			}
 			else
 			{
 				if ($matches[1] == '.')
 				{
-									$parsedlink = array('content' => $link, 'url' => $CFG->wwwroot . '/mod/socialwiki/view.php?pageid='.$page->id, 'new' => false, 'link_info' => array('link' => $link, 'pageid' => $page->id, 'new' => false));
+					$parsedlink = array('content' => $link, 'url' => $CFG->wwwroot . '/mod/socialwiki/view.php?pageid='.$page->id, 'new' => false, 'link_info' => array('link' => $link, 'pageid' => $page->id, 'new' => false));
 				}
 			else
 				{
-				if (socialwiki_get_page($matches[1]))
-				{
-				$parsedlink = array('content' => $link, 'url' => $CFG->wwwroot . '/mod/socialwiki/view.php?pageid='.$matches[1], 'new' => false, 'link_info' => array('link' => $link, 'pageid' => $page->id, 'new' => false));
-				}
-				else
-				{
-				$parsedlink = array('content' => $link, 'url' => $CFG->wwwroot . '/mod/socialwiki/view.php?pageid='.socialwiki_get_first_page(socialwiki_get_subwiki($swid)->wikiid)->id, 'new' => false, 'link_info' => array('link' => $link, 'pageid' => $page->id, 'new' => false));
-				}
+				
+					if (socialwiki_get_page($matches[1]))
+					{
+						$parsedlink = array('content' => $link, 'url' => $CFG->wwwroot . '/mod/socialwiki/view.php?pageid='.$matches[1], 'new' => false, 'link_info' => array('link' => $link, 'pageid' => $matches[1], 'new' => false));
+					}
+					else
+					{
+						$parsedlink = array('content' => $link, 'url' => $CFG->wwwroot . '/mod/socialwiki/view.php?pageid='.socialwiki_get_first_page(socialwiki_get_subwiki($swid)->wikiid)->id, 'new' => false, 'link_info' => array('link' => $link, 'pageid' => $page->id, 'new' => false));
+					}
 				}
 			}
 		

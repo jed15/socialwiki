@@ -340,11 +340,10 @@ abstract class socialwiki_markup_parser extends socialgeneric_parser {
         } else {
             $callbackargs = $this->linkgeneratorcallbackargs;
             $callbackargs['anchor'] = $anchor;
-
+			
             $link = call_user_func_array($this->linkgeneratorcallback, array($link, $callbackargs));
-
             if (isset($link['link_info'])) {
-                $l = $link['link_info']['link'];
+                $l = $link['link_info']['link'].' '.$link['link_info']['pageid'];
                 unset($link['link_info']['link']);
                 $this->returnvalues['link_count'][$l] = $link['link_info'];
             }

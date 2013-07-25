@@ -133,9 +133,6 @@ abstract class page_socialwiki {
 		$html = $OUTPUT->header();
         echo $html;
 
-
-        //echo $this->wikioutput->socialwiki_info();
-        //print_object(array_keys($GLOBALS));
         // tabs are associated with pageid, so if page is empty, tabs should be disabled
         if (!empty($this->page) && !empty($this->tabs)) {
             if (socialwiki_liked($USER->id, $this->page->id))
@@ -1365,7 +1362,7 @@ class page_socialwiki_map extends page_socialwiki {
 	protected function print_pagetitle(){
 		Global $OUTPUT;
 		echo $this->wikioutput->content_area_begin();
-		echo $OUTPUT->heading($this->title,2,"colourtext");
+		echo $OUTPUT->heading($this->title,2,"socialwiki_headingtitle colourtext");
 		echo $this->wikioutput->content_area_end();
 	}
 	
@@ -1447,7 +1444,7 @@ class page_socialwiki_map extends page_socialwiki {
 
         $table = new html_table();
         $table->head = array(get_string('contributions', 'socialwiki') . $OUTPUT->help_icon('contributions', 'socialwiki'));
-        $table->attributes['class'] = 'socailwiki_editor generalbox colourtext';
+        $table->attributes['class'] = 'socialwiki_editor generalbox colourtext';
         $table->data = array();
         $table->rowclasses = array();
 
@@ -1481,7 +1478,7 @@ class page_socialwiki_map extends page_socialwiki {
                 $link = socialwiki_parser_link($page->title, array('swid' => $swid));
                 $class = ($link['new']) ? 'class="socialwiki_newentry"' : '';
 
-                $linkpage = '<a href="' . $link['url'] . '"' . $class . '>' . format_string($link['content'], true, array('context' => $this->modcontext)) . '</a>';
+                $linkpage = '<a href="' . $link['url'] . '"' . $class . '>' . format_string($link['content'].' (ID:'.$page->id.')', true, array('context' => $this->modcontext)) . '</a>';
                 $icon = $OUTPUT->user_picture($user, array('popup' => true));
 
                 $table->data[] = array("$icon&nbsp;$linkpage");
@@ -1499,7 +1496,7 @@ class page_socialwiki_map extends page_socialwiki {
      *
      */
     private function print_navigation_content() {
-        global $OUTPUT;
+        global $OUTPUT,$PAGE,$COURSE;
         $page = $this->page;
 
         if ($page->timerendered + SOCIALWIKI_REFRESH_CACHE_TIME < time()) {
@@ -1534,9 +1531,16 @@ class page_socialwiki_map extends page_socialwiki {
                 $viewlink = new moodle_url('/mod/socialwiki/create.php', array('swid' => $page->subwikiid, 'title' => $link->tomissingpage, 'action' => 'new'));
                 $table->data[] = array(html_writer::link($viewlink->out(false), format_string($link->tomissingpage), array('class' => 'socialwiki_newentry')));
             } else {
-                $lpage = socialwiki_get_page($link->topageid);
-                $viewlink = new moodle_url('/mod/socialwiki/view.php', array('pageid' => $lpage->id));
-                $table->data[] = array(html_writer::link($viewlink->out(false), format_string($lpage->title)));
+				if($link->topageid>0){
+					$lpage = socialwiki_get_page($link->topageid);
+					$viewlink = new moodle_url('/mod/socialwiki/view.php', array('pageid' => $lpage->id));
+					$table->data[] = array(html_writer::link($viewlink->out(false), format_string($lpage->title).' (ID:'.$page->id.')'));
+				}else{
+					//if the topageid is negative it means the page links to a search  
+					$lpage = socialwiki_get_page(abs($link->topageid));
+					$viewlink = new moodle_url('/mod/socialwiki/search.php', array('pageid' => $page->id,'searchstring'=>$lpage->title,'courseid'=>$COURSE->id,'cmid'=>$PAGE->cm->id));
+					$table->data[] = array(html_writer::link($viewlink->out(false),'Search for: '.format_string($lpage->title)));
+				}
             }
             $table->rowclasses[] = 'mdl-align';
         }
@@ -1611,7 +1615,7 @@ class page_socialwiki_map extends page_socialwiki {
         foreach ($stdaux as $key => $elem) {
             $table->data[] = array($key);
             foreach ($elem as $e) {
-                $table->data[] = array(html_writer::link($e['url'], format_string($e['content'], true, array('context' => $this->modcontext))));
+                $table->data[] = array(html_writer::link($e['url'], format_string($e['content'].' (ID:'.$e['link_info']['pageid'].')', true, array('context' => $this->modcontext))));
             }
         }
         echo html_writer::table($table);
@@ -1688,7 +1692,7 @@ class page_socialwiki_map extends page_socialwiki {
                 $link = socialwiki_parser_link($page->title, array('swid' => $swid));
                 $class = ($link['new']) ? 'class="socialwiki_newentry"' : '';
 
-                $linkpage = '<a href="' . $link['url'] . '"' . $class . '>' . format_string($link['content']) . '</a>';
+                $linkpage = '<a href="' . $link['url'] . '"' . $class . '>' . format_string($link['content'].' (ID:'.$page->id.')') . '</a>';
                 $icon = $OUTPUT->user_picture($user, array($COURSE->id));
                 $table->data[] = array("$icon&nbsp;$linkpage");
             }
