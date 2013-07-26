@@ -134,6 +134,18 @@ function socialwiki_get_page($pageid) {
 }
 
 /**
+ *Get all pages for a user
+ *@param int $pageid
+ *@param int $swid
+ *return object array 
+ */
+ function socialwiki_get_pages_from_userid($userid,$swid){
+	Global $DB;
+	$select= 'userid=? And subwikiid=?';
+	return $DB->get_records_select('socialwiki_pages',$select,array($userid,$swid));
+ }
+
+/**
  * Get latest version of wiki page
  * @param int $pageid
  * @return object
@@ -205,18 +217,37 @@ function socialwiki_get_version($versionid) {
  * Get first page of wiki instace
  * @param int $subwikiid
  * @param int $module, wiki instance object
+ * @return last version of first page edited by a teacher
  */
 function socialwiki_get_first_page($subwikid, $module = null) {
-    global $DB, $USER;
-
-    $sql = "SELECT p.*
-            FROM {socialwiki} w, {socialwiki_subwikis} s, {socialwiki_pages} p
-            WHERE s.id = ? AND
-            s.wikiid = w.id AND
-            w.firstpagetitle = p.title AND
-            p.subwikiid = s.id ORDER BY id ASC";
-	$records = $DB->get_records_sql($sql, array($subwikid));
-    return $records[max(array_keys($records))];
+    global $DB, $USER,$COURSE;
+	$context=get_context_instance(CONTEXT_COURSE, $COURSE->id);
+	$teachers=socialwiki_get_teachers($context->id);
+	$toreturn=array();
+	foreach($teachers as $teacher){
+		$sql = "SELECT p.*
+				FROM {socialwiki} w, {socialwiki_subwikis} s, {socialwiki_pages} p, {socialwiki_versions} v
+				WHERE s.id = ? AND
+				s.wikiid = w.id AND
+				w.firstpagetitle = p.title AND
+				p.subwikiid = s.id AND	
+				v.version=0 AND v.userid=? 
+				AND v.pageid=p.id
+				ORDER BY id ASC";
+		$records= $DB->get_records_sql($sql, array($subwikid,$teacher->id));
+		
+		if($records){
+			//get the last edit of this page by the teacher
+			$toreturn[max(array_keys($records))]=$records[max(array_keys($records))];
+			
+		}
+	}
+	//if there are isn't a front page return false
+	if($toreturn){
+		return $toreturn[max(array_keys($toreturn))];
+	}else{
+		return false;
+	}
 }
 
 function socialwiki_save_section($wikipage, $sectiontitle, $sectioncontent, $userid) {
@@ -1619,60 +1650,135 @@ function socialwiki_indexof_page($pageid,$pages){
 	return -1;
 }
 
-/*
- *sets the follow similarity to the 
- *@userid the current users id
- *@swid the subwikiid
- */
-function socialwiki_get_follow_sim($userid,$peerid,$swid){
-	$followsim=0;
-	$userfollows=socialwiki_get_follows($userid,$swid);
-	$peerfollows=socialwiki_get_follows($peerid,$swid);
-	if(count($userfollows)>0){
-		foreach($peerfollows as $follow){
-			if(socialwiki_is_following($userid,$follows->usertoid,$swid)){
-				$followsim++;
-			}
-		}
-		if(count($userfollows)>count($peerfollows)){
-			$followsim=($followsim/count($userfollows));
-		}else{
-			$followsim=($followsim/count($peerfollows));
-		}
-	}
-	return $followsim;
+
+//returns array of teachers as moodle allows multiple teachers per course
+function socialwiki_get_teachers($contextid){
+	Global $DB;
+	$sql='SELECT ra.userid AS id
+	FROM {role_assignments} ra 
+	JOIN {role} r ON r.id=ra.roleid
+	WHERE contextid=? AND (shortname="teacher" OR shortname="editingteacher")';
+	return $DB->get_records_sql($sql,array($contextid));
 }
 
-function socialwiki_get_like_sim($userid,$peerid,$swid){
-	$likesim=0;
-	$userlikes=socialwiki_getlikes($userid,$swid);
-	if(count($userlikes)>0){
-		$peerlikes=socialwiki_getlikes($peerid,$swid);
-		foreach($peerlikes as $like){
-			if(socialwiki_liked($userid,$like->pageid)){
-				$likesim++;
-			}
-		}
-		if(count($userlikes)>count($peerlikes)){
-				$likesim=($likesim/count($userlikes));
-		}else{
-				$likesim=($likesim/count($peerlikes));
+function socialwiki_get_recomended_pages($userid,$swid){
+	Global $PAGE;
+	$context = get_context_instance(CONTEXT_MODULE, $PAGE->cm->id);
+	$users=get_enrolled_users($context);
+	$peers= array();
+	//count number of user's peers
+	$numpeers=count($users)-1; 
+	foreach ($users as $user){
+		if($user->id != $userid){
+			$peers[]=new peer($user->id,$swid,$userid,$numpeers);
 		}
 	}
-	return $likesim;
+	
+	$pages = socialwiki_get_page_list($swid);
+	$pages=socialwiki_order_pages_using_peers($peers,$pages);
+	
+	//return top ten pages
+	if(count($pages)<=10){
+		return($pages);
+	}else{
+		return array_slice($pages,0,10);
+	}
 }
+
+function socialwiki_page_comp($p1,$p2){
+	if($p1->votes==$p2->votes){
+		return 0;
+	}
+	return ($p1->votes < $p2->votes) ? 1 : -1;
+}
+
+/**
+ *orders pages using the trust indicators from an array of peers
+ *@param $peers an array of peer objects
+ *@param $pages an array of pages
+ **/
+
+function socialwiki_order_pages_using_peers($peers,$pages){
+	Global $USER;
+	foreach ($pages as $page){
+		if (socialwiki_liked($USER->id,$page->id)){
+			unset($pages[$page->id]);
+			continue;
+		}
+		$votes=0;
+		foreach ($peers as $peer){
+			if (socialwiki_liked($peer->id,$page->id)){
+				$votes+=$peer->trust;
+			}
+		}
+		$page->votes=$votes;
+	}
+	usort($pages,"socialwiki_page_comp");
+	return $pages;
+}
+
+
 //class that describes the similarity between the current user and another student in the activity
 class peer{
 	public $trust=1; //trust indicator value
 	public $id; //the user id
 	public $likesim=0; //the similarity between likes of the peer and user
 	public $followsim=0; //the similarity between the people the user and peer are following
-
-	function __construct($id,$swid,$numpeers){
+	protected $scale=1;		//variable used to scale the persentages
+	function __construct($id,$swid,$currentuser,$numpeers){
 		Global $USER;
 		$this->id=$id;
 		if(socialwiki_is_following($USER->id,$id,$swid)){
 			$this->trust+=$numpeers/count(socialwiki_get_follows($userid,$swid));
 		}
+		$this->scale=$numpeers/2;
+		$this->set_follow_sim($currentuser,$swid);
+		$this->set_like_sim($currentuser,$swid);
+		$this->set_trust();
+	}
+	/*
+	 *sets the follow similarity to the 
+	 *@userid the current users id
+	 *@swid the subwikiid
+	 */
+	function set_follow_sim($userid,$swid){
+		$this->followsim=0;
+		$userfollows=socialwiki_get_follows($userid,$swid);
+		$peerfollows=socialwiki_get_follows($this->id,$swid);
+		if(count($userfollows)>0){
+			foreach($peerfollows as $follow){
+				if(socialwiki_is_following($userid,$follows->usertoid,$swid)){
+					$this->followsim++;
+				}
+			}
+			if(count($userfollows)>count($peerfollows)){
+				$this->followsim=($this->followsim/count($userfollows));
+			}else{
+				$this->followsim=($this->followsim/count($peerfollows));
+			}
+		}
+	}
+
+	function set_like_sim($userid,$swid){
+	$this->likesim=0;
+	$userlikes=socialwiki_getlikes($userid,$swid);
+	if(count($userlikes)>0){
+		$peerlikes=socialwiki_getlikes($this->id,$swid);
+		foreach($peerlikes as $like){
+			if(socialwiki_liked($userid,$like->pageid)){
+				$this->likesim++;
+			}
+		}
+		if(count($userlikes)>count($peerlikes)){
+				$this->likesim=($this->likesim/count($userlikes));
+		}else{
+				$this->likesim=($this->likesim/count($peerlikes));
+		}
 	}
 }
+	function set_trust(){
+		$this->trust+=($this->followsim*$this->scale)+($this->likesim*$this->scale);
+	}
+
+}
+

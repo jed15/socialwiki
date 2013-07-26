@@ -45,6 +45,7 @@
     margin: auto;
     margin-top: 10px;
     margin-bottom: 10px;
+	text-align:center;
 }
 
 .socialwiki_previewbox {
@@ -413,6 +414,10 @@ margin-left:25px;
 	padding:10px;
 }
 
+#firstpagecontainer{
+text-align:right;
+margin-right:10%;
+}
 .socialwiki_diffbutton
 {
 text-align:center;

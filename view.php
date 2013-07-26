@@ -55,56 +55,14 @@ $swid = optional_param('swid', 0, PARAM_INT); // Subwiki ID
 /*
  * Case 0:
  *
- * User that comes from a course. First wiki page must be shown
+ * User that comes from a course. Home page must be shown
  *
  * URL params: id -> course module id
  *
  */
 if ($id) {
-    // Cheacking course module instance
-    if (!$cm = get_coursemodule_from_id('socialwiki', $id)) {
-        print_error('invalidcoursemodule');
-    }
-
-    // Checking course instance
-    $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-
-    require_login($course, true, $cm);
-
-    // Checking socialwiki instance
-    if (!$wiki = socialwiki_get_wiki($cm->instance)) {
-        print_error('incorrectwikiid', 'socialwiki');
-    }
-    $PAGE->set_cm($cm);
-
-    // Getting the subwiki corresponding to that wiki, group and user.
-    //
-    // Also setting the page if it exists or getting the first page title form
-    // that wiki
-
-    // Getting current group id
-    $currentgroup = groups_get_activity_group($cm);
-
-    // Getting current user id
-    if ($wiki->wikimode == 'individual') {
-        $userid = $USER->id;
-    } else {
-        $userid = 0;
-    }
-
-    // Getting subwiki. If it does not exists, redirecting to create page
-    if (!$subwiki = socialwiki_get_subwiki_by_group($wiki->id, $currentgroup, $userid)) {
-        $params = array('wid' => $wiki->id, 'group' => $currentgroup, 'uid' => $userid, 'title' => $wiki->firstpagetitle);
-        $url = new moodle_url('/mod/socialwiki/create.php', $params);
-        redirect($url);
-    }
-
-    // Getting first page. If it does not exists, redirecting to create page
-    if (!$page = socialwiki_get_first_page($subwiki->id, $wiki)) {
-        $params = array('swid'=>$subwiki->id, 'title'=>$wiki->firstpagetitle);
-        $url = new moodle_url('/mod/socialwiki/create.php', $params);
-        redirect($url);
-    }
+	 $url = new moodle_url('/mod/socialwiki/home.php',array('id'=>$id));
+    redirect($url);
 
     /*
      * Case 1:

@@ -36,33 +36,64 @@ require_once($CFG->dirroot . '/mod/socialwiki/lib.php');
 require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
 require_once($CFG->dirroot . '/mod/socialwiki/pagelib.php');
 
-$pageid = required_param('pageid', PARAM_INT); // Page ID
+	$id =optional_param('id',0,PARAM_INT);
+$pageid = optional_param('pageid',0, PARAM_INT); // Page ID
 $option = optional_param('option', 0, PARAM_INT); // Option ID
 
-if (!$page = socialwiki_get_page($pageid)) {
-    print_error('incorrectpageid', 'socialwiki');
-}
-if (!$subwiki = socialwiki_get_subwiki($page->subwikiid)) {
-    print_error('incorrectsubwikiid', 'socialwiki');
-}
-if (!$cm = get_coursemodule_from_instance("socialwiki", $subwiki->wikiid)) {
-    print_error('invalidcoursemodule');
-}
-$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
-    print_error('incorrectwikiid', 'socialwiki');
+//case 1 User that comes from a course
+if($id){
+	// Cheacking course module instance
+    if (!$cm = get_coursemodule_from_id('socialwiki', $id)) {
+        print_error('invalidcoursemodule');
+    }
+
+    // Checking course instance
+    $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+
+    require_login($course, true, $cm);
+
+    // Checking socialwiki instance
+    if (!$wiki = socialwiki_get_wiki($cm->instance)) {
+        print_error('incorrectwikiid', 'socialwiki');
+    }
+    $PAGE->set_cm($cm);
+
+    // Getting the subwiki corresponding to that socialwiki, group and user.
+
+    // Getting current group id
+    $currentgroup = groups_get_activity_group($cm);
+
+    // set user id 0
+        $userid = 0;
+
+    // Getting subwiki. If it does not exists, redirecting to create page
+    if (!$subwiki = socialwiki_get_subwiki_by_group($wiki->id, $currentgroup, $userid)) {
+        $params = array('wid' => $wiki->id, 'group' => $currentgroup, 'uid' => $userid, 'title' => $wiki->firstpagetitle);
+        $url = new moodle_url('/mod/socialwiki/create.php', $params);
+        redirect($url);
+    }
+	$context = context_module::instance($cm->id);
+	if (!$page=socialwiki_get_first_page($subwiki->id)) {
+		//if the front page doesn't exist redirect a teacher to create it
+		if (has_capability('mod/socialwiki:managewiki', $context)) {
+			$params = array('swid'=>$subwiki->id, 'title'=>$wiki->firstpagetitle);
+			$url = new moodle_url('/mod/socialwiki/create.php', $params);
+			redirect($url);
+		}
+	}
+
+}else{
+	    print_error('incorrectparameters');
 }
 
 require_login($course, true, $cm);
-$context = context_module::instance($cm->id);
 require_capability('mod/socialwiki:viewpage', $context);
 
 $wikipage = new page_socialwiki_home($wiki, $subwiki, $cm);
-add_to_log($course->id, "socialwiki", "home", "home.php?pageid=".$pageid, $pageid, $cm->id);
+add_to_log($course->id, "socialwiki", "home", "home.php?id=".$cm->id, $cm->id);
 
 // Print page header
 $wikipage->set_view($option);
-$wikipage->set_page($page);
 $wikipage->print_header();
 $wikipage->print_content();
 
