@@ -1489,10 +1489,7 @@ class page_socialwiki_home extends page_socialwiki {
                     $user = $users[$version->userid];
                 }
 
-                $link = socialwiki_parser_link($page->title, array('swid' => $swid));
-                $class = ($link['new']) ? 'class="socialwiki_newentry"' : '';
-
-                $linkpage = '<a class="socialwiki_link" href="' . $link['url'] . '"' . $class . '>' . format_string($link['content'].' (ID:'.$page->id.')', true, array('context' => $this->modcontext)) . '</a>';
+                $linkpage = html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title.' (ID:'.$page->id.')',array('class'=>'socialwiki_link'));
                 
 
                 $table->data[] = array("$linkpage");
@@ -1597,7 +1594,7 @@ class page_socialwiki_home extends page_socialwiki {
      *
      */
     private function print_page_list_content() {
-        global $OUTPUT;
+        global $OUTPUT,$CFG;
         /*$page = $this->page;
 
         if ($page->timerendered + SOCIALWIKI_REFRESH_CACHE_TIME < time()) {
@@ -1616,9 +1613,9 @@ class page_socialwiki_home extends page_socialwiki {
             $letter = textlib::substr($letter, 0, 1);
             if (preg_match('/^[a-zA-Z]$/', $letter)) {
                 $letter = textlib::strtoupper($letter);
-                $stdaux->{$letter}[] = socialwiki_parser_link($page);
+                $stdaux->{$letter}[] =html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title.' (ID:'.$page->id.')',array('class'=>'socialwiki_link'));
             } else {
-                $stdaux->{$strspecial}[] = socialwiki_parser_link($page);
+                $stdaux->{$strspecial}[] = html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title.' (ID:'.$page->id.')',array('class'=>'socialwiki_link'));
             }
         }
 
@@ -1628,8 +1625,8 @@ class page_socialwiki_home extends page_socialwiki {
         $table->align = array('center');
         foreach ($stdaux as $key => $elem) {
             $table->data[] = array($key);
-            foreach ($elem as $e) {
-                $table->data[] = array(html_writer::link($e['url'], format_string($e['content'].' (ID:'.$e['link_info']['pageid'].')', true, array('context' => $this->modcontext,'class'=>'socialwiki_link'))));
+            foreach ($elem as $link) {
+                $table->data[] = array($link);
             }
         }
         echo html_writer::table($table);
@@ -1641,7 +1638,7 @@ class page_socialwiki_home extends page_socialwiki {
      *
      */
     private function print_orphaned_content() {
-        global $OUTPUT;
+        global $OUTPUT,$CFG;
 
        /* $page = $this->page;
 
@@ -1660,9 +1657,7 @@ class page_socialwiki_home extends page_socialwiki {
 
         if ($orphanedpages = socialwiki_get_orphaned_pages($swid)) {
             foreach ($orphanedpages as $page) {
-                $link = socialwiki_parser_link($page->title, array('swid' => $swid));
-                $class = ($link['new']) ? 'class="socialwiki_newentry"' : '';
-                $table->data[] = array('<a class="socialwiki_link" href="' . $link['url'] . '"' . $class . '>' . format_string($link['content'].' (ID:'.$page->id.')') . '</a>');
+                $table->data[] = array(html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title.' (ID:'.$page->id.')',array('class'=>'socialwiki_link')));
             }
         } else {
             $table->data[] = array(get_string('noorphanedpages', 'socialwiki'));
@@ -1703,10 +1698,8 @@ class page_socialwiki_home extends page_socialwiki {
                     $table->data[] = array($OUTPUT->heading($strdata, 4));
                     $strdataux = $strdata;
                 }
-                $link = socialwiki_parser_link($page->title, array('swid' => $swid));
-                $class = ($link['new']) ? 'class="socialwiki_newentry"' : '';
 
-                $linkpage = '<a class="socialwiki_link" href="' . $link['url'] . '"' . $class . '>' . format_string($link['content'].' (ID:'.$page->id.')') . '</a>';
+                $linkpage = html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title.' (ID:'.$page->id.')',array('class'=>'socialwiki_link'));
                 $name = html_writer::link($CFG->wwwroot.'/user/view.php?id='.$user->id,fullname($user),array('class'=>'socialwiki_link'));
                 $table->data[] = array("$name&nbsp&nbsp;$linkpage");
             }
@@ -1718,14 +1711,9 @@ class page_socialwiki_home extends page_socialwiki {
     }
 	
 	private function print_teacher_content() {
-        global $COURSE, $OUTPUT,$PAGE;
-        //$page = $this->page;
+        global $COURSE, $OUTPUT,$CFG,$PAGE;
+
 		$context = get_context_instance(CONTEXT_COURSE, $COURSE->id);
-		/*
-        if ($page->timerendered + SOCIALWIKI_REFRESH_CACHE_TIME < time()) {
-            $fresh = socialwiki_refresh_cachedcontent($page);
-            $page = $fresh['page'];
-        }*/
 		
 		$teachers=socialwiki_get_teachers($context->id);
 		//moodle allows multiple teachers so print pages for all teachers and editing teachers
@@ -1742,9 +1730,9 @@ class page_socialwiki_home extends page_socialwiki {
 				$letter = textlib::substr($letter, 0, 1);
 				if (preg_match('/^[a-zA-Z]$/', $letter)) {
 					$letter = textlib::strtoupper($letter);
-					$stdaux->{$letter}[] = socialwiki_parser_link($page);
+					$stdaux->{$letter}[] = html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title.' (ID:'.$page->id.')',array('class'=>'socialwiki_link'));
 				} else {
-					$stdaux->{$strspecial}[] = socialwiki_parser_link($page);
+					$stdaux->{$strspecial}[] = html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title.' (ID:'.$page->id.')',array('class'=>'socialwiki_link'));
 				}
 			}
 
@@ -1754,8 +1742,8 @@ class page_socialwiki_home extends page_socialwiki {
 			$table->align = array('center');
 			foreach ($stdaux as $key => $elem) {
 				$table->data[] = array($key);
-				foreach ($elem as $e) {
-					$table->data[] = array(html_writer::link($e['url'], format_string($e['content'].' (ID:'.$e['link_info']['pageid'].')', true, array('context' => $this->modcontext,'class'=>'socialwiki_link'))));
+				foreach ($elem as $link) {
+					$table->data[] = array($link);
 				}
 			}
 			echo html_writer::table($table);
@@ -1763,20 +1751,15 @@ class page_socialwiki_home extends page_socialwiki {
     }
 	
 	private function print_recomended_content() {
-        global $USER;
+        global $USER,$CFG;
 
 		$pages = socialwiki_get_recomended_pages($USER->id,$this->subwiki->id);
 		$table = new html_table();
 			$table->head = array('recomended pages');
 			$table->attributes['class'] = 'socialwiki_editor generalbox colourtext';
 			$table->align = array('center');
-			print_object($pages);
 		foreach ($pages as $page) {
-			$link=socialwiki_parser_link($page);
-			
-			
-			
-			$table->data[] = array(html_writer::link($link['url'], format_string($link['content'].' (ID:'.$page->id.')', true, array('context' => $this->modcontext,'class'=>'socialwiki_link'))));
+			$table->data[] = array(html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title.' (ID:'.$page->id.')',array('class'=>'socialwiki_link')));
 		}
 		echo html_writer::table($table);
 	}
