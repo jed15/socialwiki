@@ -60,7 +60,7 @@ function socialwiki_print_editor_wiki($pageid, $content, $editor, $version = -1,
     $tag = getTokens($editor, 'nowiki');
     $wiki_editor['nowiki'] = array('ed_nowiki.gif', get_string('wikinowikitext', 'socialwiki'), $tag[0], $tag[1], get_string('wikinowikitext', 'socialwiki'));
 
-    $OUTPUT->heading(strtoupper(get_string('format' . $editor, 'wiki')));
+    $OUTPUT->heading(strtoupper(get_string('format' . $editor, 'socialwiki')));
 
     $PAGE->requires->js('/mod/socialwiki/editors/wiki/buttons.js');
 

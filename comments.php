@@ -48,7 +48,7 @@ if (!$subwiki = socialwiki_get_subwiki($page->subwikiid)) {
 }
 
 if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
-    print_error('incorrectwikiid', 'wiki');
+    print_error('incorrectwikiid', 'socialwiki');
 }
 
 if (!$cm = get_coursemodule_from_instance('socialwiki', $wiki->id)) {

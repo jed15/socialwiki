@@ -110,13 +110,13 @@ class MoodleQuickForm_socialwikifiletable extends HTML_QuickForm_element {
 
                 $action_icons = "";
                 if(!empty($tags['attach'])) {
-                    $action_icons .= "<a href=\"javascript:void(0)\" class=\"socialwiki-attachment-attach\" ".$this->printInsertTags($tags['attach'], $file->get_filename())." title=\"".get_string('attachmentattach', 'wiki')."\">".$OUTPUT->pix_icon($icon, "Attach")."</a>"; //TODO: localize
+                    $action_icons .= "<a href=\"javascript:void(0)\" class=\"socialwiki-attachment-attach\" ".$this->printInsertTags($tags['attach'], $file->get_filename())." title=\"".get_string('attachmentattach', 'socialwiki')."\">".$OUTPUT->pix_icon($icon, "Attach")."</a>"; //TODO: localize
                 }
 
-                $action_icons .= "&nbsp;&nbsp;<a href=\"javascript:void(0)\" class=\"socialwiki-attachment-link\" ".$this->printInsertTags($tags['link'], $file_url)." title=\"".get_string('attachmentlink', 'wiki')."\">".$OUTPUT->pix_icon($icon, "Link")."</a>";
+                $action_icons .= "&nbsp;&nbsp;<a href=\"javascript:void(0)\" class=\"socialwiki-attachment-link\" ".$this->printInsertTags($tags['link'], $file_url)." title=\"".get_string('attachmentlink', 'socialwiki')."\">".$OUTPUT->pix_icon($icon, "Link")."</a>";
 
                 if (file_mimetype_in_typegroup($file->get_mimetype(), 'web_image')) {
-                    $action_icons .= "&nbsp;&nbsp;<a href=\"javascript:void(0)\" class=\"socialwiki-attachment-image\" ".$this->printInsertTags($tags['image'], $file->get_filename())." title=\"".get_string('attachmentimage', 'wiki')."\">".$OUTPUT->pix_icon($icon, "Image")."</a>"; //TODO: localize
+                    $action_icons .= "&nbsp;&nbsp;<a href=\"javascript:void(0)\" class=\"socialwiki-attachment-image\" ".$this->printInsertTags($tags['image'], $file->get_filename())." title=\"".get_string('attachmentimage', 'socialwiki')."\">".$OUTPUT->pix_icon($icon, "Image")."</a>"; //TODO: localize
                 }
 
                 $htmltable->data[] = array($checkbox, '<a href="'.$file_url.'">'.$file->get_filename().'</a>', $action_icons);

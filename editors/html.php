@@ -16,7 +16,7 @@
 function socialwiki_print_editor_html($pageid, $content, $version = -1, $section = null, $upload = false, $deleteuploads = array()) {
     global $CFG, $OUTPUT;
 
-    $OUTPUT->heading(strtoupper(get_string('formathtml', 'wiki')));
+    $OUTPUT->heading(strtoupper(get_string('formathtml', 'socialwiki')));
 
     $action = $CFG->wwwroot.'/mod/socialwiki/edit.php?pageid='.$pageid;
 

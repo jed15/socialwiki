@@ -179,8 +179,8 @@ class moodle1_mod_socialwiki_handler extends moodle1_mod_handler {
         // we now have all information needed to start writing into the file
         $this->open_xml_writer("activities/socialwiki_{$this->moduleid}/socialwiki.xml");
         $this->xmlwriter->begin_tag('activity', array('id' => $instanceid, 'moduleid' => $this->moduleid,
-            'modulename' => 'wiki', 'contextid' => $contextid));
-        $this->xmlwriter->begin_tag('wiki', array('id' => $instanceid));
+            'modulename' => 'socialwiki', 'contextid' => $contextid));
+        $this->xmlwriter->begin_tag('socialwiki', array('id' => $instanceid));
 
         foreach ($data as $field => $value) {
             if ($field <> 'id') {
@@ -251,7 +251,7 @@ class moodle1_mod_socialwiki_handler extends moodle1_mod_handler {
     }
 
     /**
-     * This is executed when we reach the closing </MOD> tag of our 'wiki' path
+     * This is executed when we reach the closing </MOD> tag of our 'socialwiki' path
      */
     public function on_socialwiki_end() {
         global $USER;

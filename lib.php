@@ -420,7 +420,7 @@ function socialwiki_scale_used($wikiid, $scaleid) {
 function socialwiki_scale_used_anywhere($scaleid) {
     global $DB;
 
-    //if ($scaleid and $DB->record_exists('wiki', array('grade' => -$scaleid))) {
+    //if ($scaleid and $DB->record_exists('socialwiki', array('grade' => -$scaleid))) {
     //    return true;
     //} else {
     //    return false;
