@@ -60,7 +60,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         $totalcount = count($records);
         $html = $this->output->heading("$strsearchresults $totalcount");
         foreach ($records as $page) {
-            $table->head = array('title' => format_string($page->title) . ' (' . html_writer::link($CFG->wwwroot . '/mod/socialwiki/view.php?pageid=' . $page->id, get_string('view', 'socialwiki')) . ')');
+            $table->head = array('title' => format_string($page->title).' (ID:',$page->id.')' . ' (' . html_writer::link($CFG->wwwroot . '/mod/socialwiki/view.php?pageid=' . $page->id, get_string('view', 'socialwiki')) . ')');
             $table->align = array('title' => 'left');
             $table->width = '100%';
             $table->data = array(array(file_rewrite_pluginfile_urls(format_text($page->cachedcontent, FORMAT_HTML), 'pluginfile.php', $context->id, 'mod_socialwiki', 'attachments', $subwiki->id)));
@@ -485,6 +485,22 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         }
 
     }
+	
+	function menu_search($cmid, $currentselect,$searchstring) {
+		Global $COURSE;
+        $options = array('tree', 'list','popular');
+        $items = array();
+        foreach ($options as $opt) {
+            $items[] = get_string($opt, 'socialwiki');
+        }
+        $selectoptions = array();
+        foreach ($items as $key => $item) {
+            $selectoptions[$key + 1] = $item;
+        }
+        $select = new single_select(new moodle_url('/mod/socialwiki/search.php',array('searchstring'=>$searchstring,'courseid'=>$COURSE->id,'cmid'=>$cmid)), 'option', $selectoptions, $currentselect);
+        $select->label = get_string('searchmenu', 'socialwiki') . ': ';
+        return $this->output->container($this->output->render($select), 'midpad colourtext');
+    }
 
     function menu_home($cmid, $currentselect) {
         $options = array('contributions', 'orphaned','pagelist', 'updatedpages','teacherpages','recomended');
@@ -500,9 +516,11 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         $select->label = get_string('homemenu', 'socialwiki') . ': ';
         return $this->output->container($this->output->render($select), 'midpad colourtext');
     }
+	
     public function socialwiki_files_tree($context, $subwiki) {
         return $this->render(new socialwiki_files_tree($context, $subwiki));
     }
+	
     public function render_socialwiki_files_tree(socialwiki_files_tree $tree) {
         if (empty($tree->dir['subdirs']) && empty($tree->dir['files'])) {
             $html = $this->output->box(get_string('nofilesavailable', 'repository'));

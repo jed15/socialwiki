@@ -32,7 +32,7 @@
 		//the level of the tree the node is on
 		public $level;
 		//the rank of a node the higher the priority the higher it appears on the search page
-		public $priority;
+		public $priority=0;
 		
 		
 		function __construct($page){
@@ -46,7 +46,9 @@
 			$this->added=false;
 			$this->hidden = true;
 			$this->set_content($page);
-			$this->set_priority($page);
+			if($page->votes){
+				$this->priority=$page->votes;
+			}
 		}
 	
 	private function set_content($page){
@@ -57,12 +59,6 @@
 	
 	}
 	
-	//sets priority to number of likes
-	function set_priority($page){
-		$numlikes=socialwiki_numlikes($page->id);
-		$this->priority=$numlikes;
-		$this->content.='<br/>Likes:'.$numlikes;
-	}
 	
 	function add_child($child){
 		$this->children[]=$child;

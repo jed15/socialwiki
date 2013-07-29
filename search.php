@@ -32,6 +32,7 @@ $courseid = optional_param('courseid', 0, PARAM_INT);
 $searchcontent = optional_param('searchsocialwiki_socialwiki_socialwiki_wikicontent', 0, PARAM_INT);
 $cmid = optional_param('cmid', 0, PARAM_INT);
 $pageid = optional_param('pageid', -1, PARAM_INT);
+$option = optional_param('option', 0, PARAM_INT); // Option ID
 
 if (!$course = $DB->get_record('course', array('id' => $courseid))) {
     echo $courseid;
@@ -70,6 +71,7 @@ if ($pageid != -1)
 {
 	$wikipage->set_page($page);
 }
+$wikipage->set_view($option);
 
 $wikipage->print_header();
 

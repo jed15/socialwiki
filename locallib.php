@@ -1571,8 +1571,7 @@ global $DB;
 }
 
 //get page's author
-function socialwiki_get_author($pageid)
-{
+function socialwiki_get_author($pageid){
 	global $DB;
 		$sql='SELECT userid 
 		  FROM {socialwiki_pages}
@@ -1632,13 +1631,6 @@ function socialwiki_get_currentstyle($wikiid){
 	return $DB->get_record_sql($sql,array($wikiid));
 }
 
-function socialwiki_sort_bylikes($tree){
-	$leaves=$tree->find_leaves();
-	foreach ($leaves as $leaf){
-		$leaf->likes=socialwiki_numlikes(substr($leaf->id,1));
-	}
-}
-
 //return the index of a page given page id and an array of pages
 //returns index if page is found -1 if the page isn't in the array
 function socialwiki_indexof_page($pageid,$pages){
@@ -1650,7 +1642,6 @@ function socialwiki_indexof_page($pageid,$pages){
 	return -1;
 }
 
-
 //returns array of teachers as moodle allows multiple teachers per course
 function socialwiki_get_teachers($contextid){
 	Global $DB;
@@ -1661,47 +1652,31 @@ function socialwiki_get_teachers($contextid){
 	return $DB->get_records_sql($sql,array($contextid));
 }
 
-function socialwiki_get_recomended_pages($userid,$swid){
-	Global $PAGE;
+//returns an array of the users peers
+function socialwiki_get_peers($swid){
+	Global $PAGE,$USER;
 	$context = get_context_instance(CONTEXT_MODULE, $PAGE->cm->id);
 	$users=get_enrolled_users($context);
 	$peers= array();
 	//count number of user's peers
 	$numpeers=count($users)-1; 
 	foreach ($users as $user){
-		if($user->id != $userid){
-			$peers[]=new peer($user->id,$swid,$userid,$numpeers);
+		if($user->id != $USER->id){
+			$peers[]=new peer($user->id,$swid,$USER->id,$numpeers);
 		}
 	}
-	
+	return $peers;
+}
+
+//returns an array of pages chosen based on peers likes and follows
+function socialwiki_get_recomended_pages($userid,$swid){
+	Global $PAGE;
+
+	$peers=socialwiki_get_peers($swid);
 	$pages = socialwiki_get_page_list($swid);
-	$pages=socialwiki_order_pages_using_peers($peers,$pages);
 	
-	//return top ten pages
-	if(count($pages)<=10){
-		return($pages);
-	}else{
-		return array_slice($pages,0,10);
-	}
-}
-
-function socialwiki_page_comp($p1,$p2){
-	if($p1->votes==$p2->votes){
-		return 0;
-	}
-	return ($p1->votes < $p2->votes) ? 1 : -1;
-}
-
-/**
- *orders pages using the trust indicators from an array of peers
- *@param $peers an array of peer objects
- *@param $pages an array of pages
- **/
-
-function socialwiki_order_pages_using_peers($peers,$pages){
-	Global $USER;
 	foreach ($pages as $page){
-		if (socialwiki_liked($USER->id,$page->id)){
+		if (socialwiki_liked($userid,$page->id)){
 			unset($pages[$page->id]);
 			continue;
 		}
@@ -1714,9 +1689,57 @@ function socialwiki_order_pages_using_peers($peers,$pages){
 		$page->votes=$votes;
 	}
 	usort($pages,"socialwiki_page_comp");
+	
+	//return top ten pages
+	if(count($pages)<=20){
+		return($pages);
+	}else{
+		return array_slice($pages,0,20);
+	}
+}
+
+//used to sort pages based on votes attribute
+function socialwiki_page_comp($p1,$p2){
+	if($p1->votes==$p2->votes){
+		return 0;
+	}
+	return ($p1->votes < $p2->votes) ? 1 : -1;
+}
+
+//sorts an array of pages by likes
+function socialwiki_order_by_likes($pages){
+	foreach($pages as $page){
+		$page->votes=socialwiki_numlikes($page->id);
+	}
+	usort($pages,"socialwiki_page_comp");
 	return $pages;
 }
 
+/**
+ *orders pages using the trust indicators from an array of peers
+ *@param $peers an array of peer objects
+ *@param $pages an array of pages
+ **/
+function socialwiki_order_pages_using_peers($peers,$pages){
+	Global $USER;
+	foreach ($pages as $page){
+		$votes=0;
+		
+		if (socialwiki_liked($USER->id,$page->id)){
+			//add the maximum any peer could vote if the current user likes a page
+			$votes+=count($peers)*2;
+		}
+		
+		foreach ($peers as $peer){
+			if (socialwiki_liked($peer->id,$page->id)){
+				$votes+=$peer->trust;
+			}
+		}
+		$page->votes=$votes;
+	}
+	usort($pages,"socialwiki_page_comp");
+	return $pages;
+}
 
 //class that describes the similarity between the current user and another student in the activity
 class peer{
@@ -1781,4 +1804,3 @@ class peer{
 	}
 
 }
-

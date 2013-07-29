@@ -36,8 +36,7 @@ require_once($CFG->dirroot . '/mod/socialwiki/lib.php');
 require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
 require_once($CFG->dirroot . '/mod/socialwiki/pagelib.php');
 
-	$id =optional_param('id',0,PARAM_INT);
-$pageid = optional_param('pageid',0, PARAM_INT); // Page ID
+	$id =optional_param('id',0,PARAM_INT); //course module ID
 $option = optional_param('option', 0, PARAM_INT); // Option ID
 
 //case 1 User that comes from a course

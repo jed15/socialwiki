@@ -125,11 +125,12 @@ $string['links_help']='There are 3 diffrent ways to add links: <br/>
 * [[page name]] links to a search pageName <br/>
 * [[page name@pageid]] links to a specific version of a page <br/>
 * [[page name@.]] links to the most recent version of that page';
+$string['list']='List View';
 $string['listall'] = 'List all';
 $string['listorphan'] = 'List orphan';
 $string['manage']='Manage';
 $string['home'] = 'Home';
-$string['homemenu'] = 'home menu';
+$string['homemenu'] = 'Home menu';
 $string['migrationfinished'] = 'Migration finished successfully';
 $string['migrationfinishednowikis'] = 'Migration finished, no wikis were migrated';
 $string['missingpages'] = 'Pages without content';
@@ -204,6 +205,7 @@ $string['pagename'] = 'Page name';
 $string['peerreview'] = 'Peer review';
 $string['pluginadministration'] = 'Social Wiki administration';
 $string['pluginname'] = 'Social Wiki';
+$string['popular']='Popular';
 $string['prettyprint'] = 'Printer-friendly version';
 $string['previewwarning'] = 'This is a preview. Changes have not been saved yet.';
 $string['rated']='You rated this page as a {$a}';
@@ -225,6 +227,7 @@ $string['save'] = 'Save';
 $string['saving'] = 'Saving wiki page';
 $string['savingerror'] = 'Saving error';
 $string['searchcontent'] = 'Search in page content';
+$string['searchmenu']='Search views';
 $string['searchresult'] = 'Search results:';
 $string['searchterms'] = 'Search terms';
 $string['search_socialwikis'] = 'Search wikis';
@@ -236,6 +239,7 @@ $string['tagtitle'] = 'See the "{$a}" tag';
 $string['teacherrating'] = 'Teacher rating';
 $string['teacherpages']='Teacher\'s pages';
 $string['timesrating']='This page has been rated  {$a->c} times with an average of: {$a->s}';
+$string['tree']='Tree View';
 $string['updatedpages'] = "Updated pages";
 $string['updatedpages_help'] = "Recently updated wiki pages";
 $string['updatedwikipages'] = "Updated wiki pages";

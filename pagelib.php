@@ -828,6 +828,8 @@ class page_socialwiki_editcomment extends page_socialwiki {
 class page_socialwiki_search extends page_socialwiki {
     private $search_result;
 	private $search_string;
+	//the view mode for viewing results
+	private $view;
 
     protected function create_navbar() {
         global $PAGE, $CFG;
@@ -866,17 +868,47 @@ class page_socialwiki_search extends page_socialwiki {
             $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/search.php');
         }
     }
-    function print_content() {
+	
+	function set_view($option){
+		$this->view=$option;
+	}
+    
+	function print_content() {
         global $PAGE,$OUTPUT;
         require_capability('mod/socialwiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'socialwiki');
 		echo $this->wikioutput->content_area_begin();
 		echo $this->wikioutput->title_block("Search results for: ".$this->search_string."(".count($this->search_result)."&nbsptotal)");
+		 switch ($this->view) {
+        case 1:
+            echo $this->wikioutput->menu_search($PAGE->cm->id, $this->view,$this->search_string);
+            $this->print_tree();
+            break;
+        case 2:
+            echo $this->wikioutput->menu_search($PAGE->cm->id, $this->view,$this->search_string);
+            $this->print_list();
+            break;
+        case 3:
+			echo $this->wikioutput->menu_search($PAGE->cm->id, $this->view,$this->search_string);
+            $this->print_popular();
+            break;
+        default:
+            echo $this->wikioutput->menu_search($PAGE->cm->id, $this->view,$this->search_string);
+            $this->print_tree();
+        }
 		
-		$tree= new socialwiki_tree();
+		echo $this->wikioutput->content_area_end();
+    }
+	
+	//print the tree view
+	private function print_tree(){
+		Global $OUTPUT;
 		//create a tree from the search results
-        $tree->build_tree($this->search_result);
-		
-		
+	$peers=socialwiki_get_peers($this->subwiki->id);
+	$pages=socialwiki_order_pages_using_peers($peers,$this->search_result);
+	
+	$tree=new socialwiki_tree;
+	$tree->build_tree($pages);
+
 		//display the php tree (this is hidden if JavaScript is enabled)
 		echo $OUTPUT->container_start('phptree');
 		$tree->display();
@@ -885,8 +917,43 @@ class page_socialwiki_search extends page_socialwiki {
 		$json=json_encode($tree);
 		//send the tree to javascript
 		echo '<script> var searchResults='.$json.';</script>';
-		echo $this->wikioutput->content_area_end();
-    }
+	}
+	
+	//print a list of pages ordered by peer votes
+	private function print_list(){
+		Global $CFG;
+		$peers=socialwiki_get_peers($this->subwiki->id);
+		$pages=socialwiki_order_pages_using_peers($peers,$this->search_result);
+		$table = new html_table();
+			$table->attributes['class'] = 'socialwiki_editor generalbox colourtext';
+			$table->align = array('center');
+		if(count($pages)>0){
+			foreach ($pages as $page) {
+				$table->data[] = array(html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title.' (ID:'.$page->id.')',array('class'=>'socialwiki_link')));
+			}
+		}else{
+			$table->data[] =array('<h3 socialwiki_titleheader>No Pages Found</h3>');
+		}
+		echo html_writer::table($table);
+	}
+	
+	//print the pages ordered by likes
+	private function print_popular(){
+		Global $CFG;
+		$pages=socialwiki_order_by_likes($this->search_result);
+		
+		$table = new html_table();
+			$table->attributes['class'] = 'socialwiki_editor generalbox colourtext';
+			$table->align = array('center');
+		if(count($pages)>0){
+			foreach ($pages as $page) {
+				$table->data[] = array(html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title.' (ID:'.$page->id.')',array('class'=>'socialwiki_link')));
+			}
+		}else{
+			$table->data[] =array('<h3 socialwiki_titleheader>No Pages Found</h3>');
+		}
+		echo html_writer::table($table);
+	}
 }
 
 /**
@@ -1363,14 +1430,7 @@ class page_socialwiki_home extends page_socialwiki {
 
     function print_header() {
         parent::print_header();
-		$this->print_pagetitle();
     }
-	protected function print_pagetitle(){
-		Global $OUTPUT;
-		echo $this->wikioutput->content_area_begin();
-		echo $OUTPUT->heading('Home Page',2,"socialwiki_headingtitle colourtext");
-		echo $this->wikioutput->content_area_end();
-	}
 	
     function print_content() {
         global $CFG, $PAGE,$OUTPUT;
@@ -1378,7 +1438,9 @@ class page_socialwiki_home extends page_socialwiki {
         require_capability('mod/wiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'socialwiki');
 		
 		echo $this->wikioutput->content_area_begin();
-		
+		//print the home page heading
+		echo $OUTPUT->heading('Home Page',1,"socialwiki_headingtitle colourtext");
+
 		
 		if ($firstpage=socialwiki_get_first_page($this->subwiki->id)) {
 			echo $OUTPUT->container_start('linkcontainer','firstpagecontainer');
@@ -1390,18 +1452,10 @@ class page_socialwiki_home extends page_socialwiki {
             echo $this->wikioutput->menu_home($PAGE->cm->id, $this->view);
             $this->print_contributions_content();
             break;
-        /*case 2:
-            echo $this->wikioutput->menu_home($this->page->id, $this->view);
-            $this->print_navigation_content();
-            break;*/
         case 2:
             echo $this->wikioutput->menu_home($PAGE->cm->id, $this->view);
             $this->print_orphaned_content();
             break;
-       /* case 4:
-            echo $this->wikioutput->menu_home($this->page->id, $this->view);
-            $this->print_index_content();
-            break;*/
         case 3:
             echo $this->wikioutput->menu_home($PAGE->cm->id, $this->view);
             $this->print_page_list_content();
