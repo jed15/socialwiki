@@ -522,12 +522,10 @@ function socialwiki_extend_navigation(navigation_node $navref, $course, $module,
 
     $pageid = $url->param('pageid');
     $cmid = $url->param('id');
-    /*if (empty($pageid) && !empty($cmid)) {
-        // wiki main page
-        $page = socialwiki_get_page_by_title($swid, $wiki->firstpagetitle);
-        $pageid = $page->id;
-    }*/
 
+	$link = new moodle_url('/mod/socialwiki/help.php', array('id' => $PAGE->cm->id));
+	$node = $navref->add(get_string('help', 'socialwiki'), $link, navigation_node::TYPE_SETTING);
+	
     if (has_capability('mod/socialwiki:createpage', $context)) {
         $link = new moodle_url('/mod/socialwiki/create.php', array('action' => 'new', 'swid' => $swid));
         $node = $navref->add(get_string('newpage', 'socialwiki'), $link, navigation_node::TYPE_SETTING);
@@ -577,8 +575,6 @@ function socialwiki_extend_navigation(navigation_node $navref, $course, $module,
             $node = $navref->add(get_string('admin', 'socialwiki'), $link, navigation_node::TYPE_SETTING);
         }
 		
-			$link = new moodle_url('/mod/socialwiki/help.php', array('pageid' => $pageid));
-            $node = $navref->add(get_string('help', 'socialwiki'), $link, navigation_node::TYPE_SETTING);
     }
 }
 /**

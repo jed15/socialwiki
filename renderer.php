@@ -52,25 +52,6 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         return $this->output->container($this->output->render($select), 'socialwiki_index');
     }
 
-    public function search_result($records, $subwiki) {
-        global $CFG, $PAGE;
-        $table = new html_table();
-        $context = context_module::instance($PAGE->cm->id);
-        $strsearchresults = get_string('searchresult', 'socialwiki');
-        $totalcount = count($records);
-        $html = $this->output->heading("$strsearchresults $totalcount");
-        foreach ($records as $page) {
-            $table->head = array('title' => format_string($page->title).' (ID:',$page->id.')' . ' (' . html_writer::link($CFG->wwwroot . '/mod/socialwiki/view.php?pageid=' . $page->id, get_string('view', 'socialwiki')) . ')');
-            $table->align = array('title' => 'left');
-            $table->width = '100%';
-            $table->data = array(array(file_rewrite_pluginfile_urls(format_text($page->cachedcontent, FORMAT_HTML), 'pluginfile.php', $context->id, 'mod_socialwiki', 'attachments', $subwiki->id)));
-            $table->colclasses = array('socialwikisearchresults');
-            $html .= html_writer::table($table);
-        }
-        $html = html_writer::tag('div', $html, array('class'=>'no-overflow'));
-        return $this->output->container($html);
-    }
-
 	//compares two pages
     public function diff($pageid, $old, $new) {
         global $CFG;

@@ -2,29 +2,35 @@
 
 require_once('../../config.php');
 require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
-$pageid=required_param('pageid', PARAM_INT);
+$id=required_param('id', PARAM_INT);
 	
- if (!$page = socialwiki_get_page($pageid)) {
-	 print_error('incorrectpageid', 'socialwiki');
- }
+// Cheacking course module instance
+if (!$cm = get_coursemodule_from_id('socialwiki', $id)) {
+	print_error('invalidcoursemodule');
+}
 
- if (!$subwiki = socialwiki_get_subwiki($page->subwikiid)) {
-	 print_error('incorrectsubwikiid', 'socialwiki');
- }
- if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
-	 print_error('incorrectwikiid', 'socialwiki');
- }
-
- if (!$cm = get_coursemodule_from_instance('socialwiki', $wiki->id)) {
-	 print_error('invalidcoursemodule');
- }
-
-$context = get_context_instance(CONTEXT_MODULE, $cm->id);
+// Checking course instance
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
 require_login($course, true, $cm);
 
-$url=new moodle_url('/mod/socialwiki/help.php?pageid='.$pageid);
+// Checking socialwiki instance
+if (!$wiki = socialwiki_get_wiki($cm->instance)) {
+	print_error('incorrectwikiid', 'socialwiki');
+}
+$PAGE->set_cm($cm);
+
+// Getting the subwiki corresponding to that socialwiki, group and user.
+
+// Getting current group id
+$currentgroup = groups_get_activity_group($cm);
+
+$context = context_module::instance($cm->id);
+
+$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+
+
+$url=new moodle_url('/mod/socialwiki/help.php?id='.$cm->id);
 $PAGE->set_url($url);
 $PAGE->requires->css(new moodle_url("/mod/socialwiki/".$wiki->style."_style.css"));
 $PAGE->set_context($context);
@@ -37,6 +43,7 @@ echo $OUTPUT->header();
 echo $helpout->help_area_start();
 echo $OUTPUT->heading('Help Page',1);
 echo $helpout->help_content('Links',get_string('links_help','socialwiki'));
+echo $helpout->help_content('Search',get_string('search_help','socialwiki'));
 echo $helpout->help_area_end();
 
 echo $OUTPUT->footer();
