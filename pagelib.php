@@ -1755,11 +1755,15 @@ class page_socialwiki_home extends page_socialwiki {
 
 		$pages = socialwiki_get_recomended_pages($USER->id,$this->subwiki->id);
 		$table = new html_table();
-			$table->head = array('recomended pages');
+			$table->head = array('Recomended Pages');
 			$table->attributes['class'] = 'socialwiki_editor generalbox colourtext';
 			$table->align = array('center');
-		foreach ($pages as $page) {
-			$table->data[] = array(html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title.' (ID:'.$page->id.')',array('class'=>'socialwiki_link')));
+		if(count($pages)>0){
+			foreach ($pages as $page) {
+				$table->data[] = array(html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title.' (ID:'.$page->id.')',array('class'=>'socialwiki_link')));
+			}
+		}else{
+			$table->data[] =array('<h3 socialwiki_titleheader>No Pages To Recommend</h3>');
 		}
 		echo html_writer::table($table);
 	}

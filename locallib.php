@@ -1729,7 +1729,7 @@ class peer{
 		Global $USER;
 		$this->id=$id;
 		if(socialwiki_is_following($USER->id,$id,$swid)){
-			$this->trust+=$numpeers/count(socialwiki_get_follows($userid,$swid));
+			$this->trust+=$numpeers/count(socialwiki_get_follows($USER->id,$swid));
 		}
 		$this->scale=$numpeers/2;
 		$this->set_follow_sim($currentuser,$swid);
@@ -1747,7 +1747,7 @@ class peer{
 		$peerfollows=socialwiki_get_follows($this->id,$swid);
 		if(count($userfollows)>0){
 			foreach($peerfollows as $follow){
-				if(socialwiki_is_following($userid,$follows->usertoid,$swid)){
+				if(socialwiki_is_following($userid,$follow->usertoid,$swid)){
 					$this->followsim++;
 				}
 			}

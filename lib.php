@@ -532,13 +532,14 @@ function socialwiki_extend_navigation(navigation_node $navref, $course, $module,
         $link = new moodle_url('/mod/socialwiki/create.php', array('action' => 'new', 'swid' => $swid));
         $node = $navref->add(get_string('newpage', 'socialwiki'), $link, navigation_node::TYPE_SETTING);
     }
+	
+	if (has_capability('mod/socialwiki:viewpage', $context)) {
+		$link = new moodle_url('/mod/socialwiki/home.php', array('id' => $PAGE->cm->id));
+		$node = $navref->add(get_string('home', 'socialwiki'), $link, navigation_node::TYPE_SETTING);
+	}
 
     if (is_numeric($pageid)) {
 		
-		if (has_capability('mod/socialwiki:viewpage', $context)) {
-            $link = new moodle_url('/mod/socialwiki/home.php', array('id' => $PAGE->cm->id));
-            $node = $navref->add(get_string('home', 'socialwiki'), $link, navigation_node::TYPE_SETTING);
-        }
 
         if (has_capability('mod/socialwiki:viewpage', $context)) {
             $link = new moodle_url('/mod/socialwiki/view.php', array('pageid' => $pageid));

@@ -442,7 +442,10 @@ position:relative;
 text-align:left;
 }
 
-	
+#page-mod-socialwiki-home #socialwiki_content_area
+{
+	overflow:auto;
+}	
 .wikititle
 {
 text-align:center;
