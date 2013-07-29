@@ -2489,9 +2489,9 @@ class page_socialwiki_admin extends page_socialwiki {
     protected function add_page_delete_options($pages, $swid, &$table) {
         global $OUTPUT;
         foreach ($pages as $page) {
-            $link = socialwiki_parser_link($page->title, array('swid' => $swid));
+            $link = socialwiki_parser_link($page);
             $class = ($link['new']) ? 'class="socialwiki_newentry"' : '';
-            $pagelink = '<a href="' . $link['url'] . '"' . $class . '>' . format_string($link['content']) . '</a>';
+            $pagelink = '<a href="' . $link['url'] . '"' . $class . '>' . format_string($link['content']).' (ID:'.$page->id.')' . '</a>';
             $urledit = new moodle_url('/mod/socialwiki/edit.php', array('pageid' => $page->id, 'sesskey' => sesskey()));
             $urldelete = new moodle_url('/mod/socialwiki/admin.php', array(
                                                                    'pageid'  => $this->page->id,
