@@ -1470,7 +1470,7 @@ class page_socialwiki_home extends page_socialwiki {
             break;
 		case 6:
 			echo $this->wikioutput->menu_home($PAGE->cm->id, $this->view);
-            $this->print_recomended_content();
+            $this->print_recommended_content();
 			break;
         default:
             echo $this->wikioutput->menu_home($PAGE->cm->id, $this->view);
@@ -1502,13 +1502,7 @@ class page_socialwiki_home extends page_socialwiki {
      */
     private function print_contributions_content() {
         global $CFG, $OUTPUT, $USER;
-       /* $page = $this->page;
-
-        if ($page->timerendered + SOCIALWIKI_REFRESH_CACHE_TIME < time()) {
-            $fresh = socialwiki_refresh_cachedcontent($page);
-            $page = $fresh['page'];
-        }*/
-
+		
         $swid = $this->subwiki->id;
 
         $table = new html_table();
@@ -1649,12 +1643,6 @@ class page_socialwiki_home extends page_socialwiki {
      */
     private function print_page_list_content() {
         global $OUTPUT,$CFG;
-        /*$page = $this->page;
-
-        if ($page->timerendered + SOCIALWIKI_REFRESH_CACHE_TIME < time()) {
-            $fresh = socialwiki_refresh_cachedcontent($page);
-            $page = $fresh['page'];
-        }*/
 
         $pages = socialwiki_get_page_list($this->subwiki->id);
 
@@ -1694,13 +1682,6 @@ class page_socialwiki_home extends page_socialwiki {
     private function print_orphaned_content() {
         global $OUTPUT,$CFG;
 
-       /* $page = $this->page;
-
-        if ($page->timerendered + SOCIALWIKI_REFRESH_CACHE_TIME < time()) {
-            $fresh = socialwiki_refresh_cachedcontent($page);
-            $page = $fresh['page'];
-        }*/
-
         $swid = $this->subwiki->id;
 
         $table = new html_table();
@@ -1728,12 +1709,6 @@ class page_socialwiki_home extends page_socialwiki {
      */
     private function print_updated_content() {
         global $COURSE,$CFG,$OUTPUT;
-       // $page = $this->page;
-		/*
-        if ($page->timerendered + SOCIALWIKI_REFRESH_CACHE_TIME < time()) {
-            $fresh = socialwiki_refresh_cachedcontent($page);
-            $page = $fresh['page'];
-        }*/
 
         $swid = $this->subwiki->id;
 
@@ -1749,7 +1724,7 @@ class page_socialwiki_home extends page_socialwiki {
                 $user = socialwiki_get_user_info($page->userid);
                 $strdata = strftime('%d %b %Y', $page->timemodified);
                 if ($strdata != $strdataux) {
-                    $table->data[] = array($OUTPUT->heading($strdata, 4));
+                    $table->data[] = array($OUTPUT->heading($strdata, 4,'colourtext'));
                     $strdataux = $strdata;
                 }
 
@@ -1804,12 +1779,12 @@ class page_socialwiki_home extends page_socialwiki {
 		}
     }
 	
-	private function print_recomended_content() {
+	private function print_recommended_content() {
         global $USER,$CFG;
 
-		$pages = socialwiki_get_recomended_pages($USER->id,$this->subwiki->id);
+		$pages = socialwiki_get_recommended_pages($USER->id,$this->subwiki->id);
 		$table = new html_table();
-			$table->head = array('Recomended Pages');
+			$table->head = array('Recommended Pages');
 			$table->attributes['class'] = 'socialwiki_editor generalbox colourtext';
 			$table->align = array('center');
 		if(count($pages)>0){
@@ -2720,6 +2695,7 @@ class page_socialwiki_admin extends page_socialwiki {
         }
     }
 }
+
 class page_socialwiki_manage extends page_socialwiki{
 	
 	function print_content(){

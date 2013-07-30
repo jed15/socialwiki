@@ -1669,7 +1669,7 @@ function socialwiki_get_peers($swid){
 }
 
 //returns an array of pages chosen based on peers likes and follows
-function socialwiki_get_recomended_pages($userid,$swid){
+function socialwiki_get_recommended_pages($userid,$swid){
 	Global $PAGE;
 
 	$peers=socialwiki_get_peers($swid);
