@@ -228,7 +228,7 @@ abstract class page_socialwiki {
         global $PAGE;
 
         $this->page = $page;
-        $this->title = $page->title;
+        $this->title = $page->title.' ID:'.$page->id;
         // set_title calls format_string itself so no probs there
         $PAGE->set_title($this->title);
     }
