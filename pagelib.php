@@ -903,20 +903,21 @@ class page_socialwiki_search extends page_socialwiki {
 	private function print_tree(){
 		Global $OUTPUT;
 		//create a tree from the search results
-	$peers=socialwiki_get_peers($this->subwiki->id);
-	$pages=socialwiki_order_pages_using_peers($peers,$this->search_result);
-	
-	$tree=new socialwiki_tree;
-	$tree->build_tree($pages);
+		$peers=socialwiki_get_peers($this->subwiki->id);	
+		$pages=socialwiki_order_pages_using_peers($peers,$this->search_result);
+		
+		$tree=new socialwiki_tree;
+		$tree->build_tree($pages);
 
 		//display the php tree (this is hidden if JavaScript is enabled)
 		echo $OUTPUT->container_start('phptree');
 		$tree->display();
 		echo $OUTPUT->container_end();
 		
-		$json=json_encode($tree);
-		//send the tree to javascript
-		echo '<script> var searchResults='.$json.';</script>';
+		//send the tree and peers to javascript
+		$jpeers=json_encode($peers);
+		$jtree=json_encode($tree);
+		echo '<script> var searchResults='.$jtree.';var peers='.$jpeers.';</script>';
 	}
 	
 	//print a list of pages ordered by peer votes
@@ -935,6 +936,9 @@ class page_socialwiki_search extends page_socialwiki {
 			$table->data[] =array('<h3 socialwiki_titleheader>No Pages Found</h3>');
 		}
 		echo html_writer::table($table);
+		
+		$jpeers=json_encode($peers);
+		echo '<script> var peers='.$jpeers.';</script>';
 	}
 	
 	//print the pages ordered by likes
@@ -1414,8 +1418,6 @@ class page_socialwiki_history extends page_socialwiki {
         }
     }
 }
-
-
 
 /**
  * Class that models the behavior of wiki's home page

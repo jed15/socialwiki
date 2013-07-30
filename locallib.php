@@ -1658,11 +1658,10 @@ function socialwiki_get_peers($swid){
 	$context = get_context_instance(CONTEXT_MODULE, $PAGE->cm->id);
 	$users=get_enrolled_users($context);
 	$peers= array();
-	//count number of user's peers
-	$numpeers=count($users)-1; 
+	$numusers=count($users);
 	foreach ($users as $user){
 		if($user->id != $USER->id){
-			$peers[]=new peer($user->id,$swid,$USER->id,$numpeers);
+			$peers[]=new peer($user->id,$swid,$USER->id,$numusers);
 		}
 	}
 	return $peers;
@@ -1683,7 +1682,7 @@ function socialwiki_get_recommended_pages($userid,$swid){
 		$votes=0;
 		foreach ($peers as $peer){
 			if (socialwiki_liked($peer->id,$page->id)){
-				$votes+=$peer->trust;
+				$votes+=$peer->score;
 			}
 		}
 		$page->votes=$votes;
@@ -1716,7 +1715,7 @@ function socialwiki_order_by_likes($pages){
 }
 
 /**
- *orders pages using the trust indicators from an array of peers
+ *orders pages using the trust indicators from an array of peers also sends peers to JavaScript
  *@param $peers an array of peer objects
  *@param $pages an array of pages
  **/
@@ -1732,7 +1731,7 @@ function socialwiki_order_pages_using_peers($peers,$pages){
 		
 		foreach ($peers as $peer){
 			if (socialwiki_liked($peer->id,$page->id)){
-				$votes+=$peer->trust;
+				$votes+=$peer->score;
 			}
 		}
 		$page->votes=$votes;
@@ -1743,21 +1742,23 @@ function socialwiki_order_pages_using_peers($peers,$pages){
 
 //class that describes the similarity between the current user and another student in the activity
 class peer{
-	public $trust=1; //trust indicator value
+	public $trust=0; //trust indicator value
 	public $id; //the user id
 	public $likesim=0; //the similarity between likes of the peer and user
 	public $followsim=0; //the similarity between the people the user and peer are following
-	protected $scale=1;		//variable used to scale the persentages
-	function __construct($id,$swid,$currentuser,$numpeers){
+	public $popularity;	//percent popularity
+	public $scale=array('follow'=>1,'like'=>1,'trust'=>1,'popular'=>1); //variable used to scale the percentages
+	public $score;
+	function __construct($id,$swid,$currentuser,$numusers){
 		Global $USER;
 		$this->id=$id;
 		if(socialwiki_is_following($USER->id,$id,$swid)){
-			$this->trust+=$numpeers/count(socialwiki_get_follows($USER->id,$swid));
+			$this->trust=1;
 		}
-		$this->scale=$numpeers/2;
+		$this->popularity=socialwiki_get_followers($id,$swid)/$numusers;
 		$this->set_follow_sim($currentuser,$swid);
 		$this->set_like_sim($currentuser,$swid);
-		$this->set_trust();
+		$this->set_score();
 	}
 	/*
 	 *sets the follow similarity to the 
@@ -1765,42 +1766,27 @@ class peer{
 	 *@swid the subwikiid
 	 */
 	function set_follow_sim($userid,$swid){
-		$this->followsim=0;
-		$userfollows=socialwiki_get_follows($userid,$swid);
-		$peerfollows=socialwiki_get_follows($this->id,$swid);
-		if(count($userfollows)>0){
-			foreach($peerfollows as $follow){
-				if(socialwiki_is_following($userid,$follow->usertoid,$swid)){
-					$this->followsim++;
-				}
-			}
-			if(count($userfollows)>count($peerfollows)){
-				$this->followsim=($this->followsim/count($userfollows));
-			}else{
-				$this->followsim=($this->followsim/count($peerfollows));
-			}
-		}
+		Global $DB;
+		$sql='SELECT COUNT(usertoid) AS total, COUNT(DISTINCT usertoid) AS different
+		FROM {socialwiki_follows} 
+		WHERE (usertoid=? OR usertoid=?) AND subwikiid=?';
+		$data=$DB->get_record_sql($sql,array($this->id,$userid,$swid));
+		//get the similarity between follows and divide by total follows 
+		$this->followsim=($data->total-$data->different)/$data->total;
 	}
 
 	function set_like_sim($userid,$swid){
-	$this->likesim=0;
-	$userlikes=socialwiki_getlikes($userid,$swid);
-	if(count($userlikes)>0){
-		$peerlikes=socialwiki_getlikes($this->id,$swid);
-		foreach($peerlikes as $like){
-			if(socialwiki_liked($userid,$like->pageid)){
-				$this->likesim++;
-			}
-		}
-		if(count($userlikes)>count($peerlikes)){
-				$this->likesim=($this->likesim/count($userlikes));
-		}else{
-				$this->likesim=($this->likesim/count($peerlikes));
-		}
+	Global $DB;
+		$sql='SELECT COUNT(pageid) AS total, COUNT(DISTINCT pageid) AS different
+		FROM {socialwiki_likes} 
+		WHERE (userid=? OR userid=?) AND subwikiid=?';
+		$data=$DB->get_record_sql($sql,array($this->id,$userid,$swid));
+		//get the similarity between follows and divide by total follows 
+		$this->likesim=($data->total-$data->different)/$data->total;
 	}
-}
-	function set_trust(){
-		$this->trust+=($this->followsim*$this->scale)+($this->likesim*$this->scale);
+	//sets peer's score to sum of scores times there weight
+	function set_score(){
+		$this->score=$this->trust*$this->scale['trust']+$this->likesim*$this->scale['like']+$this->followsim*$this->scale['follow']+$this->popularity*$this->scale['popular'];
 	}
 
 }

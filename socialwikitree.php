@@ -46,7 +46,7 @@
 			$this->added=false;
 			$this->hidden = true;
 			$this->set_content($page);
-			if($page->votes){
+			if(isset($page->votes)){
 				$this->priority=$page->votes;
 			}
 		}
