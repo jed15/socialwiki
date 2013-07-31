@@ -1670,7 +1670,7 @@ function socialwiki_get_peers($swid){
 //returns an array of pages chosen based on peers likes and follows
 function socialwiki_get_recommended_pages($userid,$swid){
 	Global $PAGE;
-
+	
 	$peers=socialwiki_get_peers($swid);
 	$pages = socialwiki_get_page_list($swid);
 	
@@ -1679,7 +1679,7 @@ function socialwiki_get_recommended_pages($userid,$swid){
 			unset($pages[$page->id]);
 			continue;
 		}
-		$votes=0;
+		$votes=$page->timecreated/time();
 		foreach ($peers as $peer){
 			if (socialwiki_liked($peer->id,$page->id)){
 				$votes+=$peer->score;
@@ -1722,12 +1722,11 @@ function socialwiki_order_by_likes($pages){
 function socialwiki_order_pages_using_peers($peers,$pages){
 	Global $USER;
 	foreach ($pages as $page){
-		$votes=0;
-		
-		if (socialwiki_liked($USER->id,$page->id)){
+		$votes=$page->timecreated/time();
+		/*if (socialwiki_liked($USER->id,$page->id)){
 			//add the maximum any peer could vote if the current user likes a page
-			$votes+=count($peers)*2;
-		}
+			$votes+=;
+		}*/
 		
 		foreach ($peers as $peer){
 			if (socialwiki_liked($peer->id,$page->id)){
