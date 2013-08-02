@@ -1767,10 +1767,12 @@ class peer{
 		Global $DB;
 		$sql='SELECT COUNT(usertoid) AS total, COUNT(DISTINCT usertoid) AS different
 		FROM {socialwiki_follows} 
-		WHERE (usertoid=? OR usertoid=?) AND subwikiid=?';
+		WHERE (userfromid=? OR userfromid=?) AND subwikiid=?';
 		$data=$DB->get_record_sql($sql,array($this->id,$userid,$swid));
-		//get the similarity between follows and divide by total follows 
-		$this->followsim=($data->total-$data->different)/$data->total;
+		if($data->total>0){
+			//get the similarity between follows and divide by the total  
+			$this->followsim=($data->total-$data->different)/$data->different;
+		}
 	}
 
 	function set_like_sim($userid,$swid){
@@ -1780,7 +1782,7 @@ class peer{
 		WHERE (userid=? OR userid=?) AND subwikiid=?';
 		$data=$DB->get_record_sql($sql,array($this->id,$userid,$swid));
 		//get the similarity between follows and divide by total follows 
-		$this->likesim=($data->total-$data->different)/$data->total;
+		$this->likesim=($data->total-$data->different)/$data->different;
 	}
 	//sets peer's score to sum of scores times there weight
 	function set_score($scale){
