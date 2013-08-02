@@ -422,3 +422,11 @@ margin-right:10%;
 {
 text-align:center;
 }
+
+.slidecontainer
+{
+	display:inline-block;
+	margin:25px;
+	text-align:center;
+	
+}

@@ -841,6 +841,8 @@ class page_socialwiki_search extends page_socialwiki {
 	{
 		global $PAGE;
 		parent::__construct($wiki, $subwiki, $cm);
+		$PAGE->requires->jquery_plugin('ui');
+		$PAGE->requires->jquery_plugin('ui-css');
 		$PAGE->requires->js(new moodle_url("/mod/socialwiki/tree_jslib/tree.js"));
 		$PAGE->requires->css(new moodle_url("/mod/socialwiki/tree_jslib/tree_styles.css"));
 		$PAGE->requires->js(new moodle_url("/mod/socialwiki/search.js"));
@@ -903,7 +905,8 @@ class page_socialwiki_search extends page_socialwiki {
 	private function print_tree(){
 		Global $OUTPUT;
 		//create a tree from the search results
-		$peers=socialwiki_get_peers($this->subwiki->id);	
+		$scale=array('follow'=>1,'like'=>1,'trust'=>1,'popular'=>1); //variable used to scale the percentages
+		$peers=socialwiki_get_peers($this->subwiki->id,$scale);	
 		$pages=socialwiki_order_pages_using_peers($peers,$this->search_result);
 		
 		$tree=new socialwiki_tree;
@@ -917,13 +920,15 @@ class page_socialwiki_search extends page_socialwiki {
 		//send the tree and peers to javascript
 		$jpeers=json_encode($peers);
 		$jtree=json_encode($tree);
-		echo '<script> var searchResults='.$jtree.';var peers='.$jpeers.';</script>';
+		$jscale=json_encode($scale);
+		echo '<script> var searchResults='.$jtree.';var peers='.$jpeers.';var scale='.$jscale.'</script>';
 	}
 	
 	//print a list of pages ordered by peer votes
 	private function print_list(){
 		Global $CFG;
-		$peers=socialwiki_get_peers($this->subwiki->id);
+		$scale=array('follow'=>1,'like'=>1,'trust'=>1,'popular'=>1);
+		$peers=socialwiki_get_peers($this->subwiki->id,$scale);
 		$pages=socialwiki_order_pages_using_peers($peers,$this->search_result);
 		$table = new html_table();
 			$table->attributes['class'] = 'socialwiki_editor generalbox colourtext';
@@ -937,8 +942,10 @@ class page_socialwiki_search extends page_socialwiki {
 		}
 		echo html_writer::table($table);
 		
+		$jpages=json_encode($pages);
+		$jscale=json_encode($scale);
 		$jpeers=json_encode($peers);
-		echo '<script> var peers='.$jpeers.';</script>';
+		echo '<script> var peers='.$jpeers.';var pages='.$jpages.';var scale='.$jscale.';</script>';
 	}
 	
 	//print the pages ordered by likes

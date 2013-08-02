@@ -29,6 +29,8 @@ function TreeControl(myTree, divID) {
         $(".wikititle").append("<p class='colourtext' id='tree_zoommessage'>Return to original zoom level or refresh the page for the best experience</p>");
         $("#tree_zoommessage").css("display", "none");
         $("#" + divID).css('text-align', 'left');
+		//add instruction text before tree
+		$("#"+divID).append('<p id="instruction" class="colourtext">Click On A Box To Display Parent</p>');
         $("#" + divID).append('<div id="tree_container_div" class="tree_container"></div>');
         $("#tree_container_div").append('<div id="tree_div" class="tree_wrapper"></div>');
 

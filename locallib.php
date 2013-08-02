@@ -1653,7 +1653,7 @@ function socialwiki_get_teachers($contextid){
 }
 
 //returns an array of the users peers
-function socialwiki_get_peers($swid){
+function socialwiki_get_peers($swid,$scale){
 	Global $PAGE,$USER;
 	$context = get_context_instance(CONTEXT_MODULE, $PAGE->cm->id);
 	$users=get_enrolled_users($context);
@@ -1661,7 +1661,7 @@ function socialwiki_get_peers($swid){
 	$numusers=count($users);
 	foreach ($users as $user){
 		if($user->id != $USER->id){
-			$peers[]=new peer($user->id,$swid,$USER->id,$numusers);
+			$peers[]=new peer($user->id,$swid,$USER->id,$numusers,$scale);
 		}
 	}
 	return $peers;
@@ -1670,8 +1670,8 @@ function socialwiki_get_peers($swid){
 //returns an array of pages chosen based on peers likes and follows
 function socialwiki_get_recommended_pages($userid,$swid){
 	Global $PAGE;
-	
-	$peers=socialwiki_get_peers($swid);
+	$scale=array('follow'=>1,'like'=>1,'trust'=>1,'popular'=>1); //scale with weight for each peer category
+	$peers=socialwiki_get_peers($swid,$scale);
 	$pages = socialwiki_get_page_list($swid);
 	
 	foreach ($pages as $page){
@@ -1746,9 +1746,8 @@ class peer{
 	public $likesim=0; //the similarity between likes of the peer and user
 	public $followsim=0; //the similarity between the people the user and peer are following
 	public $popularity;	//percent popularity
-	public $scale=array('follow'=>1,'like'=>1,'trust'=>1,'popular'=>1); //variable used to scale the percentages
 	public $score;
-	function __construct($id,$swid,$currentuser,$numusers){
+	function __construct($id,$swid,$currentuser,$numusers,$scale){
 		Global $USER;
 		$this->id=$id;
 		if(socialwiki_is_following($USER->id,$id,$swid)){
@@ -1757,7 +1756,7 @@ class peer{
 		$this->popularity=socialwiki_get_followers($id,$swid)/$numusers;
 		$this->set_follow_sim($currentuser,$swid);
 		$this->set_like_sim($currentuser,$swid);
-		$this->set_score();
+		$this->set_score($scale);
 	}
 	/*
 	 *sets the follow similarity to the 
@@ -1784,8 +1783,8 @@ class peer{
 		$this->likesim=($data->total-$data->different)/$data->total;
 	}
 	//sets peer's score to sum of scores times there weight
-	function set_score(){
-		$this->score=$this->trust*$this->scale['trust']+$this->likesim*$this->scale['like']+$this->followsim*$this->scale['follow']+$this->popularity*$this->scale['popular'];
+	function set_score($scale){
+		$this->score=$this->trust*$scale['trust']+$this->likesim*$scale['like']+$this->followsim*$scale['follow']+$this->popularity*$scale['popular'];
 	}
 
 }
