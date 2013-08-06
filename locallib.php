@@ -1812,6 +1812,7 @@ class peer{
 		WHERE (userfromid=? OR userfromid=?) AND subwikiid=?';
 		$data=$DB->get_record_sql($sql,array($this->id,$userid,$swid));
 		if($data->total>0){
+
 			//get the similarity between follows and divide by the number of unique likes  
 			$this->followsim=($data->total-$data->different)/$data->different;
 		}
@@ -1823,6 +1824,7 @@ class peer{
 		FROM {socialwiki_likes} 
 		WHERE (userid=? OR userid=?) AND subwikiid=?';
 		$data=$DB->get_record_sql($sql,array($this->id,$userid,$swid));
+
 		//get the similarity between follows and divide by unique follows 
 		$this->likesim=($data->total-$data->different)/$data->different;
 	}

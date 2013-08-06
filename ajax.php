@@ -10,6 +10,7 @@ $userid=optional_param('uid',null,PARAM_INT);
 $pages=optional_param('pages',null,PARAM_RAW);
 $peers=optional_param('peers',null,PARAM_RAW);
 $nodes=optional_param('nodes',null,PARAM_RAW);
+
 	switch($action){
 		//check if a page is liked by the userid
 		case 'liked':

@@ -4,8 +4,12 @@ var pattern2=/option=2/;
 var pattern3=/option/;
 var pattern4=/option=3/;
 
+<<<<<<< HEAD
 var run=0;	//used to check if all ajax calls have been run
 //check if a peer likes a page and add there score to the page if they do
+=======
+
+>>>>>>> 533278a8858bb999b7866d51f7d9b78d01d3326e
 function likedTree(peer,pageid){
 	$.ajax({
 		url:'ajax.php',
@@ -62,7 +66,6 @@ function rescoreTree (){
 		});
 }
 
-//re-score all the pages using an ajax call
 function rescorePages(){
 	var jpages=JSON.stringify(pages);
 	var jpeers=JSON.stringify(peers);
@@ -75,6 +78,7 @@ function rescorePages(){
 			}
 		});
 }
+
 
 //function create all the weight sliders and define the function to be executed when they are moved
 function weightSliders (divID){
@@ -103,6 +107,7 @@ function weightSliders (divID){
 					peers[i].score=peers[i].trust*scale['trust']+peers[i].likesim*scale['like']+peers[i].followsim*scale['follow']+peers[i].popularity*scale['popular'];
 				}
 				if(pattern1.test(document.URL)||!pattern3.test(document.URL)){
+
 					//delete the old tree
 					$('#tree_container_div').remove();
 					$("#tree_zoommessage").remove();
