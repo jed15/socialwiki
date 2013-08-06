@@ -1513,6 +1513,7 @@ function socialwiki_is_following($userfromid,$usertoid,$subwikiid)
 	return $DB->record_exists_sql($sql,array($userfromid,$usertoid,$subwikiid));
 }
 
+//unfollow a user
 function socialwiki_unfollow($userfromid,$usertoid, $subwikiid){
 	Global $DB;
 	$select='userfromid=? AND usertoid=? AND subwikiid=?';
@@ -1535,6 +1536,7 @@ global $DB;
 		  
 	return $DB->record_exists_sql($sql,array($userid,$pageid));
 }
+
 //add a like
 function socialwiki_add_like($userid,$pageid,$subwikiid){
 	Global $DB;
@@ -1621,7 +1623,8 @@ function socialwiki_get_relations($pageid){
 	 sort($relations);
 	 return $relations;
 }
-	
+
+//returns the current style of the socialwiki	
 function socialwiki_get_currentstyle($wikiid){
 
 	Global $DB;
@@ -1687,6 +1690,7 @@ function socialwiki_get_recommended_pages($userid,$swid){
 		}
 		$page->votes=$votes;
 	}
+	//sort pages based on votes
 	usort($pages,"socialwiki_page_comp");
 	
 	//return top ten pages
@@ -1703,6 +1707,13 @@ function socialwiki_page_comp($p1,$p2){
 		return 0;
 	}
 	return ($p1->votes < $p2->votes) ? 1 : -1;
+}
+
+function socialwiki_node_comp($n1,$n2){
+	if($n1->priority==$n2->priority){
+		return 0;
+	}
+	return ($n1->priority < $n2->priority) ? 1 : -1;
 }
 
 //sorts an array of pages by likes
@@ -1739,6 +1750,38 @@ function socialwiki_order_pages_using_peers($peers,$pages){
 	return $pages;
 }
 
+/**
+ *finds the following depth for a user
+ * @param int userfrom 
+ * @param int userto
+ * @param int swid
+ * @param int depth 
+ * @param int array checked is an array of users that have already been checked
+ */ 
+ function socialwiki_follow_depth($userfrom,$userto,$swid,$depth=1,&$checked=array()){
+	if(socialwiki_is_following($userfrom,$userto,$swid)){
+		return $depth;
+	}
+	//get userfrom's follows 
+	$follows=socialwiki_get_follows($userfrom,$swid);
+	if(count($follows>0)){
+		//add the userfrom to checked array
+		$checked[]=$userfrom;
+		$depth++;
+		foreach($follows as $follow){
+			//keep checking until either all followers have been checked or a follower is following userto
+			if(!in_array($follow->usertoid,$checked)){
+				$fdepth=socialwiki_follow_depth($follow->usertoid,$userto,$swid,$depth,$checked);
+				if($fdepth!=0){
+					return $fdepth;
+				}
+			}
+		}
+
+	}
+	return 0;
+ }
+
 //class that describes the similarity between the current user and another student in the activity
 class peer{
 	public $trust=0; //trust indicator value
@@ -1750,14 +1793,13 @@ class peer{
 	function __construct($id,$swid,$currentuser,$numusers,$scale){
 		Global $USER;
 		$this->id=$id;
-		if(socialwiki_is_following($USER->id,$id,$swid)){
-			$this->trust=1;
-		}
+		$this->trust=socialwiki_follow_depth($USER->id,$this->id,$swid);
 		$this->popularity=socialwiki_get_followers($id,$swid)/$numusers;
 		$this->set_follow_sim($currentuser,$swid);
 		$this->set_like_sim($currentuser,$swid);
 		$this->set_score($scale);
 	}
+	
 	/*
 	 *sets the follow similarity to the 
 	 *@userid the current users id
@@ -1770,7 +1812,7 @@ class peer{
 		WHERE (userfromid=? OR userfromid=?) AND subwikiid=?';
 		$data=$DB->get_record_sql($sql,array($this->id,$userid,$swid));
 		if($data->total>0){
-			//get the similarity between follows and divide by the total  
+			//get the similarity between follows and divide by the number of unique likes  
 			$this->followsim=($data->total-$data->different)/$data->different;
 		}
 	}
@@ -1781,7 +1823,7 @@ class peer{
 		FROM {socialwiki_likes} 
 		WHERE (userid=? OR userid=?) AND subwikiid=?';
 		$data=$DB->get_record_sql($sql,array($this->id,$userid,$swid));
-		//get the similarity between follows and divide by total follows 
+		//get the similarity between follows and divide by unique follows 
 		$this->likesim=($data->total-$data->different)/$data->different;
 	}
 	//sets peer's score to sum of scores times there weight

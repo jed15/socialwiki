@@ -72,3 +72,11 @@ overflow:auto;
 position:relative;
 text-align:left;
 }
+
+.slidecontainer
+{
+	display:inline-block;
+	margin:25px;
+	width:20px;
+	
+}

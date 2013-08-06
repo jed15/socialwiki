@@ -17,10 +17,10 @@
 	require_once('../../config.php');
 	require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
 	
-	$from=required_param('from',PARAM_TEXT);
+	$from=required_param('from',PARAM_TEXT); //the url of the previous page
 	$pageid=optional_param('pageid',-1, PARAM_INT);
 	$user2=optional_param('user2',-1,PARAM_INT);
-        $swid = optional_param('swid', -1, PARAM_INT);
+    $swid = optional_param('swid', -1, PARAM_INT);
         
         if ($swid != -1)
         {

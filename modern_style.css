@@ -458,3 +458,11 @@ text-align:center;
 {
 	display:none !important;
 }
+
+.slidecontainer
+{
+	display:inline-block;
+	margin:25px;
+	width:20px;
+	
+}

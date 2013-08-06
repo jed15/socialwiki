@@ -880,22 +880,23 @@ class page_socialwiki_search extends page_socialwiki {
         require_capability('mod/socialwiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'socialwiki');
 		echo $this->wikioutput->content_area_begin();
 		echo $this->wikioutput->title_block("Search results for: ".$this->search_string."(".count($this->search_result)."&nbsptotal)");
-		 switch ($this->view) {
-        case 1:
-            echo $this->wikioutput->menu_search($PAGE->cm->id, $this->view,$this->search_string);
-            $this->print_tree();
-            break;
-        case 2:
-            echo $this->wikioutput->menu_search($PAGE->cm->id, $this->view,$this->search_string);
-            $this->print_list();
-            break;
-        case 3:
-			echo $this->wikioutput->menu_search($PAGE->cm->id, $this->view,$this->search_string);
-            $this->print_popular();
-            break;
-        default:
-            echo $this->wikioutput->menu_search($PAGE->cm->id, $this->view,$this->search_string);
-            $this->print_tree();
+		 
+		switch ($this->view) {
+			case 1:
+				echo $this->wikioutput->menu_search($PAGE->cm->id, $this->view,$this->search_string);
+				$this->print_tree();
+				break;
+			case 2:
+				echo $this->wikioutput->menu_search($PAGE->cm->id, $this->view,$this->search_string);
+				$this->print_list();
+				break;
+			case 3:
+				echo $this->wikioutput->menu_search($PAGE->cm->id, $this->view,$this->search_string);
+				$this->print_popular();
+				break;
+			default:
+				echo $this->wikioutput->menu_search($PAGE->cm->id, $this->view,$this->search_string);
+				$this->print_tree();
         }
 		
 		echo $this->wikioutput->content_area_end();
@@ -919,9 +920,9 @@ class page_socialwiki_search extends page_socialwiki {
 		
 		//send the tree and peers to javascript
 		$jpeers=json_encode($peers);
-		$jtree=json_encode($tree);
+		$jnodes=json_encode($tree->nodes);
 		$jscale=json_encode($scale);
-		echo '<script> var searchResults='.$jtree.';var peers='.$jpeers.';var scale='.$jscale.'</script>';
+		echo '<script> var searchResults='.$jnodes.';var peers='.$jpeers.';var scale='.$jscale.'</script>';
 	}
 	
 	//print a list of pages ordered by peer votes
@@ -1450,7 +1451,7 @@ class page_socialwiki_home extends page_socialwiki {
 		//print the home page heading
 		echo $OUTPUT->heading('Home Page',1,"socialwiki_headingtitle colourtext");
 
-		
+		//outputs a link to the first page if it exists
 		if ($firstpage=socialwiki_get_first_page($this->subwiki->id)) {
 			echo $OUTPUT->container_start('linkcontainer','firstpagecontainer');
 			echo html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$firstpage->id,'Go to First Page',array('class'=>'socialwiki_link'));
@@ -1459,7 +1460,7 @@ class page_socialwiki_home extends page_socialwiki {
         switch ($this->view) {
         case 1:
             echo $this->wikioutput->menu_home($PAGE->cm->id, $this->view);
-            $this->print_contributions_content();
+            $this->print_userpages_content();
             break;
         case 2:
             echo $this->wikioutput->menu_home($PAGE->cm->id, $this->view);
@@ -1504,18 +1505,19 @@ class page_socialwiki_home extends page_socialwiki {
     }
 
     /**
-     * Prints the contributions tab content
+     * Prints a list of pages the user created
      *
      * @uses $OUTPUT, $USER
      *
      */
-    private function print_contributions_content() {
+	
+    private function print_userpages_content() {
         global $CFG, $OUTPUT, $USER;
 		
         $swid = $this->subwiki->id;
 
         $table = new html_table();
-        $table->head = array(get_string('contributions', 'socialwiki') . $OUTPUT->help_icon('contributions', 'socialwiki'));
+        $table->head = array(get_string('userpages', 'socialwiki') . $OUTPUT->help_icon('userpages', 'socialwiki'));
         $table->attributes['class'] = 'socialwiki_editor generalbox colourtext';
         $table->data = array();
         $table->rowclasses = array();
@@ -1562,7 +1564,6 @@ class page_socialwiki_home extends page_socialwiki {
      *
      * @uses $OUTPUT
      *
-     */
     private function print_navigation_content() {
         global $OUTPUT,$PAGE,$COURSE;
         $page = $this->page;
@@ -1614,13 +1615,13 @@ class page_socialwiki_home extends page_socialwiki {
         }
         $table_right = html_writer::table($table);
         echo $OUTPUT->container($table_left . $table_right, 'socialwiki_navigation_container');
-    }
+    }*/
 
     /**
      * Prints the index page tab content
      *
      *
-     */
+    
     private function print_index_content() {
         global $OUTPUT;
         $page = $this->page;
@@ -1643,10 +1644,10 @@ class page_socialwiki_home extends page_socialwiki {
         $table->data[] = array($this->render_navigation_node($tree));
 
         echo html_writer::table($table);
-    }
+    }*/
 
     /**
-     * Prints the page list tab content
+     * Prints a list of all pages
      *
      *
      */
@@ -1711,7 +1712,7 @@ class page_socialwiki_home extends page_socialwiki {
     }
 
     /**
-     * Prints the updated tab content
+     * Prints the upages that have been modified since the last login
      *
      * @uses $COURSE, $OUTPUT
      *
@@ -1748,6 +1749,10 @@ class page_socialwiki_home extends page_socialwiki {
         echo html_writer::table($table);
     }
 	
+	/**
+	 *prints a list of all the pages created by the teacher
+	 */
+	
 	private function print_teacher_content() {
         global $COURSE, $OUTPUT,$CFG,$PAGE;
 
@@ -1761,9 +1766,9 @@ class page_socialwiki_home extends page_socialwiki {
 
 			$stdaux = new stdClass();
 			$strspecial = get_string('special', 'socialwiki');
-
+			
+			//order pages alphabetically 
 			foreach ($pages as $page) {
-				// We need to format the title here to account for any filtering
 				$letter = format_string($page->title, true, array('context' => $this->modcontext));
 				$letter = textlib::substr($letter, 0, 1);
 				if (preg_match('/^[a-zA-Z]$/', $letter)) {
@@ -1787,6 +1792,9 @@ class page_socialwiki_home extends page_socialwiki {
 			echo html_writer::table($table);
 		}
     }
+	/**
+	 *print recomended pages based on peer scores
+	 */
 	
 	private function print_recommended_content() {
         global $USER,$CFG;
@@ -2705,6 +2713,10 @@ class page_socialwiki_admin extends page_socialwiki {
     }
 }
 
+/**
+ * page that allows the user to manage likes and follows
+ */
+
 class page_socialwiki_manage extends page_socialwiki{
 	
 	function print_content(){
@@ -2779,6 +2791,9 @@ class page_socialwiki_manage extends page_socialwiki{
         $PAGE->navbar->add(get_string('manage', 'socialwiki'), $CFG->wwwroot . '/mod/socialwiki/manage.php?pageid=' . $this->page->id);
     }
 }
+/**
+ * page that allows a user to view all the pages another user has liked
+ */
 
 class page_socialwiki_viewuserpages extends page_socialwiki{
 

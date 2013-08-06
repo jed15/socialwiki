@@ -4,21 +4,36 @@ var pattern2=/option=2/;
 var pattern3=/option/;
 var pattern4=/option=3/;
 
-
+var run=0;	//used to check if all ajax calls have been run
+//check if a peer likes a page and add there score to the page if they do
 function likedTree(peer,pageid){
 	$.ajax({
 		url:'ajax.php',
 		type:'get',
 		data: {action:'liked',uid:peer.id,pageid:pageid},
 		success: function(output){
-				//add peer's score if they like the page
-				if(output){
-					searchTree.nodes['l'+pageid].priority+=peer.score;
-				}
+			//add peer's score if they like the page
+			if(output){
+				searchTree.nodes['l'+pageid].priority+=peer.score;
+				//console.log(searchTree.nodes['l'+pageid].priority);
+			}
+			run++;
+			treeDisplay();
 		}
 	});
 }
 
+
+//displays the tree if all ajax functions have been run
+function treeDisplay(){
+	if(run>=18*3){
+		mTree = new TreeControl(searchTree, "socialwiki_content_area");
+		mTree.display();
+		run=0;
+	}
+}
+
+//get the time score for a page
 function time(pageid){
 
 	$.ajax({
@@ -26,24 +41,28 @@ function time(pageid){
 			type:'get',
 			data: {action:'time',pageid:pageid},
 			success: function(output){
-				//set priority to time created/ current time
-				searchTree.nodes['l'+pageid].priority=parseFloat(output);
+				//set priority to time score
+				searchTree.nodes['l'+pageid].priority+=parseFloat(output);
 			}
-		});
+	});
 }
 //recalculates the score for the tree nodes
 function rescoreTree (){
-	for(i in searchTree.nodes){
-		//set priority to time created/ current time
-		time(searchTree.nodes[i].id.substr(1));
-		//readjust score
-		for(j in peers){
-			//add peer's score if they like the page
-			likedTree(peers[j],searchTree.nodes[i].id.substr(1))		
-		}
-	}
+	var jpeers=JSON.stringify(peers);
+	var jnodes=JSON.stringify(mTree.myTree.nodes);
+	$.ajax({
+			url:'ajax.php',
+			type:'post',
+			data: {action:'tree',nodes:jnodes,peers:jpeers},
+			success: function(output){
+				searchTree.nodes = JSON.parse(output);
+				mTree = new TreeControl(searchTree, "socialwiki_content_area");
+				mTree.display();
+			}
+		});
 }
 
+//re-score all the pages using an ajax call
 function rescorePages(){
 	var jpages=JSON.stringify(pages);
 	var jpeers=JSON.stringify(peers);
@@ -57,11 +76,11 @@ function rescorePages(){
 		});
 }
 
-//function for weight sliders
+//function create all the weight sliders and define the function to be executed when they are moved
 function weightSliders (divID){
 	//array containing labels for sliders
 	var labels={like:'like similarity',follow:'follow similarity',trust:'trust<br/>&nbsp',popular:'popularity<br/>&nbsp'};
-	$("#"+divID).prepend('<div id="sliders"></div>');
+	$("#"+divID).prepend('<div id="sliders" class="colourtext"></div>');
 	$('#sliders').append('<h2>Adjust Peer Weights<h2>');
 	//set up the sliders for each weighted score
 	for(option in scale){
@@ -75,6 +94,7 @@ function weightSliders (divID){
 		  max:4,
 		  step:1,
 		  value:scale[option],
+		  //on the slide event rescore either the tree or pages depending on view
 		  slide:function( event, ui ) {
 				//update the scale
 				scale[this.id]=ui.value;
@@ -83,15 +103,14 @@ function weightSliders (divID){
 					peers[i].score=peers[i].trust*scale['trust']+peers[i].likesim*scale['like']+peers[i].followsim*scale['follow']+peers[i].popularity*scale['popular'];
 				}
 				if(pattern1.test(document.URL)||!pattern3.test(document.URL)){
-					//rescore and display the tree
-					rescoreTree();
 					//delete the old tree
 					$('#tree_container_div').remove();
 					$("#tree_zoommessage").remove();
 					$('#instruction').remove();
-					mTree = new TreeControl(searchTree, "socialwiki_content_area");
-					mTree.display();
+					//rescore and display the tree
+					rescoreTree();
 				}else if(pattern2.test(document.URL)){
+					//rescore pages
 					rescorePages();
 				}
 			}
@@ -105,12 +124,13 @@ var zoom = document.documentElement.clientWidth / window.innerWidth;
 
 //only create tree if in tree view
 if(pattern1.test(document.URL)||!pattern3.test(document.URL)){
-	searchTree.nodes = searchResults.nodes;
+	searchTree.nodes = searchResults;
 	mTree = new TreeControl(searchTree, "socialwiki_content_area");
 }
 
 $(document).ready(function() {
 	$(".phptree").css("display", "none");
+	
 	if(!pattern4.test(document.URL)){
 		weightSliders("socialwiki_content_area");
 	}
