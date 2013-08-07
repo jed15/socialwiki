@@ -2791,6 +2791,7 @@ class page_socialwiki_manage extends page_socialwiki{
         $PAGE->navbar->add(get_string('manage', 'socialwiki'), $CFG->wwwroot . '/mod/socialwiki/manage.php?pageid=' . $this->page->id);
     }
 }
+
 /**
  * page that allows a user to view all the pages another user has liked
  */

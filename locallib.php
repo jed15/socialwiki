@@ -1818,7 +1818,7 @@ class peer{
 	function __construct($id,$swid,$currentuser,$numusers,$scale){
 		Global $USER;
 		$this->id=$id;
-		$depth=socialwiki_follow_depth($USER->id,$this->id,$swid)
+		$depth=socialwiki_follow_depth($USER->id,$this->id,$swid);
 		if($depth ==0){
 			$this->trust=0;
 		}else{

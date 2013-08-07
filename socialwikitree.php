@@ -95,24 +95,14 @@ class socialwiki_tree{
 					//if the array has a parent add it to the parents child array
 		foreach ($this->nodes as $node){
 			if($node->parent!=-1){
-				$parent=$this->find_node($node->parent);
-				if($parent){
+				if(isset($this->nodes[$node->parent])){
+					$parent=$this->nodes[$node->parent];
 					$parent->add_child($node->id);
 				}else{
 					print_error('nonode','socialwiki');
 				}
 			}
 		}
-	}
-	
-	//finds a node given an id returns that node if found. -1 if the node doesn't exist
-	function find_node($nodeid){
-		foreach($this->nodes as $node){
-			if($node->id==$nodeid){
-				return $node;
-			}
-		}
-		return NULL;
 	}
 	
 	//sorts the nodes so that the family of the leaf with the highest priority is first
@@ -158,16 +148,18 @@ class socialwiki_tree{
 
 	function repos_children($node,&$ar){	
 			$removed=array();
+			//remove node from array so doesn't affect find_index
 			unset($ar[$node->id]);
+			//remove children from array so doesn't affect find_index
 			foreach($node->children as $childid){
 				$removed[]=$childid;
 				unset($ar[$childid]);
 			}
+		//add the node in the proper place
 		$keyindex=$this->find_index($node->parent,$ar);
 		$copy=$ar;
 		$ar=array_splice($ar,0,$keyindex)+array($node->id=>$node)+array_splice($copy,$keyindex);
-		if(count($node->children)>0){
-		}
+		//reposition all nodes that where removed along with their children
 		for($i=0;$i<count($removed);$i++){
 			$this->repos_children($this->nodes[$removed[$i]],$ar);
 		}

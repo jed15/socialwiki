@@ -99,4 +99,3 @@
 		print_error('nouser','socialwiki');
 	}
 	
-
