@@ -1709,13 +1709,6 @@ function socialwiki_page_comp($p1,$p2){
 	return ($p1->votes < $p2->votes) ? 1 : -1;
 }
 
-function socialwiki_node_comp($n1,$n2){
-	if($n1->priority==$n2->priority){
-		return 0;
-	}
-	return ($n1->priority < $n2->priority) ? 1 : -1;
-}
-
 //sorts an array of pages by likes
 function socialwiki_order_by_likes($pages){
 	foreach($pages as $page){
@@ -1723,6 +1716,38 @@ function socialwiki_order_by_likes($pages){
 	}
 	usort($pages,"socialwiki_page_comp");
 	return $pages;
+}
+
+//merge sort for leaf nodes
+function socialwiki_merge_sort_nodes($array){
+	if(count($array)<=1){
+		return $array;
+	}
+	$left= array_slice($array,0,(int)(count($array)/2));
+	$right= array_slice($array,(int)(count($array)/2));
+	
+	$left = socialwiki_merge_sort_nodes($left);  
+	$right = socialwiki_merge_sort_nodes($right);  
+ 
+	$output = socialwiki_merge_nodes($left, $right);  
+ 
+	return $output;  
+}
+
+function socialwiki_merge_nodes($left,$right){
+	$result=array();
+	while(count($left)>0&&count($right)>0){
+		if($left[0]->priority>=$right[0]->priority){
+			array_push($result,array_shift($left));
+		}else{
+			array_push($result,array_shift($right));
+		}
+	}
+	
+	array_splice($result, count($result), 0, $left);  
+	array_splice($result, count($result), 0, $right);  
+ 
+	return $result;  
 }
 
 /**
@@ -1793,7 +1818,12 @@ class peer{
 	function __construct($id,$swid,$currentuser,$numusers,$scale){
 		Global $USER;
 		$this->id=$id;
-		$this->trust=socialwiki_follow_depth($USER->id,$this->id,$swid);
+		$depth=socialwiki_follow_depth($USER->id,$this->id,$swid)
+		if($depth ==0){
+			$this->trust=0;
+		}else{
+			$this->trust=1/$depth;
+		}
 		$this->popularity=socialwiki_get_followers($id,$swid)/$numusers;
 		$this->set_follow_sim($currentuser,$swid);
 		$this->set_like_sim($currentuser,$swid);

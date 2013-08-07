@@ -4,79 +4,35 @@ var pattern2=/option=2/;
 var pattern3=/option/;
 var pattern4=/option=3/;
 
-<<<<<<< HEAD
-var run=0;	//used to check if all ajax calls have been run
-//check if a peer likes a page and add there score to the page if they do
-=======
 
->>>>>>> 533278a8858bb999b7866d51f7d9b78d01d3326e
-function likedTree(peer,pageid){
-	$.ajax({
-		url:'ajax.php',
-		type:'get',
-		data: {action:'liked',uid:peer.id,pageid:pageid},
-		success: function(output){
-			//add peer's score if they like the page
-			if(output){
-				searchTree.nodes['l'+pageid].priority+=peer.score;
-				//console.log(searchTree.nodes['l'+pageid].priority);
-			}
-			run++;
-			treeDisplay();
-		}
-	});
-}
-
-
-//displays the tree if all ajax functions have been run
-function treeDisplay(){
-	if(run>=18*3){
-		mTree = new TreeControl(searchTree, "socialwiki_content_area");
-		mTree.display();
-		run=0;
-	}
-}
-
-//get the time score for a page
-function time(pageid){
-
-	$.ajax({
-			url:'ajax.php',
-			type:'get',
-			data: {action:'time',pageid:pageid},
-			success: function(output){
-				//set priority to time score
-				searchTree.nodes['l'+pageid].priority+=parseFloat(output);
-			}
-	});
-}
 //recalculates the score for the tree nodes
 function rescoreTree (){
 	var jpeers=JSON.stringify(peers);
 	var jnodes=JSON.stringify(mTree.myTree.nodes);
 	$.ajax({
-			url:'ajax.php',
-			type:'post',
-			data: {action:'tree',nodes:jnodes,peers:jpeers},
-			success: function(output){
-				searchTree.nodes = JSON.parse(output);
-				mTree = new TreeControl(searchTree, "socialwiki_content_area");
-				mTree.display();
-			}
-		});
+		url:'ajax.php',
+		type:'post',
+		data: {action:'tree',nodes:jnodes,peers:jpeers},
+		success: function(output){
+			searchTree.nodes = JSON.parse(output);
+			mTree = new TreeControl(searchTree, "socialwiki_content_area");
+			mTree.display();
+		}
+	});
 }
 
+//call ajax.php to re-score pages
 function rescorePages(){
 	var jpages=JSON.stringify(pages);
 	var jpeers=JSON.stringify(peers);
 	$.ajax({
-			url:'ajax.php',
-			type:'post',
-			data: {action:'pages',pages:jpages,peers:jpeers},
-			success: function(output){
-				$('.socialwiki_editor').html(output);
-			}
-		});
+		url:'ajax.php',
+		type:'post',
+		data: {action:'pages',pages:jpages,peers:jpeers},
+		success: function(output){
+			$('.socialwiki_editor').html(output);
+		}
+	});
 }
 
 
@@ -112,10 +68,10 @@ function weightSliders (divID){
 					$('#tree_container_div').remove();
 					$("#tree_zoommessage").remove();
 					$('#instruction').remove();
-					//rescore and display the tree
+					//re-score and display the tree
 					rescoreTree();
 				}else if(pattern2.test(document.URL)){
-					//rescore pages
+					//re-score pages
 					rescorePages();
 				}
 			}

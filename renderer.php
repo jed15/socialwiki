@@ -484,7 +484,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
     }
 
     function menu_home($cmid, $currentselect) {
-        $options = array('contributions', 'orphaned','pagelist', 'updatedpages','teacherpages','recommended');
+        $options = array('userpages', 'orphaned','pagelist', 'updatedpages','teacherpages','recommended');
         $items = array();
         foreach ($options as $opt) {
             $items[] = get_string($opt, 'socialwiki');

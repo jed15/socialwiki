@@ -5,45 +5,28 @@ require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
 require_once($CFG->dirroot . '/mod/socialwiki/socialwikitree.php');
 
 $action=required_param('action',PARAM_TEXT);
-$pageid=optional_param('pageid',null,PARAM_INT);
-$userid=optional_param('uid',null,PARAM_INT);
 $pages=optional_param('pages',null,PARAM_RAW);
 $peers=optional_param('peers',null,PARAM_RAW);
 $nodes=optional_param('nodes',null,PARAM_RAW);
 
 	switch($action){
-		//check if a page is liked by the userid
-		case 'liked':
-			if(isset($pageid)&&isset($userid)){
-				echo json_encode(socialwiki_liked($userid,$pageid));
-			}
-			
-			break;
-		case 'time':
-			if (isset($pageid)){
-				$page=socialwiki_get_page($pageid);
-				//return the time it was created divided by current time
-				echo json_encode($page->timecreated/time());
-			}
-			break;
 		case 'tree':
 				if(isset($nodes)&&isset($peers)){
 					$tree=new socialwiki_tree;
 					//decode from JavaScript
 					$tree->nodes=(array)json_decode($nodes);
 					$peers=json_decode($peers);
+					//re-score nodes
 					foreach($tree->nodes as $node){
 						$page=socialwiki_get_page(substr($node->id,1));
 						$node->priority=$page->timecreated/time();
-						if($node->id=='l335'){
-							$node->priority=555;
-						}
 						foreach($peers as $peer){
 							if(socialwiki_liked($peer->id,substr($node->id,1))){
 								$node->priority+=$peer->score;
 							}
 						}
 					}
+					//sort tree 
 					$tree->sort();
 					echo json_encode($tree->nodes);
 				}

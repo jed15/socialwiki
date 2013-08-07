@@ -115,19 +115,13 @@ class socialwiki_tree{
 		return NULL;
 	}
 	
+	//sorts the nodes so that the family of the leaf with the highest priority is first
+	//the order is parents followed by children 
 	function sort(){
 		$leaves=$this->find_leaves();
 		$sorted=array();
 		//sort leaves in order of priority
-		for($i=1;$i<count($leaves);$i++){
-			for($j=0;$j<count($leaves)&&$j<$i;$j++){
-				if($leaves[$i]->priority>$leaves[$j]->priority){
-					$temp=$leaves[$i];
-					$leaves[$i]=$leaves[$j];
-					$leaves[$j]=$temp;
-				}
-			}
-		}
+		$leaves=socialwiki_merge_sort_nodes($leaves);
 		
 		for($i=0;$i<count($leaves);$i++){
 			//if the parent is already in the tree add the leaf in the proper position
