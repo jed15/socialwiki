@@ -908,7 +908,7 @@ class page_socialwiki_search extends page_socialwiki {
 		//create a tree from the search results
 		$scale=array('follow'=>1,'like'=>1,'trust'=>1,'popular'=>1); //variable used to scale the percentages
 		$peers=socialwiki_get_peers($this->subwiki->id,$scale);	
-		$pages=socialwiki_order_pages_using_peers($peers,$this->search_result);
+		$pages=socialwiki_order_pages_using_peers($peers,$this->search_result,$scale);
 		
 		$tree=new socialwiki_tree;
 		$tree->build_tree($pages);
@@ -930,13 +930,14 @@ class page_socialwiki_search extends page_socialwiki {
 		Global $CFG;
 		$scale=array('follow'=>1,'like'=>1,'trust'=>1,'popular'=>1);
 		$peers=socialwiki_get_peers($this->subwiki->id,$scale);
-		$pages=socialwiki_order_pages_using_peers($peers,$this->search_result);
+		$pages=socialwiki_order_pages_using_peers($peers,$this->search_result,$scale);
 		$table = new html_table();
 			$table->attributes['class'] = 'socialwiki_editor generalbox colourtext';
 			$table->align = array('center');
 		if(count($pages)>0){
 			foreach ($pages as $page) {
 				$table->data[] = array(html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title.' (ID:'.$page->id.')',array('class'=>'socialwiki_link')));
+				$table->data[] = array('Total Score: '.$page->votes.'<br/>Trust Score: '.$page->trust.'<br/>Follow Similarity Score: '.$page->followsim.'<br/>Like Similarity Score: '.$page->likesim.'<br/>Peer Popularity Score: '.$page->peerpopular.'<br/>Time Score: '.$page->time);
 			}
 		}else{
 			$table->data[] =array('<h3 socialwiki_titleheader>No Pages Found</h3>');

@@ -1755,21 +1755,25 @@ function socialwiki_merge_nodes($left,$right){
  *@param $peers an array of peer objects
  *@param $pages an array of pages
  **/
-function socialwiki_order_pages_using_peers($peers,$pages){
+function socialwiki_order_pages_using_peers($peers,$pages,$scale){
 	Global $USER;
 	foreach ($pages as $page){
-		$votes=$page->timecreated/time();
-		/*if (socialwiki_liked($USER->id,$page->id)){
-			//add the maximum any peer could vote if the current user likes a page
-			$votes+=;
-		}*/
+		$page->trust=0;
+		$page->time=$page->timecreated/time();
+		$page->likesim=0;
+		$page->followsim=0;
+		$page->peerpopular=0;
+		$page->votes=$page->time;
 		
 		foreach ($peers as $peer){
 			if (socialwiki_liked($peer->id,$page->id)){
-				$votes+=$peer->score;
+				$page->votes+=$peer->score;
+				$page->trust+=$peer->trust*$scale['trust'];
+				$page->likesim+=$peer->likesim*$scale['like'];
+				$page->followsim+=$peer->followsim*$scale['follow'];
+				$page->peerpopular+=$peer->popularity*$scale['popular'];
 			}
 		}
-		$page->votes=$votes;
 	}
 	usort($pages,"socialwiki_page_comp");
 	return $pages;

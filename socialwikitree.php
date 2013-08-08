@@ -51,12 +51,15 @@
 			}
 		}
 	
-	private function set_content($page){
+	function set_content($page){
 		Global $PAGE,$CFG;
 		$user = socialwiki_get_user_info($page->userid);
-		$userlink = new moodle_url('/user/view.php', array('id' => $user->id, 'course' => $PAGE->cm->course));
+		$userlink = new moodle_url('/mod/socialwiki/profile.php', array('userid' => $user->id, 'course' => $PAGE->cm->course));
 		$this->content=html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title,array("class"=>"colourtext")).'<br/>'.html_writer::link($userlink->out(false),fullname($user),array("class"=>"colourtext")).'<br/>ID: '.$page->id;
-	
+		if(isset($page->votes)){
+			//add page scores
+			$this->content.='<br/>Total Score: '.$page->votes.'<br/>Trust Score: '.$page->trust.'<br/>Follow Similarity Score: '.$page->followsim.'<br/>Like Similarity Score: '.$page->likesim.'<br/>Peer Popularity Score: '.$page->peerpopular.'<br/>Time Score: '.$page->time;
+		}
 	}
 	
 	

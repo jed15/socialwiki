@@ -9,11 +9,16 @@ var pattern4=/option=3/;
 function rescoreTree (){
 	var jpeers=JSON.stringify(peers);
 	var jnodes=JSON.stringify(mTree.myTree.nodes);
+	var jscale=JSON.stringify(scale);
 	$.ajax({
 		url:'ajax.php',
 		type:'post',
-		data: {action:'tree',nodes:jnodes,peers:jpeers},
+		data: {action:'tree',nodes:jnodes,peers:jpeers,scale:jscale},
 		success: function(output){
+			//delete the old tree
+			$('#tree_container_div').remove();
+			$("#tree_zoommessage").remove();
+			$('#instruction').remove();
 			searchTree.nodes = JSON.parse(output);
 			mTree = new TreeControl(searchTree, "socialwiki_content_area");
 			mTree.display();
@@ -25,10 +30,11 @@ function rescoreTree (){
 function rescorePages(){
 	var jpages=JSON.stringify(pages);
 	var jpeers=JSON.stringify(peers);
+	var jscale=JSON.stringify(scale);
 	$.ajax({
 		url:'ajax.php',
 		type:'post',
-		data: {action:'pages',pages:jpages,peers:jpeers},
+		data: {action:'pages',pages:jpages,peers:jpeers,scale:jscale},
 		success: function(output){
 			$('.socialwiki_editor').html(output);
 		}
@@ -63,11 +69,6 @@ function weightSliders (divID){
 					peers[i].score=peers[i].trust*scale['trust']+peers[i].likesim*scale['like']+peers[i].followsim*scale['follow']+peers[i].popularity*scale['popular'];
 				}
 				if(pattern1.test(document.URL)||!pattern3.test(document.URL)){
-
-					//delete the old tree
-					$('#tree_container_div').remove();
-					$("#tree_zoommessage").remove();
-					$('#instruction').remove();
 					//re-score and display the tree
 					rescoreTree();
 				}else if(pattern2.test(document.URL)){
