@@ -20,18 +20,18 @@
 	$from=required_param('from',PARAM_RAW);
 	
 	if (!$page = socialwiki_get_page($pageid)) {
-    print_error('incorrectpageid', 'socialwiki');
+		print_error('incorrectpageid', 'socialwiki');
 	}
 
 	if (!$subwiki = socialwiki_get_subwiki($page->subwikiid)) {
-    print_error('incorrectsubwikiid', 'socialwiki');
+		print_error('incorrectsubwikiid', 'socialwiki');
 	}
 	if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
-    print_error('incorrectwikiid', 'socialwiki');
+		print_error('incorrectwikiid', 'socialwiki');
 	}
 
 	if (!$cm = get_coursemodule_from_instance('socialwiki', $wiki->id)) {
-    print_error('invalidcoursemodule');
+		print_error('invalidcoursemodule');
 	}
 	$context = context_module::instance($cm->id);
 	

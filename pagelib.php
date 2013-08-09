@@ -336,7 +336,7 @@ class page_socialwiki_view extends page_socialwiki {
 	protected function print_pagetitle() {
         global $OUTPUT,$PAGE;
 		$user = socialwiki_get_user_info($this->page->userid);
-		$userlink = new moodle_url('/user/view.php', array('id' => $user->id, 'course' => $PAGE->cm->course));
+		$userlink = new moodle_url('/mod/socialwiki/viewuserpages.php', array('userid' => $user->id, 'subwikiid' => $this->page->subwikiid));
 		$html = '';
 
         $html .= $OUTPUT->container_start('','socialwiki_title');
@@ -646,7 +646,7 @@ class page_socialwiki_comments extends page_socialwiki {
 
             $fullname = fullname($user, has_capability('moodle/site:viewfullnames', context_course::instance($course->id)));
             $by = new stdclass();
-            $by->name = '<a href="' . $CFG->wwwroot . '/user/view.php?id=' . $user->id . '&amp;course=' . $course->id . '">' . $fullname . '</a>';
+            $by->name = '<a href="' . $CFG->wwwroot . '/mod/socialwiki/viewuserpages.php?userid=' . $user->id . '&amp;subwikiid=' . $this->page->subwikiid . '">' . $fullname . '</a>';
             $by->date = userdate($comment->timecreated);
 
             $t = new html_table();
@@ -1241,7 +1241,7 @@ class page_socialwiki_diff extends page_socialwiki {
         $PAGE->navbar->add(get_string('diff', 'socialwiki'));
 	}
      /**
-     * Given two , prints a page displaying the differences between them.
+     * Given two pages, prints a page displaying the differences between them.
      *
      * @global object $CFG
      * @global object $OUTPUT
@@ -1740,7 +1740,7 @@ class page_socialwiki_home extends page_socialwiki {
                 }
 
                 $linkpage = html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title.' (ID:'.$page->id.')',array('class'=>'socialwiki_link'));
-                $name = html_writer::link($CFG->wwwroot.'/user/view.php?id='.$user->id,fullname($user),array('class'=>'socialwiki_link'));
+                $name = html_writer::link($CFG->wwwroot.'/mod/socailwiki/view.php?userid='.$user->id.'&amp;subwikiid='.$page->subwikiid,fullname($user),array('class'=>'socialwiki_link'));
                 $table->data[] = array("$name&nbsp&nbsp;$linkpage");
             }
         } else {
@@ -2135,7 +2135,7 @@ class page_socialwiki_viewversion extends page_socialwiki {
             echo $OUTPUT->heading(get_string('viewversion', 'socialwiki', $pageversion->version) . '<br />' . html_writer::link($restorelink->out(false), '(' . get_string('restorethis', 'socialwiki') . ')', array('class' => 'socialwiki_restore')) . '&nbsp;', 4);
             $userinfo = socialwiki_get_user_info($pageversion->userid);
             $heading = '<p><strong>' . get_string('modified', 'socialwiki') . ':</strong>&nbsp;' . userdate($pageversion->timecreated, get_string('strftimedatetime', 'langconfig'));
-            $viewlink = new moodle_url('/user/view.php', array('id' => $userinfo->id));
+            $viewlink = new moodle_url('/mod/socialwiki/viewuserpages.php', array('id' => $userinfo->id,'subwikiid'=>$this->page->subwikiid));
             $heading .= '&nbsp;&nbsp;&nbsp;<strong>' . get_string('user') . ':</strong>&nbsp;' . html_writer::link($viewlink->out(false), fullname($userinfo));
             $heading .= '&nbsp;&nbsp;&rarr;&nbsp;' . $OUTPUT->user_picture(socialwiki_get_user_info($pageversion->userid), array('popup' => true)) . '</p>';
             print_container($heading, false, 'mdl-align socialwiki_modifieduser socialwiki_headingtime');
@@ -2594,7 +2594,7 @@ class page_socialwiki_admin extends page_socialwiki {
                 $time = userdate($row->timecreated, get_string('strftimetime', 'langconfig'));
                 $versionid = socialwiki_get_version($row->id);
                 $versionlink = new moodle_url('/mod/socialwiki/viewversion.php', array('pageid' => $pageid, 'versionid' => $versionid->id));
-                $userlink = new moodle_url('/user/view.php', array('id' => $username->id, 'course' => $PAGE->cm->course));
+                $userlink = new moodle_url('/mod/socialwiki/viewuserpages.php', array('userid' => $user->id, 'subwikiid' => $this->page->subwikiid));
                 $picturelink = $picture . html_writer::link($userlink->out(false), fullname($username));
                 $historydate = $OUTPUT->container($date, 'socialwiki_histdate');
                 $contents[] = array('', html_writer::link($versionlink->out(false), $row->version), $picturelink, $time, $historydate);
@@ -2631,7 +2631,7 @@ class page_socialwiki_admin extends page_socialwiki {
                         $viewlink = $version->version;
                     }
 
-                    $userlink = new moodle_url('/user/view.php', array('id' => $version->userid, 'course' => $PAGE->cm->course));
+                    $userlink = new moodle_url('/mod/socialwiki/viewuserpages.php', array('userid' => $user->id, 'subwikiid' => $this->page->subwikiid));
                     $picturelink = $picture . html_writer::link($userlink->out(false), fullname($user));
                     $historydate = $OUTPUT->container($date, 'socialwiki_histdate');
                     $radiofromelement = $this->choose_from_radio(array($version->version  => null), 'fromversion', 'M.mod_socialwiki.deleteversion()', $versioncount, true);
@@ -2742,12 +2742,11 @@ class page_socialwiki_manage extends page_socialwiki{
 			//display all the users being followed by the current user
 			foreach($follows as $follow){
 				$user = socialwiki_get_user_info($follow->usertoid);
-				$userlink = new moodle_url('/user/view.php', array('id' => $user->id, 'course' => $PAGE->cm->course));
+				$userlink = new moodle_url('/mod/socialwiki/viewuserpages.php', array('userid' => $follow->usertoid, 'subwikiid' => $this->subwiki->id));
 				$picture = $OUTPUT->user_picture($user, array('popup' => true));
 				$html.=$picture;
 				$html.=html_writer::link($userlink->out(false),fullname($user),array('class'=>'socialwiki_username socialwiki_link'));
 				$html.='&nbsp&nbsp&nbsp';
-				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/viewuserpages.php?subwikiid='.$this->subwiki->id.'&userid='.$user->id,'view user\'s likes',array('class'=>'socialwiki_link'));
 				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/follow.php?user2='.$follow->usertoid.'&from='.urlencode($PAGE->url->out()).'&swid='.$this->subwiki->id,'Unfollow',array('class'=>'socialwiki_unfollowlink socialwiki_link'));
 				$html.='<br/>';
 			}
@@ -2800,12 +2799,26 @@ class page_socialwiki_manage extends page_socialwiki{
 class page_socialwiki_viewuserpages extends page_socialwiki{
 
 	function print_content(){
-		Global $OUTPUT,$CFG;
+		Global $OUTPUT,$CFG,$USER,$PAGE;
 		$likes=socialwiki_getlikes($this->uid,$this->subwiki->id);
+		$user = socialwiki_get_user_info($this->uid);
+		
 		$html='';
 		$html.=$this->wikioutput->content_area_begin();
+		
+		$html.=$OUTPUT->heading(fullname($user),1,'colourtext');
+		$html.=$OUTPUT->container_start('userinfo');
+		$html.=$OUTPUT->user_picture($user,array('size'=>100,));
+		//add link to follow or unfollow the user
+		if(!socialwiki_is_following($USER->id,$user->id,$this->subwiki->id)){
+			$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/follow.php?user2='.$user->id.'&from='.urlencode($PAGE->url->out()).'&swid='.$this->subwiki->id,'follow',array('class'=>'socialwiki_followlink socialwiki_link'));
+		}else if($USER->id!=$this->uid){
+			$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/follow.php?user2='.$user->id.'&from='.urlencode($PAGE->url->out()).'&swid='.$this->subwiki->id,'Unfollow',array('class'=>'socialwiki_unfollowlink socialwiki_link'));
+		}
+		$html.=$OUTPUT->container_end();
+		
 		$html.=$OUTPUT->container_start('socialwiki_manageheading');
-		$html.='<br/><br/><br/>'. $OUTPUT->heading('LIKES',1,'colourtext');
+		$html.='<br/><br/><br/>'. $OUTPUT->heading('LIKES',2,'colourtext');
 		$html.=$OUTPUT->container_end();
 		if (count($likes)==0){
 			$html.=$OUTPUT->container_start('socialwiki_manageheading');

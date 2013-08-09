@@ -54,7 +54,7 @@
 	function set_content($page){
 		Global $PAGE,$CFG;
 		$user = socialwiki_get_user_info($page->userid);
-		$userlink = new moodle_url('/mod/socialwiki/profile.php', array('userid' => $user->id, 'course' => $PAGE->cm->course));
+		$userlink = new moodle_url('/mod/socialwiki/viewuserpages.php', array('userid' => $user->id, 'subwikiid' => $page->subwikiid));
 		$this->content=html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title,array("class"=>"colourtext")).'<br/>'.html_writer::link($userlink->out(false),fullname($user),array("class"=>"colourtext")).'<br/>ID: '.$page->id;
 		if(isset($page->votes)){
 			//add page scores

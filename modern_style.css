@@ -387,10 +387,6 @@ width:100%;
 	text-align:center;
 }
 
-.socialwiki_likelist
-{
-text-align:left;
-}
 
 .socialwiki_unfollowlink,.socialwiki_unlikelink
 {
@@ -465,4 +461,8 @@ text-align:center;
 	margin:25px;
 	width:20px;
 	
+}
+.userinfo
+{
+	text-align:left;
 }

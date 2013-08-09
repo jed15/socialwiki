@@ -55,7 +55,8 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 	//compares two pages
     public function diff($pageid, $old, $new) {
         global $CFG;
-        if (!empty($options['total'])) {
+		$page=socialwiki_get_page($pageid);
+	   if (!empty($options['total'])) {
             $total = $options['total'];
         } else {
             $total = 0;
@@ -66,7 +67,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 
         $olduser = $old->user;
         $versionlink = new moodle_url('/mod/socialwiki/view.php', array('pageid' => $old->pageid));
-        $userlink = new moodle_url('/user/view.php', array('id' => $olduser->id));
+        $userlink = new moodle_url('/mod/socialwiki/viewuserpages.php', array('userid' => $olduser->id, 'subwikiid' => $page->subwikiid));
         // view version link
         $oldversionview = ' ';
         $oldversionview .= html_writer::link($versionlink->out(false), get_string('view', 'socialwiki'), array('class' => 'socialwiki_diffview'));
@@ -74,7 +75,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         // userinfo container
         $oldheading = $this->output->container_start('socialwiki_diffuserleft');
         // username
-        $oldheading .= html_writer::link($CFG->wwwroot . '/user/view.php?id=' . $olduser->id, fullname($olduser)) . '&nbsp;';
+        $oldheading .= html_writer::link($CFG->wwwroot . '/mod/socialwiki/viewuserpages.php?userid=' . $olduser->id.'&subwikiid='.$page->subwikiid, fullname($olduser)) . '&nbsp;';
         // user picture
         $oldheading .= html_writer::link($userlink->out(false), $this->output->user_picture($olduser, array('popup' => true)), array('class' => 'notunderlined'));
         $oldheading .= $this->output->container_end();
@@ -90,7 +91,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 
         $newuser = $new->user;
         $versionlink = new moodle_url('/mod/socialwiki/view.php', array('pageid' => $new->pageid));
-        $userlink = new moodle_url('/user/view.php', array('id' => $newuser->id));
+        $userlink = new moodle_url('/mod/socialwiki/viewuserpages.php', array('userid' => $newuser->id, 'subwikiid' => $page->subwikiid));
 
         $newversionview = ' ';
         $newversionview .= html_writer::link($versionlink->out(false), get_string('view', 'socialwiki'), array('class' => 'socialwiki_diffview'));
@@ -672,7 +673,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 			
 			
 			$user = socialwiki_get_user_info($page->userid);
-			$userlink = new moodle_url('/user/view.php', array('id' => $user->id, 'course' => $PAGE->cm->course)); 
+			$userlink = new moodle_url('/mod/socialwiki/viewuserpages.php', array('userid' => $user->id, 'subwikiid' => $page->subwikiid)); 
 			$html.=html_writer::link($userlink->out(false),fullname($user));
 			
 			$html .= html_writer::end_div();
