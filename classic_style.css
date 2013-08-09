@@ -24,9 +24,9 @@ color:black !important;
 background-color:black !important;
 }
 
-.socialwiki_likelist
+.socialwiki_likelist, .socialwiki_followlist
 {
-text-align:left;
+text-align:center;
 }
 
 .socialwiki_unfollowlink,.socialwiki_unlikelink
@@ -58,6 +58,7 @@ text-align:center;
 {
 	display:none !important;
 }
+
 
 #page-mod-socialwiki-search #socialwiki_content_area
 {

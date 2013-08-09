@@ -1661,7 +1661,7 @@ function socialwiki_get_peers($swid,$scale){
 	$context = get_context_instance(CONTEXT_MODULE, $PAGE->cm->id);
 	$users=get_enrolled_users($context);
 	$peers= array();
-	$numusers=count($users);
+	$numusers=count($users)-1;
 	foreach ($users as $user){
 		if($user->id != $USER->id){
 			$peers[]=new peer($user->id,$swid,$USER->id,$numusers,$scale);

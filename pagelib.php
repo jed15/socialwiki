@@ -2717,7 +2717,6 @@ class page_socialwiki_admin extends page_socialwiki {
 /**
  * page that allows the user to manage likes and follows
  */
-
 class page_socialwiki_manage extends page_socialwiki{
 	
 	function print_content(){
@@ -2802,10 +2801,15 @@ class page_socialwiki_viewuserpages extends page_socialwiki{
 		Global $OUTPUT,$CFG,$USER,$PAGE;
 		$likes=socialwiki_getlikes($this->uid,$this->subwiki->id);
 		$user = socialwiki_get_user_info($this->uid);
+		$scale=array('like'=>1,'trust'=>1,'follow'=>1,'popular'=>1);
+		$context = get_context_instance(CONTEXT_MODULE, $PAGE->cm->id);
+		$numpeers=count(get_enrolled_users($context))-1;
+		//get this user's peer score
+		$peer= new peer($user->id,$this->subwiki->id,$USER->id,$numpeers,$scale);
 		
 		$html='';
 		$html.=$this->wikioutput->content_area_begin();
-		
+		//USER INFO OUTPUT
 		$html.=$OUTPUT->heading(fullname($user),1,'colourtext');
 		$html.=$OUTPUT->container_start('userinfo');
 		$html.=$OUTPUT->user_picture($user,array('size'=>100,));
@@ -2817,6 +2821,23 @@ class page_socialwiki_viewuserpages extends page_socialwiki{
 		}
 		$html.=$OUTPUT->container_end();
 		
+		//PEER SCORES OUTPUT
+		$html.=$OUTPUT->container_start('peerinfo colourtext');
+		$table = new html_table();
+		$table->head = array('PEER SCORES');
+        $table->attributes['class'] = 'peer_table colourtext';
+        $table->align = array('left');
+		$table->data=array();
+		$table->data[]=array('FOLLOW DISTANCE:',(1/$peer->trust));
+		$table->data[]=array('TRUST:',$peer->trust);
+		$table->data[]=array('FOLLOW SIMILARITY:',$peer->followsim);
+		$table->data[]=array('LIKE SIMILARITY:',$peer->likesim);
+		$table->data[]=array('PEER POPULARITY:',$peer->popularity);
+		$table->data[]=array('TOTAL:',$peer->score);
+		$html.=html_writer::table($table);
+		$html.=$OUTPUT->container_end();
+		
+		//START OF USER LIKES OUTPUT
 		$html.=$OUTPUT->container_start('socialwiki_manageheading');
 		$html.='<br/><br/><br/>'. $OUTPUT->heading('LIKES',2,'colourtext');
 		$html.=$OUTPUT->container_end();
