@@ -2594,7 +2594,7 @@ class page_socialwiki_admin extends page_socialwiki {
                 $time = userdate($row->timecreated, get_string('strftimetime', 'langconfig'));
                 $versionid = socialwiki_get_version($row->id);
                 $versionlink = new moodle_url('/mod/socialwiki/viewversion.php', array('pageid' => $pageid, 'versionid' => $versionid->id));
-                $userlink = new moodle_url('/mod/socialwiki/viewuserpages.php', array('userid' => $user->id, 'subwikiid' => $this->page->subwikiid));
+                $userlink = new moodle_url('/mod/socialwiki/viewuserpages.php', array('userid' => $creator->id, 'subwikiid' => $this->page->subwikiid));
                 $picturelink = $picture . html_writer::link($userlink->out(false), fullname($username));
                 $historydate = $OUTPUT->container($date, 'socialwiki_histdate');
                 $contents[] = array('', html_writer::link($versionlink->out(false), $row->version), $picturelink, $time, $historydate);

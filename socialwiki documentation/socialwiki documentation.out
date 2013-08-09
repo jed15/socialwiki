@@ -1,0 +1,50 @@
+\BOOKMARK [1][-]{section.0.1}{peer}{}% 1
+\BOOKMARK [1][-]{section.0.2}{node}{}% 2
+\BOOKMARK [2][-]{subsection.0.2.1}{attributes}{section.0.2}% 3
+\BOOKMARK [2][-]{subsection.0.2.2}{methods}{section.0.2}% 4
+\BOOKMARK [1][-]{section.0.3}{socialwiki\137tree}{}% 5
+\BOOKMARK [2][-]{subsection.0.3.1}{methods}{section.0.3}% 6
+\BOOKMARK [1][-]{section.0.4}{Peerscore Algorithm}{}% 7
+\BOOKMARK [1][-]{section.0.5}{pagescore}{}% 8
+\BOOKMARK [1][-]{section.0.6}{New Database Tables}{}% 9
+\BOOKMARK [2][-]{subsection.0.6.1}{socialwiki\137follows}{section.0.6}% 10
+\BOOKMARK [2][-]{subsection.0.6.2}{socialwiki\137likes}{section.0.6}% 11
+\BOOKMARK [2][-]{subsection.0.6.3}{socialwiki}{section.0.6}% 12
+\BOOKMARK [0][-]{chapter.1}{files and folders}{}% 13
+\BOOKMARK [1][-]{section.1.1}{backup folder}{chapter.1}% 14
+\BOOKMARK [1][-]{section.1.2}{db folder}{chapter.1}% 15
+\BOOKMARK [2][-]{subsection.1.2.1}{access.php}{section.1.2}% 16
+\BOOKMARK [2][-]{subsection.1.2.2}{install.xml}{section.1.2}% 17
+\BOOKMARK [2][-]{subsection.1.2.3}{upgrade.php}{section.1.2}% 18
+\BOOKMARK [1][-]{section.1.3}{lang/en}{chapter.1}% 19
+\BOOKMARK [2][-]{subsection.1.3.1}{socialwiki.php}{section.1.3}% 20
+\BOOKMARK [1][-]{section.1.4}{parser}{chapter.1}% 21
+\BOOKMARK [1][-]{section.1.5}{pix}{chapter.1}% 22
+\BOOKMARK [1][-]{section.1.6}{tree\137jslib}{chapter.1}% 23
+\BOOKMARK [1][-]{section.1.7}{admin.php}{chapter.1}% 24
+\BOOKMARK [1][-]{section.1.8}{ajax.php}{chapter.1}% 25
+\BOOKMARK [1][-]{section.1.9}{classic\137style.css and modern\137style.css}{chapter.1}% 26
+\BOOKMARK [1][-]{section.1.10}{styles.css}{chapter.1}% 27
+\BOOKMARK [1][-]{section.1.11}{comments.php}{chapter.1}% 28
+\BOOKMARK [1][-]{section.1.12}{create.php}{chapter.1}% 29
+\BOOKMARK [1][-]{section.1.13}{diff.php}{chapter.1}% 30
+\BOOKMARK [1][-]{section.1.14}{edit.php}{chapter.1}% 31
+\BOOKMARK [1][-]{section.1.15}{follow.php}{chapter.1}% 32
+\BOOKMARK [1][-]{section.1.16}{help.php}{chapter.1}% 33
+\BOOKMARK [1][-]{section.1.17}{history.js}{chapter.1}% 34
+\BOOKMARK [1][-]{section.1.18}{history.php}{chapter.1}% 35
+\BOOKMARK [1][-]{section.1.19}{home.php}{chapter.1}% 36
+\BOOKMARK [1][-]{section.1.20}{lib.php}{chapter.1}% 37
+\BOOKMARK [1][-]{section.1.21}{locallib.php}{chapter.1}% 38
+\BOOKMARK [1][-]{section.1.22}{manage.php}{chapter.1}% 39
+\BOOKMARK [1][-]{section.1.23}{pagelib.php}{chapter.1}% 40
+\BOOKMARK [1][-]{section.1.24}{renderer.php}{chapter.1}% 41
+\BOOKMARK [1][-]{section.1.25}{search.php}{chapter.1}% 42
+\BOOKMARK [1][-]{section.1.26}{search.js}{chapter.1}% 43
+\BOOKMARK [1][-]{section.1.27}{toolbar.js}{chapter.1}% 44
+\BOOKMARK [1][-]{section.1.28}{version.php}{chapter.1}% 45
+\BOOKMARK [1][-]{section.1.29}{view.php}{chapter.1}% 46
+\BOOKMARK [1][-]{section.1.30}{viewuserpages.php}{chapter.1}% 47
+\BOOKMARK [0][-]{chapter.2}{users}{}% 48
+\BOOKMARK [1][-]{section.2.1}{Admin User and Teachers}{chapter.2}% 49
+\BOOKMARK [1][-]{section.2.2}{Enrolled Users}{chapter.2}% 50
