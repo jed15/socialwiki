@@ -1740,7 +1740,7 @@ class page_socialwiki_home extends page_socialwiki {
                 }
 
                 $linkpage = html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title.' (ID:'.$page->id.')',array('class'=>'socialwiki_link'));
-                $name = html_writer::link($CFG->wwwroot.'/mod/socailwiki/view.php?userid='.$user->id.'&amp;subwikiid='.$page->subwikiid,fullname($user),array('class'=>'socialwiki_link'));
+                $name = html_writer::link($CFG->wwwroot.'/mod/socialwiki/viewuserpages.php?userid='.$user->id.'&subwikiid='.$page->subwikiid,fullname($user),array('class'=>'socialwiki_link'));
                 $table->data[] = array("$name&nbsp&nbsp;$linkpage");
             }
         } else {
