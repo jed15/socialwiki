@@ -2814,28 +2814,31 @@ class page_socialwiki_viewuserpages extends page_socialwiki{
 		$html.=$OUTPUT->container_start('userinfo');
 		$html.=$OUTPUT->user_picture($user,array('size'=>100,));
 		//add link to follow or unfollow the user
-		if(!socialwiki_is_following($USER->id,$user->id,$this->subwiki->id)){
+		if(!socialwiki_is_following($USER->id,$user->id,$this->subwiki->id)&&$USER->id!=$this->uid){
 			$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/follow.php?user2='.$user->id.'&from='.urlencode($PAGE->url->out()).'&swid='.$this->subwiki->id,'follow',array('class'=>'socialwiki_followlink socialwiki_link'));
 		}else if($USER->id!=$this->uid){
 			$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/follow.php?user2='.$user->id.'&from='.urlencode($PAGE->url->out()).'&swid='.$this->subwiki->id,'Unfollow',array('class'=>'socialwiki_unfollowlink socialwiki_link'));
 		}
 		$html.=$OUTPUT->container_end();
 		
-		//PEER SCORES OUTPUT
-		$html.=$OUTPUT->container_start('peerinfo colourtext');
-		$table = new html_table();
-		$table->head = array('PEER SCORES');
-        $table->attributes['class'] = 'peer_table colourtext';
-        $table->align = array('left');
-		$table->data=array();
-		$table->data[]=array('FOLLOW DISTANCE:',(1/$peer->trust));
-		$table->data[]=array('TRUST:',$peer->trust);
-		$table->data[]=array('FOLLOW SIMILARITY:',$peer->followsim);
-		$table->data[]=array('LIKE SIMILARITY:',$peer->likesim);
-		$table->data[]=array('PEER POPULARITY:',$peer->popularity);
-		$table->data[]=array('TOTAL:',$peer->score);
-		$html.=html_writer::table($table);
-		$html.=$OUTPUT->container_end();
+		//don't show peer scores if user is viewing themselves
+		if($USER->id!=$user->id){
+			//PEER SCORES OUTPUT
+			$html.=$OUTPUT->container_start('peerinfo colourtext');
+			$table = new html_table();
+			$table->head = array('PEER SCORES');
+			$table->attributes['class'] = 'peer_table colourtext';
+			$table->align = array('left');
+			$table->data=array();
+			$table->data[]=array('FOLLOW DISTANCE:',$peer->trust==0? 0:1/$peer->trust);
+			$table->data[]=array('TRUST:',$peer->trust);
+			$table->data[]=array('FOLLOW SIMILARITY:',$peer->followsim);
+			$table->data[]=array('LIKE SIMILARITY:',$peer->likesim);
+			$table->data[]=array('PEER POPULARITY:',$peer->popularity);
+			$table->data[]=array('TOTAL:',$peer->score);
+			$html.=html_writer::table($table);
+			$html.=$OUTPUT->container_end();
+		}
 		
 		//START OF USER LIKES OUTPUT
 		$html.=$OUTPUT->container_start('socialwiki_manageheading');
