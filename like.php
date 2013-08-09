@@ -34,6 +34,10 @@
 		print_error('invalidcoursemodule');
 	}
 	$context = context_module::instance($cm->id);
+	if (!is_enrolled($context, $USER->id)) {
+			//must be an enrolled user to like a page
+		print_error('connotlike','socialwiki');
+	}
 	
 	if(socialwiki_liked($USER->id,$pageid)){
 		socialwiki_delete_like($USER->id,$pageid);

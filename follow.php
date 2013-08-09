@@ -21,11 +21,12 @@
 	$pageid=optional_param('pageid',-1, PARAM_INT);
 	$user2=optional_param('user2',-1,PARAM_INT);
     $swid = optional_param('swid', -1, PARAM_INT);
-        
-        if ($swid != -1)
-        {
-                $subwiki = socialwiki_get_subwiki($swid);
-        }
+    	
+		
+	if ($swid != -1)
+	{
+			$subwiki = socialwiki_get_subwiki($swid);
+	}
         
 	if($pageid>-1){
 		if (!$page = socialwiki_get_page($pageid)) {
@@ -45,6 +46,11 @@
 		}
 		$context = get_context_instance(CONTEXT_MODULE, $cm->id);
 
+		if (!is_enrolled($context, $USER->id)) {
+			//must be an enrolled user to follow someone
+			print_error('deniedfollow','socialwiki');
+		}
+		
 		//get the author of the current page
 		$page=socialwiki_get_wiki_page_version($pageid,0);
 		$user2=$page->userid;

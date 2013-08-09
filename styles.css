@@ -435,3 +435,8 @@ text-align:center;
 	text-align:center;
 	 margin: auto;
 }
+
+.peerinfo
+{
+display:inline-block;
+}
