@@ -74,7 +74,7 @@ if($id){
 	$context = context_module::instance($cm->id);
 	if (!$page=socialwiki_get_first_page($subwiki->id)) {
 		//if the front page doesn't exist redirect a teacher to create it
-		if (has_capability('mod/socialwiki:managewiki', $context)) {
+		if (socialwiki_is_teacher($USER->id,$context)) {
 			$params = array('swid'=>$subwiki->id, 'title'=>$wiki->firstpagetitle);
 			$url = new moodle_url('/mod/socialwiki/create.php', $params);
 			redirect($url);

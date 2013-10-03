@@ -1655,6 +1655,17 @@ function socialwiki_get_teachers($contextid){
 	return $DB->get_records_sql($sql,array($contextid));
 }
 
+//checks if the user is a teacher
+function socialwiki_is_teacher($context,$uid){
+	$teachers=socialwiki_get_teachers($context);
+	foreach($teachers as $teacher){
+		if($uid==$teacher->id){
+			return true;
+		}
+	}
+	return false;
+}
+
 //returns an array of the users peers
 function socialwiki_get_peers($swid,$scale){
 	Global $PAGE,$USER;
