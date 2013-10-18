@@ -273,7 +273,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
             if ($tab == 'follow')
             {
                 $link = new moodle_url('/mod/socialwiki/'. $tab. '.php', array('pageid' => $pageid, 'from' => $PAGE->url->out()));
-            }elseif ($tab == 'follow')
+            }elseif ($tab == 'unfollow')
             {
                 $link = new moodle_url('/mod/socialwiki/follow.php', array('pageid' => $pageid, 'from' => $PAGE->url->out()));   
             }
